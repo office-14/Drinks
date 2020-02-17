@@ -1,11 +1,10 @@
-using System;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
-using Project.API.Domain.AddIns;
+using Project.API.Domain.Drinks;
 
-namespace Project.API.WebApi.Endpoints.AddIns
+namespace Project.API.WebApi.Endpoints.AvailableDrinks
 {
-    public class AddInItem
+    public class AvailableDrink
     {
         [JsonPropertyName("id")]
         [Required]
@@ -23,18 +22,13 @@ namespace Project.API.WebApi.Endpoints.AddIns
         [Required]
         public string PhotoUrl { get; set; }
 
-        [JsonPropertyName("price")]
-        [Required]
-        public int Price { get; set; }
-
-        public static AddInItem From(AddIn addInn) =>
-            new AddInItem
+        public static AvailableDrink From(Drink drink) =>
+            new AvailableDrink
             {
-                Id = addInn.Id,
-                Name = addInn.Name.Value,
-                Description = addInn.Description.Value,
-                PhotoUrl = addInn.PhotoUrl.ToString(),
-                Price = addInn.Price.Amount
+                Id = drink.Id,
+                Name = drink.Name.Value,
+                Description = drink.Description.Value,
+                PhotoUrl = drink.PhotoUrl.ToString()
             };
     }
 }

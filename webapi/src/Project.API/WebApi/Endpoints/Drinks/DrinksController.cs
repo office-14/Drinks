@@ -7,25 +7,9 @@ using Project.API.WebApi.Endpoints.Shared;
 
 namespace Project.API.WebApi.Endpoints.Drinks
 {
-    [Route("api/drinks")]
     public class DrinksController : ControllerBase
     {
-        private readonly IDrinksRepository drinksRepository;
-
-        public DrinksController(IDrinksRepository drinksRepository)
-        {
-            this.drinksRepository = drinksRepository;
-        }
-
-        [HttpGet]
-        public async Task<ResponseWrapper<IEnumerable<DrinkItem>>> AvailableDrinks()
-        {
-            var drinks = await drinksRepository.ListAvailableDrinks();
-
-            return ResponseWrapper<IEnumerable<DrinkItem>>.From(drinks.Select(DrinkItem.From));
-        }
-
-        [HttpGet("{id}/sizes")]
+        [HttpGet("api/drinks/{id}/sizes")]
         public ResponseWrapper<IEnumerable<DrinkSizeItem>> AvailableSizesOfDrink([FromRoute] int id)
         {
             return ResponseWrapper<IEnumerable<DrinkSizeItem>>.From(new[] {
