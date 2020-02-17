@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation"
+    app:startDestination="@id/drinksFragment">
+
+    <fragment
+        android:id="@+id/drinksFragment"
+        android:name="com.coffeedose.ui.DrinksFragment"
+        android:label="fragment_coffe_list"
+        tools:layout="@layout/fragment_drinks" >
+        <action
+            android:id="@+id/action_drinksFragment_to_selectDoseAndAddinsFragment"
+            app:destination="@id/selectDoseAndAddinsFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+    <fragment
+        android:id="@+id/selectDoseAndAddinsFragment"
+        android:name="com.coffeedose.ui.SelectDoseAndAddinsFragment"
+        android:label="fragment_select_dose_and_addins"
+        tools:layout="@layout/fragment_select_dose_and_addins" >
+        <action
+            android:id="@+id/action_selectDoseAndAddinsFragment_to_orderFragment"
+            app:destination="@id/orderFragment"
+            app:enterAnim="@anim/fade_in"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+        <argument
+            android:name="drinkId"
+            app:argType="integer" />
+    </fragment>
+    <fragment
+        android:id="@+id/orderFragment"
+        android:name="com.coffeedose.ui.OrderFragment"
+        android:label="fragment_order"
+        tools:layout="@layout/fragment_order" />
+</navigation>
