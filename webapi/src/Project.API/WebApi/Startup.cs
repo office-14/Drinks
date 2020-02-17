@@ -31,6 +31,7 @@ namespace Project.API.WebApi
             services.AddCustomSwagger();
 
             services.AddSingleton<IDrinksRepository, InMemoryDrinksRepository>();
+            services.AddSingleton<IDrinkSizesRepository, InMemoryDrinksRepository>();
             services.AddSingleton<IAddInsRepository, InMemoryAddInsRepository>();
         }
 

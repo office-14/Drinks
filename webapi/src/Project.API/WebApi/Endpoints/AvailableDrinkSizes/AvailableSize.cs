@@ -1,9 +1,10 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using Project.API.Domain.Drinks;
 
-namespace Project.API.WebApi.Endpoints.Drinks
+namespace Project.API.WebApi.Endpoints.AvailableDrinkSizes
 {
-    public class DrinkSizeItem
+    public class AvailableSize
     {
         [JsonPropertyName("id")]
         [Required]
@@ -20,5 +21,14 @@ namespace Project.API.WebApi.Endpoints.Drinks
         [JsonPropertyName("price")]
         [Required]
         public int Price { get; set; }
+
+        public static AvailableSize From(DrinkSize drinkSize) =>
+            new AvailableSize
+            {
+                Id = drinkSize.Id,
+                Volume = drinkSize.Volume.Value,
+                Name = drinkSize.Name.Value,
+                Price = drinkSize.Price.Amount
+            };
     }
 }

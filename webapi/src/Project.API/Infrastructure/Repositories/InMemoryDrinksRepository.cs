@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Project.API.Domain.Core;
@@ -7,7 +8,7 @@ using Project.API.Domain.Drinks;
 
 namespace Project.API.Infrastructure.Repositories
 {
-    public sealed class InMemoryDrinksRepository : IDrinksRepository
+    public sealed class InMemoryDrinksRepository : IDrinksRepository, IDrinkSizesRepository
     {
         private static readonly IEnumerable<Drink> AvailableDrinks = new List<Drink>{
             Drink.Available(
@@ -42,9 +43,34 @@ namespace Project.API.Infrastructure.Repositories
             ),
         };
 
+        private static readonly IEnumerable<DrinkSize> AvailableSizes = new List<DrinkSize> {
+            DrinkSize.Available(
+                7,
+                Name.From("Medium"),
+                Volume.From("200 ml"),
+                Roubles.From(140)
+            ),
+            DrinkSize.Available(
+                10,
+                Name.From("Large"),
+                Volume.From("300 ml"),
+                Roubles.From(250)
+            )
+        };
+
         public Task<IEnumerable<Drink>> ListAvailableDrinks(CancellationToken token = default)
         {
             return Task.FromResult(AvailableDrinks);
+        }
+
+        public Task<IEnumerable<DrinkSize>> ListSizesOfDrink(int drinkId, CancellationToken token = default)
+        {
+            if (!AvailableDrinks.Select(d => d.Id).Contains(drinkId))
+            {
+                return Task.FromResult((IEnumerable<DrinkSize>)null);
+            }
+
+            return Task.FromResult(AvailableSizes);
         }
     }
 }
