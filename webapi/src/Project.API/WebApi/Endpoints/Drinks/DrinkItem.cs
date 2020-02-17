@@ -22,16 +22,13 @@ namespace Project.API.WebApi.Endpoints.Drinks
         [Required]
         public string PhotoUrl { get; set; }
 
-        public static DrinkItem From(Drink drink)
-        {
-            var drinkItem = new DrinkItem();
-
-            drinkItem.Id = drink.Id;
-            drinkItem.Name = drink.Name.Value;
-            drinkItem.Description = drink.Description.Value;
-            drinkItem.PhotoUrl = drink.PhotoUrl.ToString();
-
-            return drinkItem;
-        }
+        public static DrinkItem From(Drink drink) =>
+            new DrinkItem
+            {
+                Id = drink.Id,
+                Name = drink.Name.Value,
+                Description = drink.Description.Value,
+                PhotoUrl = drink.PhotoUrl.ToString()
+            };
     }
 }

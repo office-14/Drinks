@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Project.API.Domain.AddIns;
 using Project.API.Domain.Drinks;
 using Project.API.Infrastructure.Repositories;
 using Project.API.WebApi.Swagger;
@@ -30,6 +31,7 @@ namespace Project.API.WebApi
             services.AddCustomSwagger();
 
             services.AddSingleton<IDrinksRepository, InMemoryDrinksRepository>();
+            services.AddSingleton<IAddInsRepository, InMemoryAddInsRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

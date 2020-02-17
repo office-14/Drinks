@@ -1,5 +1,7 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using Project.API.Domain.AddIns;
 
 namespace Project.API.WebApi.Endpoints.AddIns
 {
@@ -24,5 +26,15 @@ namespace Project.API.WebApi.Endpoints.AddIns
         [JsonPropertyName("price")]
         [Required]
         public int Price { get; set; }
+
+        public static AddInItem From(AddIn addInn) =>
+            new AddInItem
+            {
+                Id = addInn.Id,
+                Name = addInn.Name.Value,
+                Description = addInn.Description.Value,
+                PhotoUrl = addInn.PhotoUrl.ToString(),
+                Price = addInn.Price.Amount
+            };
     }
 }
