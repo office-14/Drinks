@@ -1,5 +1,8 @@
 using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Project.API.Domain.Drinks;
 using Project.API.WebApi.Endpoints.Shared;
 
 namespace Project.API.WebApi.Endpoints.Drinks
@@ -7,17 +10,19 @@ namespace Project.API.WebApi.Endpoints.Drinks
     [Route("api/drinks")]
     public class DrinksController : ControllerBase
     {
-        [HttpGet]
-        public ResponseWrapper<IEnumerable<DrinkItem>> AvailableDrinks()
+        private readonly IDrinksRepository drinksRepository;
+
+        public DrinksController(IDrinksRepository drinksRepository)
         {
-            return ResponseWrapper<IEnumerable<DrinkItem>>.From(new[] {
-                new DrinkItem {
-                    Id = 1,
-                    Name = "Glisse",
-                    Description = "Tasty glisse",
-                    PhotoUrl = "http://photo.url",
-                }
-            });
+            this.drinksRepository = drinksRepository;
+        }
+
+        [HttpGet]
+        public async Task<ResponseWrapper<IEnumerable<DrinkItem>>> AvailableDrinks()
+        {
+            var drinks = await drinksRepository.ListAvailableDrinks();
+
+            return ResponseWrapper<IEnumerable<DrinkItem>>.From(drinks.Select(DrinkItem.From));
         }
 
         [HttpGet("{id}/sizes")]
