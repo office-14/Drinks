@@ -27,7 +27,16 @@ namespace Project.API.WebApi
             services.AddMvcCore()
                 .AddApiExplorer();
 
-            services.AddCors();
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll", builder =>
+                {
+                    builder
+                        .AllowAnyOrigin()
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                });
+            });
 
             services.AddCustomSwagger();
 
@@ -44,12 +53,7 @@ namespace Project.API.WebApi
 
             if (env.IsDevelopment())
             {
-                app.UseCors(policy =>
-                {
-                    policy.AllowAnyOrigin()
-                        .AllowAnyHeader()
-                        .AllowAnyMethod();
-                });
+                app.UseCors("AllowAll");
             }
             else
             {
