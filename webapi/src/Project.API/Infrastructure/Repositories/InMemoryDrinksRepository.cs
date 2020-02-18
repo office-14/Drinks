@@ -58,6 +58,11 @@ namespace Project.API.Infrastructure.Repositories
             )
         };
 
+        public Task<Drink> DrinkWithId(int id, CancellationToken token = default)
+        {
+            return Task.FromResult(AvailableDrinks.FirstOrDefault(d => d.Id == id));
+        }
+
         public Task<IEnumerable<Drink>> ListAvailableDrinks(CancellationToken token = default)
         {
             return Task.FromResult(AvailableDrinks);
@@ -71,6 +76,13 @@ namespace Project.API.Infrastructure.Repositories
             }
 
             return Task.FromResult(AvailableSizes);
+        }
+
+        public async Task<DrinkSize> SizeOfDrink(int drinkId, int drinkSizeId, CancellationToken token = default)
+        {
+            var availableSizes = await ListSizesOfDrink(drinkId, token);
+
+            return availableSizes?.FirstOrDefault(s => s.Id == drinkSizeId);
         }
     }
 }

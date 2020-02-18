@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Project.API.Domain.AddIns;
@@ -26,6 +27,11 @@ namespace Project.API.Infrastructure.Repositories
                 Roubles.From(25)
             )
         };
+
+        public Task<AddIn> AddInWithId(int id, CancellationToken token = default)
+        {
+            return Task.FromResult(AvailableAddIns.FirstOrDefault(a => a.Id == id));
+        }
 
         public Task<IEnumerable<AddIn>> ListAvailableAddIns(CancellationToken token = default) =>
             Task.FromResult(AvailableAddIns);

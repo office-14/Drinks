@@ -1,5 +1,7 @@
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Project.API.Application.OrderDetails;
 using Project.API.WebApi.Endpoints.Shared;
 
@@ -8,23 +10,31 @@ namespace Project.API.WebApi.Endpoints.OrderWithId
     public class OrderWithIdController : ControllerBase
     {
         private readonly IOrderDetailsRepository orderDetailsRepository;
+        private readonly ILogger<OrderWithIdController> logger;
 
-        public OrderWithIdController(IOrderDetailsRepository orderDetailsRepository)
+        public OrderWithIdController(
+            IOrderDetailsRepository orderDetailsRepository,
+            ILogger<OrderWithIdController> logger
+        )
         {
             this.orderDetailsRepository = orderDetailsRepository;
+            this.logger = logger;
         }
 
         [HttpGet("api/orders/{id}")]
-        public async Task<ActionResult<ResponseWrapper<OrderWithId>>> Get([FromRoute] int id)
+        [ProducesResponseType(typeof(ResponseWrapper<SingleOrder>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<ResponseWrapper<SingleOrder>>> Get([FromRoute] int id)
         {
             var order = await orderDetailsRepository.GetOrderDetailsById(id);
 
             if (order == null)
             {
+                logger.LogWarning("Trying to find order with id='{id}' returns null", id);
                 return NotFound();
             }
 
-            return ResponseWrapper<OrderWithId>.From(OrderWithId.From(order));
+            return ResponseWrapper<SingleOrder>.From(SingleOrder.From(order));
         }
     }
 }

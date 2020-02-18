@@ -3,9 +3,9 @@ using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 using Project.API.Application.OrderDetails;
 
-namespace Project.API.WebApi.Endpoints.OrderWithId
+namespace Project.API.WebApi.Endpoints.Shared
 {
-    public class OrderWithId
+    public class SingleOrder
     {
         [JsonPropertyName("id")]
         [Required]
@@ -34,9 +34,9 @@ namespace Project.API.WebApi.Endpoints.OrderWithId
         [Required]
         public int TotalPrice { get; set; }
 
-        public static OrderWithId From(OrderDetails order)
+        public static SingleOrder From(OrderDetails order)
         {
-            return new OrderWithId
+            return new SingleOrder
             {
                 Id = order.Id,
                 StatusCode = order.Status.Code,

@@ -18,6 +18,14 @@ namespace Project.API.WebApi
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
             Host.CreateDefaultBuilder(args)
+                .ConfigureLogging((host, logging) =>
+                {
+                    if (host.HostingEnvironment.IsDevelopment())
+                    {
+                        logging.ClearProviders();
+                        logging.AddConsole();
+                    }
+                })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();

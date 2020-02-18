@@ -41,7 +41,7 @@ namespace Project.API.Application.OrderDetails
             Roubles totalPrice,
             Status status,
             DateTime createdDate,
-            DateTime? finishDate = null // TODO: maybe use method overloading
+            DateTime? finishDate = null // TODO: maybe use method overloading instead of default values?
         ) => new OrderDetails(
             id,
             orderNumber,

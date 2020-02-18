@@ -10,5 +10,7 @@ namespace Project.API.Domain.Drinks
         // into domain logic. Is it good/bad?
         // TODO: discuss IAsyncEnumerable<Drink> usage
         Task<IEnumerable<Drink>> ListAvailableDrinks(CancellationToken token = default(CancellationToken));
+
+        Task<Drink> DrinkWithId(int id, CancellationToken token = default(CancellationToken));
     }
 }
