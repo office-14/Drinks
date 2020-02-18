@@ -1,5 +1,6 @@
 package com.coffeedose.repository
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import com.coffeedose.database.CoffeeDatabase
@@ -8,6 +9,8 @@ import com.coffeedose.domain.Coffee
 import com.coffeedose.network.CoffeeApi
 import com.coffeedose.network.asDatabaseModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import java.lang.Exception
 
 class CoffeeRepository (private val database: CoffeeDatabase) {
 
@@ -16,19 +19,15 @@ class CoffeeRepository (private val database: CoffeeDatabase) {
     }
 
     suspend fun refreshDrinks(){
-        with(Dispatchers.IO){
-            val drinksReponse = CoffeeApi.retrofitService.getDrinks().await()
+        try {
+            withContext(Dispatchers.IO){
 
-            if (!drinksReponse.message.isNullOrEmpty()){
-                //TODO handle exception
+                val drinksResponse = CoffeeApi.retrofitService.getDrinks().await()
+                database.sleepDatabaseDao.insertAllDrinks(*drinksResponse.payload.asDatabaseModel().toTypedArray())
             }
-            else{
-                //if (!drinksReponse.payload?.isEmpty()!!)
-                var payload = drinksReponse.payload!!.asDatabaseModel()
-                database.sleepDatabaseDao.insertAllDrinks(*payload.toTypedArray())
-            }
-
-
+        }
+        catch (ex:Exception){
+            Log.d("CoffeeRepository.refreshDrinks", ex.message)
         }
     }
 }

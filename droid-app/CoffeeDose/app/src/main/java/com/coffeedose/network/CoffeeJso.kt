@@ -7,7 +7,7 @@ import com.squareup.moshi.JsonClass
 @JsonClass(generateAdapter = true)
 data class CoffeeJso (
     var id: Int,
-    var name: String,
+    val name: String,
     var description: String,
 
     @Json(name = "photo_url")
