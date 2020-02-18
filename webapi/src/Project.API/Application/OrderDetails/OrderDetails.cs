@@ -1,7 +1,8 @@
 using System;
 using Project.API.Domain.Core;
+using Project.API.Domain.Orders;
 
-namespace Project.API.Domain.Orders
+namespace Project.API.Application.OrderDetails
 {
     public sealed class OrderDetails
     {

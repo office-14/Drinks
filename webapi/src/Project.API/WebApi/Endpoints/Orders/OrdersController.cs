@@ -7,21 +7,6 @@ namespace Project.API.WebApi.Endpoints.Orders
     [Route("api/orders")]
     public class OrdersController : ControllerBase
     {
-        [HttpGet("{id}")]
-        public ResponseWrapper<OrderItem> OrderWithId([FromRoute] int id)
-        {
-            return ResponseWrapper<OrderItem>.From(new OrderItem
-            {
-                Id = id,
-                StatusCode = "FINISHED",
-                StatusName = "Finished",
-                CreatedDate = DateTime.UtcNow.AddMinutes(-10).ToString("o"),
-                FinishDate = DateTime.UtcNow.ToString("o"),
-                OrderNumber = "ORD-101",
-                TotalPrice = 520
-            });
-        }
-
         [HttpPost]
         public ResponseWrapper<CreatedOrderItem> createNewOrder([FromBody] CreateOrderDetails orderDetails)
         {
