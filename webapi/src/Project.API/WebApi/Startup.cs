@@ -11,6 +11,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
 using Project.API.Application;
+using Project.API.Application.DrinkDetails;
 using Project.API.Application.OrderDetails;
 using Project.API.Application.OrderService;
 using Project.API.Domain.AddIns;
@@ -49,6 +50,7 @@ namespace Project.API.WebApi
             services.AddSingleton<InMemoryDrinksRepository>();
             services.AddSingleton<IDrinksRepository>(provider => provider.GetRequiredService<InMemoryDrinksRepository>());
             services.AddSingleton<IDrinkSizesRepository>(provider => provider.GetRequiredService<InMemoryDrinksRepository>());
+            services.AddSingleton<IDrinkDetailsRepository>(provider => provider.GetRequiredService<InMemoryDrinksRepository>());
             services.AddSingleton<IAddInsRepository, InMemoryAddInsRepository>();
             services.AddSingleton<InMemoryOrdersRepository>();
             services.AddSingleton<IOrderDetailsRepository>(provider => provider.GetRequiredService<InMemoryOrdersRepository>());

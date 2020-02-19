@@ -3,12 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Project.API.Application.DrinkDetails;
 using Project.API.Domain.Core;
 using Project.API.Domain.Drinks;
 
 namespace Project.API.Infrastructure.Repositories
 {
-    public sealed class InMemoryDrinksRepository : IDrinksRepository, IDrinkSizesRepository
+    public sealed class InMemoryDrinksRepository :
+        IDrinksRepository,
+        IDrinkSizesRepository,
+        IDrinkDetailsRepository
     {
         private static readonly IEnumerable<Drink> AvailableDrinks = new List<Drink>{
             Drink.Available(
@@ -57,6 +61,18 @@ namespace Project.API.Infrastructure.Repositories
                 Roubles.From(250)
             )
         };
+
+        public Task<IEnumerable<DrinkDetails>> AvailableDrinkDetails(CancellationToken token = default)
+        {
+            return Task.FromResult(AvailableDrinks.
+                Select(ad => DrinkDetails.Available(
+                    ad.Id,
+                    ad.Name,
+                    ad.Description,
+                    ad.PhotoUrl,
+                    Roubles.From(140)
+                )));
+        }
 
         public Task<Drink> DrinkWithId(int id, CancellationToken token = default)
         {
