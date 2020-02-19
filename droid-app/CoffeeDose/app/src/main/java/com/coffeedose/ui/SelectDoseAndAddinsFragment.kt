@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -31,6 +32,11 @@ class SelectDoseAndAddinsFragment : Fragment() {
         val binding: FragmentSelectDoseAndAddinsBinding = DataBindingUtil.inflate(inflater,R.layout.fragment_select_dose_and_addins,container,false)
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
+
+        viewModel.addins.observe(this, Observer {
+            val i = 0
+        })
+
         return binding.root
     }
 }

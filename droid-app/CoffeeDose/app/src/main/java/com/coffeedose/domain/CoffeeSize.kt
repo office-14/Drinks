@@ -2,7 +2,8 @@ package com.coffeedose.domain
 
 data class CoffeeSize (
     var id: Int,
-    val name : String,
-    val volume : String
-) {
-}
+    var drinkId : Int,
+    var volume: String,
+    var name: String,
+    var price : Int
+)

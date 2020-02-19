@@ -9,20 +9,22 @@
             type="com.coffeedose.viewmodels.DrinksViewModel" />
     </data>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:orientation="vertical"
         android:layout_height="match_parent">
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/drinkPhoto"
+            android:layout_alignParentTop="true"
             android:layout_width="match_parent"
             android:layout_margin="@dimen/spacing_normal_16"
             android:layout_height="240dp"/>
 
+
         <Spinner
             android:id="@+id/drinksSpinner"
-            android:layout_alignParentTop="true"
+            android:layout_below="@id/drinkPhoto"
             android:layout_marginLeft="@dimen/spacing_normal_16"
             android:layout_marginRight="@dimen/spacing_normal_16"
             android:layout_marginTop="@dimen/spacing_normal_16"
@@ -32,12 +34,23 @@
             app:onItemSelected="@{(newIndex) -> viewModel.onSelectedItemIndexChanged(newIndex)}"
             app:drinks="@{viewModel.drinks}"/>
 
-        <androidx.appcompat.widget.AppCompatTextView
+        <com.google.android.material.textview.MaterialTextView
             android:id="@+id/drinkDescription"
+            android:layout_below="@id/drinksSpinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/spacing_normal_16"
             android:gravity="left"/>
-    </LinearLayout>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/proceedButton"
+            android:layout_width="200dp"
+            android:text="@string/DoProceed"
+            android:layout_centerHorizontal="true"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_margin="@dimen/spacing_normal_16"/>
+
+    </RelativeLayout>
 
 </layout>

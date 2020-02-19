@@ -8,6 +8,7 @@ import okhttp3.ConnectionSpec
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.GET
+import retrofit2.http.Path
 
 private const val BASE_URL = "http://10.0.2.2:5000/api/"
 
@@ -23,7 +24,14 @@ private val retrofit = Retrofit.Builder()
 
 interface CoffeeApiService {
     @GET("drinks")
-    fun getDrinks():Deferred<TestPayload>
+    fun getDrinksAsync():Deferred<ResponseContainer<List<CoffeeJso>>>
+
+    @GET("/api/drinks/{drinkId}/sizes")
+    fun getSizesByDrinkIdAsync(@Path(value = "drinkId", encoded = true) drinkId : Int):Deferred<ResponseContainer<List<SizeJso>>>
+
+    @GET("add-ins")
+    fun getAddinsAsync():Deferred<ResponseContainer<List<AddinJso>>>
+
 }
 
 object CoffeeApi {

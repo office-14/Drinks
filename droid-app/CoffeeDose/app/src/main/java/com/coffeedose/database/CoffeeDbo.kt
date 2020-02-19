@@ -17,15 +17,8 @@ data class CoffeeDbo(
 
     @ColumnInfo(name = "photo_url")
     var photoUrl:String
-)
-
-fun List<CoffeeDbo>.asDomainModel() : List<Coffee> {
-    return map {
-        Coffee(
-            id = it.id,
-            name = it.name,
-            description = it.description,
-            photoUrl = it.photoUrl
-        )
-    }
+){
+    fun toDomainModel() = Coffee(
+        id,name,description,photoUrl
+    )
 }

@@ -24,11 +24,7 @@ import kotlinx.android.synthetic.main.fragment_drinks.*
 class DrinksFragment : Fragment() {
 
     private val viewModel: DrinksViewModel by lazy {
-
-        ViewModelProviders.of(
-            this,
-            DrinksViewModel.Factory(requireNotNull(this.activity).application)
-        ).get(DrinksViewModel::class.java)
+        ViewModelProviders.of(this,DrinksViewModel.Factory(requireNotNull(this.activity).application)).get(DrinksViewModel::class.java)
     }
 
 
@@ -37,6 +33,10 @@ class DrinksFragment : Fragment() {
         val binding: FragmentDrinksBinding = DataBindingUtil.inflate(inflater,R.layout.fragment_drinks,container,false)
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
+
+        binding.proceedButton.setOnClickListener {
+            findNavController().navigate(DrinksFragmentDirections.actionDrinksFragmentToSelectDoseAndAddinsFragment(viewModel.selectedDrink.value!!.id))
+        }
 
         initObserveListeners()
 
@@ -59,10 +59,5 @@ class DrinksFragment : Fragment() {
         })
 
         viewModel.drinks.observe(this, Observer { viewModel.onSelectedItemIndexChanged(0) }) // TODO drop and do well
-    }
-
-    fun goToDoseAndAddins(){
-        var action = DrinksFragmentDirections.actionDrinksFragmentToSelectDoseAndAddinsFragment(11)
-        this.findNavController().navigate(action)
     }
 }

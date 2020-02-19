@@ -6,17 +6,14 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 
-
 @Dao
-interface CoffeeDao {
-
-    /* Drinks  */
-    @Query("select * from drinks")
-    fun getAllDrinks(): LiveData<List<CoffeeDbo>>
+interface AddinDao {
+    @Query("select * from add_ins")
+    fun getAllAddins(): LiveData<List<AddinDbo>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAllDrinks(vararg videos: CoffeeDbo)
+    fun insertAllAddins(vararg videos: AddinDbo)
 
-    @Query("delete from drinks")
+    @Query("delete from add_ins")
     fun clear()
 }

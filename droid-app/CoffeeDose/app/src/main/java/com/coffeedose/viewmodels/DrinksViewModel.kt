@@ -13,17 +13,22 @@ import kotlinx.coroutines.launch
 
 class DrinksViewModel(application:Application) : AndroidViewModel(application) {
 
-    private var viewModelJob = SupervisorJob()
+    private val viewModelJob = SupervisorJob()
 
-    private var viewModelScope = CoroutineScope(viewModelJob + Dispatchers.Main)
+    private val viewModelScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
-    private var database = CoffeeDatabase.getInstance(application)
-    private var coffeeRepository = CoffeeRepository(database)
+    private val database = CoffeeDatabase.getInstance(application)
+    private val coffeeRepository = CoffeeRepository(database.drinksDatabaseDao)
 
     private var selectedItemIndex = mutableLiveData(0)
 
     // list of drinks
     val drinks = coffeeRepository.drinks
+
+    /*private val _navigatingToSize = mutableLiveData(false)
+    val navigatingToSize
+        get() = _navigatingToSize*/
+
 
     val selectedDrink : LiveData<Coffee?>
     get() = _selectedDrink
@@ -49,6 +54,15 @@ class DrinksViewModel(application:Application) : AndroidViewModel(application) {
         if (newIndex != selectedItemIndex.value)
             selectedItemIndex.value = newIndex
     }
+
+    /*fun navigateToSize() {
+        _navigatingToSize.value = true
+    }
+
+    fun doneNavigating(){
+        if (!_navigatingToSize.value!!)
+            _navigatingToSize.value = false
+    }*/
 
     class Factory(val app: Application) : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {

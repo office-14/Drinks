@@ -12,13 +12,8 @@ data class CoffeeJso (
 
     @Json(name = "photo_url")
     var photoUrl:String
-)
-
-fun List<CoffeeJso>.asDatabaseModel():List<CoffeeDbo> {
-    return map { CoffeeDbo(
-        id = it.id,
-        name = it.name,
-        description = it.description,
-        photoUrl = it.photoUrl
-    ) }
+){
+    fun toDataBaseModel() = CoffeeDbo(
+        id,name,description,photoUrl
+    )
 }
