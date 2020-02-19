@@ -1,7 +1,8 @@
 using System;
 using Project.API.Domain.Core;
+using Project.API.Domain.Orders;
 
-namespace Project.API.Domain.Orders
+namespace Project.API.Application.OrderDetails
 {
     public sealed class OrderDetails
     {
@@ -40,7 +41,7 @@ namespace Project.API.Domain.Orders
             Roubles totalPrice,
             Status status,
             DateTime createdDate,
-            DateTime? finishDate = null // TODO: maybe use method overloading
+            DateTime? finishDate = null // TODO: maybe use method overloading instead of default values?
         ) => new OrderDetails(
             id,
             orderNumber,

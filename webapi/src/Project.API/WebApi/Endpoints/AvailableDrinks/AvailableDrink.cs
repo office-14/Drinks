@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
-using Project.API.Domain.Drinks;
+using Project.API.Application.DrinkDetails;
 
 namespace Project.API.WebApi.Endpoints.AvailableDrinks
 {
@@ -22,13 +22,18 @@ namespace Project.API.WebApi.Endpoints.AvailableDrinks
         [Required]
         public string PhotoUrl { get; set; }
 
-        public static AvailableDrink From(Drink drink) =>
+        [JsonPropertyName("smallest_size_price")]
+        [Required]
+        public int PriceOfSmallestSize { get; set; }
+
+        public static AvailableDrink From(DrinkDetails drink) =>
             new AvailableDrink
             {
                 Id = drink.Id,
                 Name = drink.Name.Value,
                 Description = drink.Description.Value,
-                PhotoUrl = drink.PhotoUrl.ToString()
+                PhotoUrl = drink.PhotoUrl.ToString(),
+                PriceOfSmallestSize = drink.PriceOfSmallestSize.Amount
             };
     }
 }

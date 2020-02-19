@@ -1,9 +1,11 @@
+using System;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using Project.API.Application.OrderDetails;
 
-namespace Project.API.WebApi.Endpoints.Orders
+namespace Project.API.WebApi.Endpoints.Shared
 {
-    public class OrderItem
+    public class SingleOrder
     {
         [JsonPropertyName("id")]
         [Required]
@@ -31,5 +33,19 @@ namespace Project.API.WebApi.Endpoints.Orders
         [JsonPropertyName("total_price")]
         [Required]
         public int TotalPrice { get; set; }
+
+        public static SingleOrder From(OrderDetails order)
+        {
+            return new SingleOrder
+            {
+                Id = order.Id,
+                StatusCode = order.Status.Code,
+                StatusName = order.Status.Name,
+                TotalPrice = order.TotalPrice.Amount,
+                OrderNumber = order.OrderNumber.Value,
+                CreatedDate = order.CreatedDate.ToString("o"),
+                FinishDate = order.FinishDate?.ToString("o")
+            };
+        }
     }
 }

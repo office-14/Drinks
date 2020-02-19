@@ -14,7 +14,7 @@ namespace Project.API.Domain.Drinks
         public static Volume From(string value)
         {
             if (string.IsNullOrWhiteSpace(value))
-                throw new ArgumentException("Volume cannot be empty");
+                throw new ArgumentException("Volume value cannot be empty");
 
             return new Volume(value);
         }

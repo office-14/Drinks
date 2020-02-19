@@ -7,5 +7,7 @@ namespace Project.API.Domain.AddIns
     public interface IAddInsRepository
     {
         Task<IEnumerable<AddIn>> ListAvailableAddIns(CancellationToken token = default(CancellationToken));
+
+        Task<AddIn> AddInWithId(int id, CancellationToken token = default(CancellationToken));
     }
 }
