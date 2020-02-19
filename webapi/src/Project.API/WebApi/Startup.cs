@@ -66,6 +66,11 @@ namespace Project.API.WebApi
             ILogger<Startup> logger
         )
         {
+            if (env.IsDevelopment())
+            {
+                app.UseExceptionHandler("/error-dev");
+            }
+
             app.UseRouting();
 
             if (env.IsDevelopment())
