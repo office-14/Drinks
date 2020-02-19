@@ -28,6 +28,8 @@ buildscript {
         version_glide = "4.8.0"
 
         version_room = "2.2.3"
+
+        version_material = '1.1.0'
 }
 
     repositories {

@@ -22,19 +22,12 @@ import com.coffeedose.viewmodels.SelectDoseAndAddinsViewModel
  */
 class SelectDoseAndAddinsFragment : Fragment() {
 
-
-    private val viewModel: SelectDoseAndAddinsViewModel by lazy {
-        val activity = requireNotNull(this.activity) {
-            "You can only access the viewModel after onActivityCreated()"
-        }
-        ViewModelProviders.of(this, SelectDoseAndAddinsViewModel.Factory(activity.application,1)).get(
-            SelectDoseAndAddinsViewModel::class.java)
-    }
-
-    //private lateinit var drinkId?
-
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View? {
+        val drinkId = SelectDoseAndAddinsFragmentArgs.fromBundle(arguments!!).drinkId
+
+        val viewModel = ViewModelProviders.of(this, SelectDoseAndAddinsViewModel
+            .Factory(requireNotNull(this.activity).application,drinkId)).get(SelectDoseAndAddinsViewModel::class.java)
+
         val binding: FragmentSelectDoseAndAddinsBinding = DataBindingUtil.inflate(inflater,R.layout.fragment_select_dose_and_addins,container,false)
         binding.viewModel = viewModel
         binding.lifecycleOwner = this

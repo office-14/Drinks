@@ -10,11 +10,13 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.lifecycle.observe
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
 
 import com.coffeedose.R
 import com.coffeedose.databinding.FragmentDrinksBinding
 import com.coffeedose.domain.Coffee
 import com.coffeedose.viewmodels.DrinksViewModel
+import kotlinx.android.synthetic.main.fragment_drinks.*
 
 /**
 
@@ -36,15 +38,28 @@ class DrinksFragment : Fragment() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
 
-        var i = 0
-        viewModel.drinks.observe(this, Observer {
-            i++
-        })
+        initObserveListeners()
 
         return binding.root
     }
 
 
+    private fun initObserveListeners(){
+        viewModel.selectedDrink?.observe(this, Observer {
+            it?.let {
+                drinkDescription.text = it.description
+
+                Glide.with(drinkPhoto.context)
+                    .load(it.photoUrl)
+                    .placeholder(R.drawable.loading_animation)
+                    .error(R.drawable.ic_broken_image)
+                    .centerCrop()
+                    .into(drinkPhoto)
+            }
+        })
+
+        viewModel.drinks.observe(this, Observer { viewModel.onSelectedItemIndexChanged(0) }) // TODO drop and do well
+    }
 
     fun goToDoseAndAddins(){
         var action = DrinksFragmentDirections.actionDrinksFragmentToSelectDoseAndAddinsFragment(11)

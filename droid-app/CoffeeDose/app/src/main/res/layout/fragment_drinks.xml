@@ -9,25 +9,35 @@
             type="com.coffeedose.viewmodels.DrinksViewModel" />
     </data>
 
-    <RelativeLayout
+    <LinearLayout
         android:layout_width="match_parent"
+        android:orientation="vertical"
         android:layout_height="match_parent">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical|center_horizontal"
-        android:layout_gravity="center_vertical|center_horizontal"
-        android:layout_centerInParent="true"
-        android:text="coffe list frag" />
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/drinkPhoto"
+            android:layout_width="match_parent"
+            android:layout_margin="@dimen/spacing_normal_16"
+            android:layout_height="240dp"/>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerInParent="true"
-        android:onClick="{}"
-        android:text="go next"/>
-    </RelativeLayout>
+        <Spinner
+            android:id="@+id/drinksSpinner"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="@dimen/spacing_normal_16"
+            android:layout_marginRight="@dimen/spacing_normal_16"
+            android:layout_marginTop="@dimen/spacing_normal_16"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            app:onItemSelected="@{(newIndex) -> viewModel.onSelectedItemIndexChanged(newIndex)}"
+            app:drinks="@{viewModel.drinks}"/>
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/drinkDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/spacing_normal_16"
+            android:gravity="left"/>
+    </LinearLayout>
 
 </layout>

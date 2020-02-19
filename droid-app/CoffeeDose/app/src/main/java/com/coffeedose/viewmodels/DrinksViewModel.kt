@@ -1,10 +1,10 @@
 package com.coffeedose.viewmodels
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.*
 import com.coffeedose.database.CoffeeDatabase
+import com.coffeedose.domain.Coffee
+import com.coffeedose.extensions.mutableLiveData
 import com.coffeedose.repository.CoffeeRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -20,7 +20,19 @@ class DrinksViewModel(application:Application) : AndroidViewModel(application) {
     private var database = CoffeeDatabase.getInstance(application)
     private var coffeeRepository = CoffeeRepository(database)
 
+    private var selectedItemIndex = mutableLiveData(0)
+
+    // list of drinks
     val drinks = coffeeRepository.drinks
+
+    val selectedDrink : LiveData<Coffee?>
+    get() = _selectedDrink
+
+    private var _selectedDrink  = Transformations.map(selectedItemIndex){
+        if (drinks.value?.isEmpty() != false)
+            return@map null
+        else return@map drinks.value!![selectedItemIndex.value!!]
+    }
 
     init {
         viewModelScope.launch {
@@ -31,6 +43,11 @@ class DrinksViewModel(application:Application) : AndroidViewModel(application) {
     override fun onCleared() {
         super.onCleared()
         viewModelJob.cancel()
+    }
+
+    fun onSelectedItemIndexChanged(newIndex : Int){
+        if (newIndex != selectedItemIndex.value)
+            selectedItemIndex.value = newIndex
     }
 
     class Factory(val app: Application) : ViewModelProvider.Factory {
