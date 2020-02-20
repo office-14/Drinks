@@ -1,5 +1,6 @@
 using System;
 using Project.API.Domain.Core;
+using Project.API.Domain.Orders.Exceptions;
 
 namespace Project.API.Domain.Orders
 {
@@ -21,8 +22,8 @@ namespace Project.API.Domain.Orders
 
         public void Finish()
         {
-            if (Status != Status.Cooking)
-                throw new ArgumentException("You can finish only cooking order");
+            if (Status == Status.Ready)
+                throw CannotFinishOrder.becauseOrderIsAlreadyFinished(Id);
 
             Status = Status.Ready;
             FinishDate = DateTime.UtcNow;
