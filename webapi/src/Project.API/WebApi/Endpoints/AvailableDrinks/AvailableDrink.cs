@@ -12,15 +12,15 @@ namespace Project.API.WebApi.Endpoints.AvailableDrinks
 
         [JsonPropertyName("name")]
         [Required]
-        public string Name { get; set; }
+        public string Name { get; set; } = null!;
 
         [JsonPropertyName("description")]
         [Required]
-        public string Description { get; set; }
+        public string Description { get; set; } = null!;
 
         [JsonPropertyName("photo_url")]
         [Required]
-        public string PhotoUrl { get; set; }
+        public string PhotoUrl { get; set; } = null!;
 
         [JsonPropertyName("smallest_size_price")]
         [Required]
@@ -29,7 +29,7 @@ namespace Project.API.WebApi.Endpoints.AvailableDrinks
         public static AvailableDrink From(DrinkDetails drink) =>
             new AvailableDrink
             {
-                Id = drink.Id,
+                Id = drink.Id.Value,
                 Name = drink.Name.Value,
                 Description = drink.Description.Value,
                 PhotoUrl = drink.PhotoUrl.ToString(),

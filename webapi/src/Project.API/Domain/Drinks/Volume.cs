@@ -4,10 +4,7 @@ namespace Project.API.Domain.Drinks
 {
     public sealed class Volume
     {
-        private Volume(string value)
-        {
-            Value = value;
-        }
+        private Volume(string value) => Value = value;
 
         public string Value { get; }
 

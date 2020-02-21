@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Project.API.Application.OrderDetails;
+using Project.API.Domain.Orders;
 using Project.API.WebApi.Endpoints.Shared;
 
 namespace Project.API.WebApi.Endpoints.OrderWithId
@@ -26,7 +27,7 @@ namespace Project.API.WebApi.Endpoints.OrderWithId
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<ResponseWrapper<SingleOrder>>> Get([FromRoute] int id)
         {
-            var order = await orderDetailsRepository.GetOrderDetailsById(id);
+            var order = await orderDetailsRepository.OrderDetailsWithId(OrderId.From(id));
 
             if (order == null)
             {

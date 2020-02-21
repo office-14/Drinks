@@ -7,6 +7,6 @@ namespace Project.API.Domain.Orders
     {
         Task<Order> Save(Order order, CancellationToken token = default(CancellationToken));
 
-        Task<Order> OrderWithId(int orderId, CancellationToken token = default(CancellationToken));
+        Task<Order?> OrderWithId(OrderId id, CancellationToken token = default(CancellationToken));
     }
 }

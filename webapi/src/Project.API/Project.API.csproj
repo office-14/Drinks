@@ -3,6 +3,14 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <IncludeOpenAPIAnalyzers>true</IncludeOpenAPIAnalyzers>
+    <Nullable>enable</Nullable>
+
+    <!-- https://stackoverflow.com/questions/56811030/enabling-nullable-types-makes-no-difference -->
+    <NullableContextOptions>enable</NullableContextOptions>
+
+    <!-- https://stackoverflow.com/a/55492438 -->
+    <!-- <LangVersion>8.0</LangVersion> -->
+    <WarningsAsErrors>CS8600;CS8602;CS8603</WarningsAsErrors>
   </PropertyGroup>
 
   <ItemGroup>

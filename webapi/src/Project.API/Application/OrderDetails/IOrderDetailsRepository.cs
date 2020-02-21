@@ -1,10 +1,11 @@
 using System.Threading;
 using System.Threading.Tasks;
+using Project.API.Domain.Orders;
 
 namespace Project.API.Application.OrderDetails
 {
     public interface IOrderDetailsRepository
     {
-        Task<OrderDetails> GetOrderDetailsById(int orderId, CancellationToken token = default(CancellationToken));
+        Task<OrderDetails?> OrderDetailsWithId(OrderId id, CancellationToken token = default(CancellationToken));
     }
 }

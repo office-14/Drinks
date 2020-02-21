@@ -12,11 +12,11 @@ namespace Project.API.WebApi.Endpoints.AvailableDrinkSizes
 
         [JsonPropertyName("volume")]
         [Required]
-        public string Volume { get; set; }
+        public string Volume { get; set; } = default!;
 
         [JsonPropertyName("name")]
         [Required]
-        public string Name { get; set; }
+        public string Name { get; set; } = default!;
 
         [JsonPropertyName("price")]
         [Required]
@@ -25,7 +25,7 @@ namespace Project.API.WebApi.Endpoints.AvailableDrinkSizes
         public static AvailableSize From(DrinkSize drinkSize) =>
             new AvailableSize
             {
-                Id = drinkSize.Id,
+                Id = drinkSize.Id.Value,
                 Volume = drinkSize.Volume.Value,
                 Name = drinkSize.Name.Value,
                 Price = drinkSize.Price.Amount

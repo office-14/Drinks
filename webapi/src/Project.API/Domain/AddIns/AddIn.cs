@@ -1,26 +1,22 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using Project.API.Domain.Core;
 
 namespace Project.API.Domain.AddIns
 {
-    public sealed class AddIn
+    public sealed class AddIn : IEquatable<AddIn>
     {
         private AddIn(
-            int id,
+            AddInId id,
             Name name,
             Description description,
             Uri photoUrl,
             Roubles price
-        )
-        {
-            Id = id;
-            Name = name;
-            Description = description;
-            PhotoUrl = photoUrl;
-            Price = price;
-        }
+        ) =>
+            (Id, Name, Description, PhotoUrl, Price) =
+            (id, name, description, photoUrl, price);
 
-        public int Id { get; }
+        public AddInId Id { get; }
 
         public Name Name { get; }
 
@@ -30,8 +26,20 @@ namespace Project.API.Domain.AddIns
 
         public Roubles Price { get; }
 
+        public bool Equals([AllowNull] AddIn other)
+        {
+            if (ReferenceEquals(this, other)) return true;
+            if (ReferenceEquals(null, other)) return false;
+
+            return Id.Equals(other.Id);
+        }
+
+        public override bool Equals(object? obj) => Equals(obj as AddIn);
+
+        public override int GetHashCode() => Id.GetHashCode();
+
         public static AddIn Available(
-            int id,
+            AddInId id,
             Name name,
             Description description,
             Uri photoUrl,

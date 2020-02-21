@@ -8,30 +8,30 @@ namespace Project.API.Infrastructure.Repositories
 {
     public sealed class InMemoryOrdersRepository : IOrderDetailsRepository, IOrdersRepository
     {
-        private static int IdCounter = 0;
+        private int IdCounter = 0;
 
-        private readonly Dictionary<int, OrderDetails> orders =
-            new Dictionary<int, OrderDetails>();
+        private readonly Dictionary<OrderId, OrderDetails> orders =
+            new Dictionary<OrderId, OrderDetails>();
 
         private readonly object syncLock = new object();
 
-        public Task<OrderDetails> GetOrderDetailsById(int orderId, CancellationToken token = default)
+        public Task<OrderDetails?> OrderDetailsWithId(OrderId id, CancellationToken token = default)
         {
             lock (syncLock)
             {
-                return Task.FromResult(orders.GetValueOrDefault(orderId));
+                return Task.FromResult<OrderDetails?>(orders.GetValueOrDefault(id));
             }
         }
 
-        public Task<Order> OrderWithId(int orderId, CancellationToken token = default)
+        public Task<Order?> OrderWithId(OrderId id, CancellationToken token = default)
         {
             lock (syncLock)
             {
-                var orderDetails = orders.GetValueOrDefault(orderId);
+                var orderDetails = orders.GetValueOrDefault(id);
 
-                if (orderDetails == null) return Task.FromResult((Order)null);
+                if (orderDetails == null) return Task.FromResult<Order?>(null);
 
-                return Task.FromResult(Order.Existing(
+                return Task.FromResult<Order?>(Order.Existing(
                     orderDetails.Id,
                     orderDetails.OrderNumber,
                     orderDetails.TotalPrice,
@@ -42,7 +42,7 @@ namespace Project.API.Infrastructure.Repositories
 
         public Task<Order> Save(Order order, CancellationToken token = default)
         {
-            var persistedOrder = order.Id == default(int)
+            var persistedOrder = order.Id == null
                 ? CreateNewOrder(order)
                 : UpdateExistingOrder(order);
 
@@ -51,7 +51,7 @@ namespace Project.API.Infrastructure.Repositories
 
         private Order CreateNewOrder(Order order)
         {
-            var nextId = Interlocked.Increment(ref IdCounter);
+            var nextId = OrderId.From(Interlocked.Increment(ref IdCounter));
 
             var orderDetails = OrderDetails.Available(
                 nextId,

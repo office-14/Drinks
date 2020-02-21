@@ -8,6 +8,6 @@ namespace Project.API.Domain.AddIns
     {
         Task<IEnumerable<AddIn>> ListAvailableAddIns(CancellationToken token = default(CancellationToken));
 
-        Task<AddIn> AddInWithId(int id, CancellationToken token = default(CancellationToken));
+        Task<AddIn?> AddInWithId(AddInId id, CancellationToken token = default(CancellationToken));
     }
 }

@@ -25,7 +25,7 @@ namespace Project.API.WebApi.Endpoints.CreateOrder
         {
             var clientOrder = orderDetails.AsClientOrder();
             var createdOrderId = await orderService.CreateNewOrder(clientOrder);
-            var orderToReturn = await orderDetailsRepository.GetOrderDetailsById(createdOrderId);
+            var orderToReturn = (await orderDetailsRepository.OrderDetailsWithId(createdOrderId))!;
 
             return ResponseWrapper<SingleOrder>.From(SingleOrder.From(orderToReturn));
         }

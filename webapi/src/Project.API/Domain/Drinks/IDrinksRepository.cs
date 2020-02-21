@@ -11,6 +11,6 @@ namespace Project.API.Domain.Drinks
         // TODO: discuss IAsyncEnumerable<Drink> usage
         Task<IEnumerable<Drink>> ListAvailableDrinks(CancellationToken token = default(CancellationToken));
 
-        Task<Drink> DrinkWithId(int id, CancellationToken token = default(CancellationToken));
+        Task<Drink?> DrinkWithId(DrinkId id, CancellationToken token = default(CancellationToken));
     }
 }
