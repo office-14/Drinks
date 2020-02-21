@@ -35,9 +35,7 @@ namespace Project.API.Infrastructure.Repositories
                     orderDetails.Id,
                     orderDetails.OrderNumber,
                     orderDetails.TotalPrice,
-                    orderDetails.Status,
-                    orderDetails.CreatedDate,
-                    orderDetails.FinishDate
+                    orderDetails.Status
                 ));
             }
         }
@@ -59,9 +57,7 @@ namespace Project.API.Infrastructure.Repositories
                 nextId,
                 order.OrderNumber,
                 order.TotalPrice,
-                order.Status,
-                order.CreatedDate,
-                order.FinishDate
+                order.Status
             );
 
             lock (syncLock)
@@ -73,9 +69,7 @@ namespace Project.API.Infrastructure.Repositories
                 nextId,
                 order.OrderNumber,
                 order.TotalPrice,
-                order.Status,
-                order.CreatedDate,
-                order.FinishDate
+                order.Status
             );
 
             return persistedOrder;
@@ -87,9 +81,7 @@ namespace Project.API.Infrastructure.Repositories
                 order.Id,
                 order.OrderNumber,
                 order.TotalPrice,
-                order.Status,
-                order.CreatedDate,
-                order.FinishDate
+                order.Status
             );
 
             lock (syncLock)

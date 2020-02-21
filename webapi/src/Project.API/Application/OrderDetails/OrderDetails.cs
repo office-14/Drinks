@@ -10,17 +10,13 @@ namespace Project.API.Application.OrderDetails
             int id,
             OrderNumber orderNumber,
             Roubles totalPrice,
-            Status status,
-            DateTime createdDate,
-            DateTime? finishDate
+            Status status
         )
         {
             Id = id;
             OrderNumber = orderNumber;
             TotalPrice = totalPrice;
             Status = status;
-            CreatedDate = createdDate;
-            FinishDate = finishDate;
         }
 
         public int Id { get; }
@@ -31,24 +27,16 @@ namespace Project.API.Application.OrderDetails
 
         public Status Status { get; }
 
-        public DateTime CreatedDate { get; }
-
-        public DateTime? FinishDate { get; }
-
         public static OrderDetails Available(
             int id,
             OrderNumber orderNumber,
             Roubles totalPrice,
-            Status status,
-            DateTime createdDate,
-            DateTime? finishDate = null // TODO: maybe use method overloading instead of default values?
+            Status status
         ) => new OrderDetails(
             id,
             orderNumber,
             totalPrice,
-            status,
-            createdDate,
-            finishDate
+            status
         );
     }
 }
