@@ -4,7 +4,6 @@ import android.app.Application
 import androidx.lifecycle.*
 import com.coffeedose.database.CoffeeDatabase
 import com.coffeedose.domain.Addin
-import com.coffeedose.domain.Coffee
 import com.coffeedose.domain.CoffeeSize
 import com.coffeedose.extensions.mutableLiveData
 import com.coffeedose.repository.AddinsRepository
@@ -25,17 +24,24 @@ class SelectDoseAndAddinsViewModel(application: Application,var drinkId : Int) :
 
     private val addinsTotal = mutableLiveData(0)
 
-    fun getTotal() : LiveData<Int?> {
-        val result = MediatorLiveData<Int>()
+    val count = mutableLiveData(1)
 
-        var sum = {
-            result.value = (addinsTotal.value?:0) + (selectedSize.value?.price?:0)
+    fun getSummary() : LiveData<String>{
+        var result = MediatorLiveData<String>()
+
+        val update = {
+            val portionPrice = (addinsTotal.value?:0) + if (selectedSize.value == null) 0 else selectedSize.value!!.price
+            val countP = count.value!!
+
+            result.value = "Итого: $portionPrice * $countP = ${portionPrice*countP} Р."
         }
 
-        result.addSource(addinsTotal){  sum.invoke() }
-        result.addSource(selectedSize){  sum.invoke() }
+        result.addSource(selectedSize) { update.invoke()}
+        result.addSource(addinsTotal) { update.invoke()}
+        result.addSource(count) { update.invoke()}
 
         return result
+
     }
 
     private var selectedItemIndex = mutableLiveData(-1)
@@ -73,6 +79,10 @@ class SelectDoseAndAddinsViewModel(application: Application,var drinkId : Int) :
     fun updateTotalOnAddinCheck(addin : Addin, isChecked : Boolean){
         if (isChecked) addinsTotal.value = addinsTotal.value?.plus(addin.price)
         else addinsTotal.value = addinsTotal.value?.minus(addin.price)
+    }
+
+    fun updateCount(newValue : Int){
+        if (count.value!! != newValue) count.value = newValue
     }
 
 

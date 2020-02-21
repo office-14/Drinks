@@ -83,7 +83,7 @@ dependencies {
     implementation "com.jakewharton.timber:timber:$version_timber"
 
     // Glide for images
-    implementation "com.github.bumptech.glide:glide:4.11.0"
+    implementation "com.github.bumptech.glide:glide:$version_glide"
 
     // Room database
     implementation "androidx.room:room-runtime:$version_room"
@@ -91,4 +91,9 @@ dependencies {
 
     // Material
     implementation "com.google.android.material:material:$version_material"
+
+    //Number Picker
+    implementation 'com.shawnlin:number-picker:2.4.8'
+
+    implementation "androidx.preference:preference-ktx:$version_preferences_manager"
 }

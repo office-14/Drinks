@@ -1,5 +1,8 @@
 <resources>
 
+    <style name="AppTheme.AppBarOverlay" parent = "ThemeOverlay.MaterialComponents.Dark.ActionBar"/>
+    <style name="AppTheme.PopupOverlay" parent = "ThemeOverlay.MaterialComponents.Light"/>
+
     <style name="ActivityTransitions" parent="android:style/Animation.Activity">
         <item name="android:activityOpenEnterAnimation">@anim/bottom_up</item>
         <item name="android:activityOpenExitAnimation">@anim/idle</item>
@@ -8,6 +11,12 @@
     </style>
 
     <style name="Base"></style>
+
+    <style name="Base.EditText" parent="Base">
+        <item name="android:textColor">?attr/colorPrimary</item>
+        <item name="android:textSize">@dimen/font_normal_16</item>
+        <item name="android:paddingTop">4dp</item>
+    </style>
 
     <style name="Base.TextView" parent="Base">
         <item name="android:textColor">?attr/colorPrimary</item>

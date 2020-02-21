@@ -52,7 +52,7 @@
             android:layout_width="200dp"
             android:text="@string/DoProceed"
             android:layout_centerHorizontal="true"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/default_button_height"
             android:layout_alignParentBottom="true"
             android:layout_margin="@dimen/spacing_normal_16"/>
 

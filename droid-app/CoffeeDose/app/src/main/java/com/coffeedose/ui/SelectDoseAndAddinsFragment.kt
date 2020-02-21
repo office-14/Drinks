@@ -7,46 +7,59 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
+import android.widget.ListView
+import android.widget.Spinner
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
-import androidx.navigation.fragment.findNavController
-import androidx.navigation.fragment.navArgs
+import androidx.lifecycle.ViewModelProvider
 
 import com.coffeedose.R
-import com.coffeedose.databinding.FragmentDrinksBinding
 import com.coffeedose.databinding.FragmentSelectDoseAndAddinsBinding
 import com.coffeedose.ui.Adapters.AddinCheckListener
 import com.coffeedose.ui.Adapters.AddinsListAdapter
 import com.coffeedose.ui.Adapters.SizeSpinnerAdapter
-import com.coffeedose.viewmodels.DrinksViewModel
 import com.coffeedose.viewmodels.SelectDoseAndAddinsViewModel
-import kotlinx.android.synthetic.main.fragment_select_dose_and_addins.*
+import com.shawnlin.numberpicker.NumberPicker
 
 /**
  * A simple [Fragment] subclass.
  */
 class SelectDoseAndAddinsFragment : Fragment() {
 
+
+    private lateinit var viewModel : SelectDoseAndAddinsViewModel
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View? {
         val drinkId = SelectDoseAndAddinsFragmentArgs.fromBundle(arguments!!).drinkId
+        val drinkName = SelectDoseAndAddinsFragmentArgs.fromBundle(arguments!!).drinkName
 
-        val viewModel = ViewModelProviders.of(this, SelectDoseAndAddinsViewModel
+        viewModel = ViewModelProvider(this, SelectDoseAndAddinsViewModel
             .Factory(requireNotNull(this.activity).application,drinkId)).get(SelectDoseAndAddinsViewModel::class.java)
 
         val binding: FragmentSelectDoseAndAddinsBinding = DataBindingUtil.inflate(inflater,R.layout.fragment_select_dose_and_addins,container,false)
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
 
+        initSpinner(binding.spinnerSelectSize)
+        initAddinsAdapter(binding.addinsListView)
+        initCountPicker(binding.numberPicker)
+
+        initToolbar(drinkName)
+
+        return binding.root
+    }
+
+    private  fun initSpinner(view : Spinner){
         val spinnerAdapter = SizeSpinnerAdapter(this.context!!)
-        binding.spinnerSelectSize.adapter = spinnerAdapter
+        view.adapter = spinnerAdapter
 
         viewModel.sizes.observe(this, Observer {
             if (viewModel.sizes.value != null)
                 spinnerAdapter.setItems(viewModel.sizes.value!!)
         })
 
-        binding.spinnerSelectSize.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+        view.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
             override fun onNothingSelected(parent: AdapterView<*>?) {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
@@ -57,20 +70,31 @@ class SelectDoseAndAddinsFragment : Fragment() {
             }
 
         }
+    }
 
+    private fun initToolbar(title:String){
+        val toolbar = (activity as AppCompatActivity)?.supportActionBar
+        toolbar?.let {
+            it.setDisplayHomeAsUpEnabled(true)
+            it.setDisplayShowHomeEnabled(true)
+            it.title = title
+        }
+    }
+
+    private fun initAddinsAdapter(view : ListView){
         val addinsListAdapter = AddinsListAdapter(this.context!!, AddinCheckListener { addin, isChecked  -> viewModel.updateTotalOnAddinCheck(addin, isChecked)})
-        binding.addinsListView.adapter = addinsListAdapter
+        view.adapter = addinsListAdapter
 
         viewModel.addins.observe(this, Observer {
             if (viewModel.addins.value != null)
                 addinsListAdapter.setItems(viewModel.addins.value!!)
         })
-
-        viewModel.getTotal().observe(this, Observer {
-            binding.tvTotal.text = "${it?:0} P."
-        })
-
-
-        return binding.root
     }
+
+    private fun initCountPicker(numberPicker : NumberPicker){
+        viewModel.count.observe(this, Observer { numberPicker.value = viewModel.count.value!! })
+
+        numberPicker.setOnValueChangedListener { picker, oldVal, newVal -> viewModel.updateCount(newVal) }
+    }
+
 }
