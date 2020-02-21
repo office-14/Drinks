@@ -11,4 +11,7 @@
     <dimen name="spacing_normal_16">16dp</dimen>
     <dimen name="spacing_small_8">8dp</dimen>
     <dimen name="spacing_tiny_4">4dp</dimen>
+    <dimen name="size_icon_dim">24dp</dimen>
+    <dimen name="zero_padding">0dp</dimen>
+    <dimen name="addin_icon_size">80dp</dimen>
 </resources>

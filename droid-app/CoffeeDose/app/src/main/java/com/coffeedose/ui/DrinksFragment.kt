@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -15,6 +16,8 @@ import com.bumptech.glide.Glide
 import com.coffeedose.R
 import com.coffeedose.databinding.FragmentDrinksBinding
 import com.coffeedose.domain.Coffee
+import com.coffeedose.ui.Adapters.CoffeeSpinnerAdapter
+import com.coffeedose.ui.Adapters.SizeSpinnerAdapter
 import com.coffeedose.viewmodels.DrinksViewModel
 import kotlinx.android.synthetic.main.fragment_drinks.*
 
@@ -37,6 +40,30 @@ class DrinksFragment : Fragment() {
         binding.proceedButton.setOnClickListener {
             findNavController().navigate(DrinksFragmentDirections.actionDrinksFragmentToSelectDoseAndAddinsFragment(viewModel.selectedDrink.value!!.id))
         }
+
+        val spinnerAdapter = CoffeeSpinnerAdapter(this.context!!)
+        binding.drinksSpinner.adapter = spinnerAdapter
+
+        viewModel.drinks.observe(this, Observer {
+            if (viewModel.drinks.value != null && viewModel.drinks.value!!.isNotEmpty()) {
+                spinnerAdapter.setItems(viewModel.drinks.value!!)
+                binding.drinksSpinner.setSelection(0)
+            }
+
+        })
+
+        binding.drinksSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            }
+
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long
+            ) {
+                viewModel.onSelectedItemIndexChanged(position)
+            }
+
+        }
+
 
         initObserveListeners()
 

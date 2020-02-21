@@ -7,4 +7,27 @@
         <item name="android:activityCloseExitAnimation">@anim/bottom_down</item>
     </style>
 
+    <style name="Base"></style>
+
+    <style name="Base.TextView" parent="Base">
+        <item name="android:textColor">?attr/colorPrimary</item>
+        <item name="android:textSize">@dimen/font_normal_16</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+    </style>
+
+    <style name="Base.TextView.Single" parent="Base.TextView">
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">end</item>
+    </style>
+
+    <style name="Base.TextView.Multiline" parent="Base.TextView">
+        <item name="android:maxLines">3</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:singleLine">false</item>
+    </style>
+
+    <style name="Base.CheckBox" parent="Base">
+        <item name="android:buttonTint">@color/color_primary</item>
+    </style>
+
 </resources>

@@ -16,26 +16,31 @@
 
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/drinkPhoto"
+            android:padding="@dimen/zero_padding"
+            android:background="@drawable/bg_round_border"
+            style="@style/Base.TextView"
             android:layout_alignParentTop="true"
             android:layout_width="match_parent"
             android:layout_margin="@dimen/spacing_normal_16"
             android:layout_height="240dp"/>
 
 
-        <Spinner
+        <androidx.appcompat.widget.AppCompatSpinner
             android:id="@+id/drinksSpinner"
             android:layout_below="@id/drinkPhoto"
+            android:background="@drawable/bg_spinner_dropdown"
             android:layout_marginLeft="@dimen/spacing_normal_16"
             android:layout_marginRight="@dimen/spacing_normal_16"
             android:layout_marginTop="@dimen/spacing_normal_16"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            app:onItemSelected="@{(newIndex) -> viewModel.onSelectedItemIndexChanged(newIndex)}"
-            app:drinks="@{viewModel.drinks}"/>
+            android:layout_height="wrap_content"/>
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/drinkDescription"
+            android:background="@drawable/bg_round_border"
+            android:padding="@dimen/spacing_small_8"
+            style="@style/Base.TextView"
+            android:fontFamily="sans-serif-light"
             android:layout_below="@id/drinksSpinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

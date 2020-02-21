@@ -10,14 +10,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.lang.Exception
 
-class SizesRepository (private val sizesDao: SizeDao, private val drinkId:Int) {
+class SizesRepository (private val sizesDao: SizeDao) {
 
-    val sizes : LiveData<List<CoffeeSize>> =  Transformations.map(sizesDao.getSizesByDrinkId(drinkId)){ itDbo ->
+    fun getSizes(drinkId:Int) =  Transformations.map(sizesDao.getSizesByDrinkId(drinkId)){ itDbo ->
         itDbo.map { it.toDomainModel() }
     }
 
 
-    suspend fun refreshSizes(){
+    suspend fun refreshSizes(drinkId:Int){
         try {
             withContext(Dispatchers.IO){
                 val sizesResponse = CoffeeApi.retrofitService.getSizesByDrinkIdAsync(drinkId).await()

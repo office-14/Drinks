@@ -20,14 +20,10 @@ class DrinksViewModel(application:Application) : AndroidViewModel(application) {
     private val database = CoffeeDatabase.getInstance(application)
     private val coffeeRepository = CoffeeRepository(database.drinksDatabaseDao)
 
-    private var selectedItemIndex = mutableLiveData(0)
+    private var selectedItemIndex = mutableLiveData(-1)
 
     // list of drinks
     val drinks = coffeeRepository.drinks
-
-    /*private val _navigatingToSize = mutableLiveData(false)
-    val navigatingToSize
-        get() = _navigatingToSize*/
 
 
     val selectedDrink : LiveData<Coffee?>
@@ -55,14 +51,6 @@ class DrinksViewModel(application:Application) : AndroidViewModel(application) {
             selectedItemIndex.value = newIndex
     }
 
-    /*fun navigateToSize() {
-        _navigatingToSize.value = true
-    }
-
-    fun doneNavigating(){
-        if (!_navigatingToSize.value!!)
-            _navigatingToSize.value = false
-    }*/
 
     class Factory(val app: Application) : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
