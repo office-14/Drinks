@@ -1,23 +1,21 @@
+using System;
+using System.Diagnostics.CodeAnalysis;
 using Project.API.Domain.Core;
 
 namespace Project.API.Domain.Drinks
 {
-    public sealed class DrinkSize
+    public sealed class DrinkSize : IEquatable<DrinkSize>
     {
         private DrinkSize(
-            int id,
+            DrinkSizeId id,
             Name name,
             Volume volume,
             Roubles price
-        )
-        {
-            Id = id;
-            Name = name;
-            Volume = volume;
-            Price = price;
-        }
+        ) =>
+            (Id, Name, Volume, Price) =
+            (id, name, volume, price);
 
-        public int Id { get; }
+        public DrinkSizeId Id { get; }
 
         public Volume Volume { get; }
 
@@ -25,8 +23,20 @@ namespace Project.API.Domain.Drinks
 
         public Roubles Price { get; }
 
+        public bool Equals([AllowNull] DrinkSize other)
+        {
+            if (ReferenceEquals(this, other)) return true;
+            if (ReferenceEquals(null, other)) return false;
+
+            return Id.Equals(other.Id);
+        }
+
+        public override bool Equals(object? obj) => Equals(obj as DrinkSize);
+
+        public override int GetHashCode() => Id.GetHashCode();
+
         public static DrinkSize Available(
-            int id,
+            DrinkSizeId id,
             Name name,
             Volume volume,
             Roubles price

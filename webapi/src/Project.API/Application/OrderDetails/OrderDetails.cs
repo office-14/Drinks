@@ -7,19 +7,15 @@ namespace Project.API.Application.OrderDetails
     public sealed class OrderDetails
     {
         private OrderDetails(
-            int id,
+            OrderId id,
             OrderNumber orderNumber,
             Roubles totalPrice,
             Status status
-        )
-        {
-            Id = id;
-            OrderNumber = orderNumber;
-            TotalPrice = totalPrice;
-            Status = status;
-        }
+        ) =>
+            (Id, OrderNumber, TotalPrice, Status) =
+            (id, orderNumber, totalPrice, status);
 
-        public int Id { get; }
+        public OrderId Id { get; }
 
         public OrderNumber OrderNumber { get; }
 
@@ -28,7 +24,7 @@ namespace Project.API.Application.OrderDetails
         public Status Status { get; }
 
         public static OrderDetails Available(
-            int id,
+            OrderId id,
             OrderNumber orderNumber,
             Roubles totalPrice,
             Status status

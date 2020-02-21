@@ -13,15 +13,15 @@ namespace Project.API.WebApi.Endpoints.AvailableAddIns
 
         [JsonPropertyName("name")]
         [Required]
-        public string Name { get; set; }
+        public string Name { get; set; } = default!;
 
         [JsonPropertyName("description")]
         [Required]
-        public string Description { get; set; }
+        public string Description { get; set; } = default!;
 
         [JsonPropertyName("photo_url")]
         [Required]
-        public string PhotoUrl { get; set; }
+        public string PhotoUrl { get; set; } = default!;
 
         [JsonPropertyName("price")]
         [Required]
@@ -30,7 +30,7 @@ namespace Project.API.WebApi.Endpoints.AvailableAddIns
         public static AvailableAddIn From(AddIn addInn) =>
             new AvailableAddIn
             {
-                Id = addInn.Id,
+                Id = addInn.Id.Value,
                 Name = addInn.Name.Value,
                 Description = addInn.Description.Value,
                 PhotoUrl = addInn.PhotoUrl.ToString(),

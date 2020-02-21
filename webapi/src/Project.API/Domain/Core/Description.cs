@@ -4,10 +4,7 @@ namespace Project.API.Domain.Core
 {
     public sealed class Description
     {
-        private Description(string value)
-        {
-            Value = value;
-        }
+        private Description(string value) => Value = value;
 
         public string Value { get; }
 

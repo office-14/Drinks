@@ -28,7 +28,7 @@ namespace Project.API.WebApi.Endpoints.AvailableDrinkSizes
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<ResponseWrapper<IEnumerable<AvailableSize>>>> AvailableSizesOfDrink([FromRoute] int id)
         {
-            var availableSizes = await drinkSizesRepository.ListSizesOfDrink(id);
+            var availableSizes = await drinkSizesRepository.ListSizesOfDrink(DrinkId.From(id));
 
             if (availableSizes == null)
             {

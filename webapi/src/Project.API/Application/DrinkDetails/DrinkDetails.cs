@@ -1,26 +1,22 @@
 using System;
 using Project.API.Domain.Core;
+using Project.API.Domain.Drinks;
 
 namespace Project.API.Application.DrinkDetails
 {
     public sealed class DrinkDetails
     {
         private DrinkDetails(
-            int id,
+            DrinkId id,
             Name name,
             Description description,
             Uri photoUrl,
             Roubles priceOfSmallestSize
-        )
-        {
-            Id = id;
-            Name = name;
-            Description = description;
-            PhotoUrl = photoUrl;
-            PriceOfSmallestSize = priceOfSmallestSize;
-        }
+        ) =>
+            (Id, Name, Description, PhotoUrl, PriceOfSmallestSize) =
+            (id, name, description, photoUrl, priceOfSmallestSize);
 
-        public int Id { get; }
+        public DrinkId Id { get; }
 
         public Name Name { get; }
 
@@ -31,7 +27,7 @@ namespace Project.API.Application.DrinkDetails
         public Roubles PriceOfSmallestSize { get; }
 
         public static DrinkDetails Available(
-            int id,
+            DrinkId id,
             Name name,
             Description description,
             Uri photoUrl,

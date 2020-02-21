@@ -1,4 +1,3 @@
-using System;
 using System.Threading.Tasks;
 using Project.API.Application.OrderService.Exceptions;
 using Project.API.Domain.AddIns;
@@ -9,11 +8,11 @@ namespace Project.API.Application.OrderService
 {
     public sealed class OrderService
     {
-        private readonly IDrinksRepository drinksRepository;
-        private readonly IDrinkSizesRepository drinkSizesRepository;
-        private readonly IAddInsRepository addInsRepository;
-        private readonly IOrdersRepository ordersRepository;
-        private readonly OrderNumberProvider orderNumberProvider;
+        private readonly IDrinksRepository drinks;
+        private readonly IDrinkSizesRepository drinkSizes;
+        private readonly IAddInsRepository addIns;
+        private readonly IOrdersRepository orders;
+        private readonly OrderNumberProvider orderNumbers;
 
         public OrderService(
             IDrinksRepository drinksRepository,
@@ -21,26 +20,22 @@ namespace Project.API.Application.OrderService
             IAddInsRepository addInsRepository,
             IOrdersRepository ordersRepository,
             OrderNumberProvider orderNumberProvider
-        )
-        {
-            this.drinksRepository = drinksRepository;
-            this.drinkSizesRepository = drinkSizesRepository;
-            this.addInsRepository = addInsRepository;
-            this.ordersRepository = ordersRepository;
-            this.orderNumberProvider = orderNumberProvider;
-        }
+        ) =>
+            (drinks, drinkSizes, addIns, orders, orderNumbers) =
+            (drinksRepository, drinkSizesRepository, addInsRepository,
+            ordersRepository, orderNumberProvider);
 
-        public async Task<int> CreateNewOrder(ClientOrder client)
+        public async Task<OrderId> CreateNewOrder(ClientOrder client)
         {
             if (client.Drinks.Count == 0) throw CannotCreateOrder.BecauseOrderHasNoDrinks();
 
             var orderDraft = OrderDraft.New();
             foreach (var orderItem in client.Drinks)
             {
-                var drinkToOrder = await drinksRepository.DrinkWithId(orderItem.DrinkId);
+                var drinkToOrder = await drinks.DrinkWithId(orderItem.DrinkId);
                 if (drinkToOrder == null) throw CannotCreateOrder.BecauseDrinkDoesntExist(orderItem.DrinkId);
 
-                var drinkSizeToOrder = await drinkSizesRepository.SizeOfDrink(orderItem.DrinkId, orderItem.DrinkSizeId);
+                var drinkSizeToOrder = await drinkSizes.SizeOfDrink(orderItem.DrinkId, orderItem.DrinkSizeId);
                 if (drinkSizeToOrder == null) throw CannotCreateOrder.BecauseDrinkOfGivenSizeDoesntExist(orderItem.DrinkId, orderItem.DrinkSizeId);
 
                 var draftItem = OrderItem.New(drinkToOrder, drinkSizeToOrder);
@@ -49,7 +44,7 @@ namespace Project.API.Application.OrderService
                 {
                     foreach (var addInId in orderItem.AddInIds)
                     {
-                        var addInToOrder = await addInsRepository.AddInWithId(addInId);
+                        var addInToOrder = await addIns.AddInWithId(addInId);
                         if (addInToOrder == null) throw CannotCreateOrder.BecauseAddInDoesntExist(addInId);
 
                         draftItem.AddAddIn(addInToOrder);
@@ -59,23 +54,12 @@ namespace Project.API.Application.OrderService
                 orderDraft.AddOrderItem(draftItem);
             }
 
-            var persistedOrder = await ordersRepository.Save(Order.New(
-                orderNumberProvider.Generate(),
+            var persistedOrder = await orders.Save(Order.New(
+                orderNumbers.Generate(),
                 orderDraft.TotalPrice()
             ));
 
             return persistedOrder.Id;
-        }
-
-        public async Task FinishOrder(int orderId)
-        {
-            var order = await ordersRepository.OrderWithId(orderId);
-
-            if (order == null) return;
-
-            order.Finish();
-
-            await ordersRepository.Save(order);
         }
     }
 }

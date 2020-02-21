@@ -13,15 +13,15 @@ namespace Project.API.WebApi.Endpoints.Shared
 
         [JsonPropertyName("status_code")]
         [Required]
-        public string StatusCode { get; set; }
+        public string StatusCode { get; set; } = default!;
 
         [JsonPropertyName("status_name")]
         [Required]
-        public string StatusName { get; set; }
+        public string StatusName { get; set; } = default!;
 
         [JsonPropertyName("order_number")]
         [Required]
-        public string OrderNumber { get; set; }
+        public string OrderNumber { get; set; } = default!;
 
         [JsonPropertyName("total_price")]
         [Required]
@@ -31,7 +31,7 @@ namespace Project.API.WebApi.Endpoints.Shared
         {
             return new SingleOrder
             {
-                Id = order.Id,
+                Id = order.Id.Value,
                 StatusCode = order.Status.Code,
                 StatusName = order.Status.Name,
                 TotalPrice = order.TotalPrice.Amount,

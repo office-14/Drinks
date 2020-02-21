@@ -1,14 +1,20 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using Project.API.Domain.Core;
 using Project.API.Domain.Orders.Exceptions;
 
 namespace Project.API.Domain.Orders
 {
-    public sealed class Order
+    public sealed class Order : IEquatable<Order>
     {
-        private Order() { }
+        private Order(
+            OrderId id,
+            OrderNumber orderNumber,
+            Roubles totalPrice,
+            Status status
+        ) => (Id, OrderNumber, TotalPrice, Status) = (id, orderNumber, totalPrice, status);
 
-        public int Id { get; private set; }
+        public OrderId Id { get; private set; }
 
         public OrderNumber OrderNumber { get; private set; }
 
@@ -24,35 +30,26 @@ namespace Project.API.Domain.Orders
             Status = Status.Ready;
         }
 
-        public static Order New(OrderNumber orderNumber, Roubles totalPrice)
+        public bool Equals([AllowNull] Order other)
         {
-            var order = new Order();
+            if (ReferenceEquals(this, other)) return true;
+            if (ReferenceEquals(null, other)) return false;
 
-            order.OrderNumber = orderNumber;
-            order.TotalPrice = totalPrice;
-
-            order.Status = Status.Cooking;
-
-            return order;
+            return Id.Equals(other.Id);
         }
 
+        public override bool Equals(object? obj) => Equals(obj as Order);
+
+        public override int GetHashCode() => Id.GetHashCode();
+
+        public static Order New(OrderNumber orderNumber, Roubles totalPrice) =>
+            new Order(null!, orderNumber, totalPrice, Status.Cooking);
+
         public static Order Existing(
-            int id,
+            OrderId id,
             OrderNumber orderNumber,
             Roubles totalPrice,
             Status status
-        )
-        {
-            var order = new Order();
-
-            order.Id = id;
-            order.OrderNumber = orderNumber;
-            order.TotalPrice = totalPrice;
-            order.Status = status;
-
-            return order;
-        }
-
-
+        ) => new Order(id, orderNumber, totalPrice, status);
     }
 }

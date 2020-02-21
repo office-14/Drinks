@@ -6,10 +6,7 @@ namespace Project.API.Domain.Core
     {
         public static readonly Roubles Zero = From(0);
 
-        private Roubles(int amount)
-        {
-            this.Amount = amount;
-        }
+        private Roubles(int amount) => Amount = amount;
 
         public int Amount { get; }
 
