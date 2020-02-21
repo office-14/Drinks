@@ -43,7 +43,7 @@ namespace Project.API.Domain.Orders
         public override int GetHashCode() => Id.GetHashCode();
 
         public static Order New(OrderNumber orderNumber, Roubles totalPrice) =>
-            new Order(null!, orderNumber, totalPrice, Status.Cooking);
+            new Order(default, orderNumber, totalPrice, Status.Cooking);
 
         public static Order Existing(
             OrderId id,

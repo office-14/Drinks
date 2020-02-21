@@ -10,9 +10,9 @@ namespace Project.API.Application.OrderService
 
         public sealed class OrderLine
         {
-            public DrinkId DrinkId { get; set; } = default!;
+            public DrinkId DrinkId { get; set; }
 
-            public DrinkSizeId DrinkSizeId { get; set; } = default!;
+            public DrinkSizeId DrinkSizeId { get; set; }
 
             public List<AddInId>? AddInIds { get; set; }
         }
