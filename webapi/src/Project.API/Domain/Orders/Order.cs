@@ -1,5 +1,6 @@
 using System;
 using Project.API.Domain.Core;
+using Project.API.Domain.Orders.Exceptions;
 
 namespace Project.API.Domain.Orders
 {
@@ -15,17 +16,12 @@ namespace Project.API.Domain.Orders
 
         public Status Status { get; private set; }
 
-        public DateTime CreatedDate { get; private set; }
-
-        public DateTime? FinishDate { get; private set; }
-
         public void Finish()
         {
-            if (Status != Status.Cooking)
-                throw new ArgumentException("You can finish only cooking order");
+            if (Status == Status.Ready)
+                throw CannotFinishOrder.becauseOrderIsAlreadyFinished(Id);
 
             Status = Status.Ready;
-            FinishDate = DateTime.UtcNow;
         }
 
         public static Order New(OrderNumber orderNumber, Roubles totalPrice)
@@ -36,7 +32,6 @@ namespace Project.API.Domain.Orders
             order.TotalPrice = totalPrice;
 
             order.Status = Status.Cooking;
-            order.CreatedDate = DateTime.UtcNow;
 
             return order;
         }
@@ -45,9 +40,7 @@ namespace Project.API.Domain.Orders
             int id,
             OrderNumber orderNumber,
             Roubles totalPrice,
-            Status status,
-            DateTime createdDate,
-            DateTime? finishDate
+            Status status
         )
         {
             var order = new Order();
@@ -56,8 +49,6 @@ namespace Project.API.Domain.Orders
             order.OrderNumber = orderNumber;
             order.TotalPrice = totalPrice;
             order.Status = status;
-            order.CreatedDate = createdDate;
-            order.FinishDate = finishDate;
 
             return order;
         }

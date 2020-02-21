@@ -66,5 +66,16 @@ namespace Project.API.Application.OrderService
 
             return persistedOrder.Id;
         }
+
+        public async Task FinishOrder(int orderId)
+        {
+            var order = await ordersRepository.OrderWithId(orderId);
+
+            if (order == null) return;
+
+            order.Finish();
+
+            await ordersRepository.Save(order);
+        }
     }
 }

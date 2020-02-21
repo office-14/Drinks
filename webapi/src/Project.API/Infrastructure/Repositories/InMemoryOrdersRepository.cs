@@ -23,7 +23,33 @@ namespace Project.API.Infrastructure.Repositories
             }
         }
 
+        public Task<Order> OrderWithId(int orderId, CancellationToken token = default)
+        {
+            lock (syncLock)
+            {
+                var orderDetails = orders.GetValueOrDefault(orderId);
+
+                if (orderDetails == null) return Task.FromResult((Order)null);
+
+                return Task.FromResult(Order.Existing(
+                    orderDetails.Id,
+                    orderDetails.OrderNumber,
+                    orderDetails.TotalPrice,
+                    orderDetails.Status
+                ));
+            }
+        }
+
         public Task<Order> Save(Order order, CancellationToken token = default)
+        {
+            var persistedOrder = order.Id == default(int)
+                ? CreateNewOrder(order)
+                : UpdateExistingOrder(order);
+
+            return Task.FromResult(persistedOrder);
+        }
+
+        private Order CreateNewOrder(Order order)
         {
             var nextId = Interlocked.Increment(ref IdCounter);
 
@@ -31,9 +57,7 @@ namespace Project.API.Infrastructure.Repositories
                 nextId,
                 order.OrderNumber,
                 order.TotalPrice,
-                order.Status,
-                order.CreatedDate,
-                order.FinishDate
+                order.Status
             );
 
             lock (syncLock)
@@ -45,12 +69,27 @@ namespace Project.API.Infrastructure.Repositories
                 nextId,
                 order.OrderNumber,
                 order.TotalPrice,
-                order.Status,
-                order.CreatedDate,
-                order.FinishDate
+                order.Status
             );
 
-            return Task.FromResult(persistedOrder);
+            return persistedOrder;
+        }
+
+        private Order UpdateExistingOrder(Order order)
+        {
+            var orderDetails = OrderDetails.Available(
+                order.Id,
+                order.OrderNumber,
+                order.TotalPrice,
+                order.Status
+            );
+
+            lock (syncLock)
+            {
+                orders[order.Id] = orderDetails;
+            }
+
+            return order;
         }
     }
 }

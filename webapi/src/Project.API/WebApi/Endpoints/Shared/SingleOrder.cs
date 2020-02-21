@@ -19,13 +19,6 @@ namespace Project.API.WebApi.Endpoints.Shared
         [Required]
         public string StatusName { get; set; }
 
-        [JsonPropertyName("created_date")]
-        [Required]
-        public string CreatedDate { get; set; }
-
-        [JsonPropertyName("finish_date")]
-        public string FinishDate { get; set; }
-
         [JsonPropertyName("order_number")]
         [Required]
         public string OrderNumber { get; set; }
@@ -42,9 +35,7 @@ namespace Project.API.WebApi.Endpoints.Shared
                 StatusCode = order.Status.Code,
                 StatusName = order.Status.Name,
                 TotalPrice = order.TotalPrice.Amount,
-                OrderNumber = order.OrderNumber.Value,
-                CreatedDate = order.CreatedDate.ToString("o"),
-                FinishDate = order.FinishDate?.ToString("o")
+                OrderNumber = order.OrderNumber.Value
             };
         }
     }
