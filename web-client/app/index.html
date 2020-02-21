@@ -12,14 +12,14 @@
   		<base href="/">
 	</head>
 
-	<body>
+	<body ng-controller="MainController as main">
 		<!-- Start Top Bar -->
 	    <div class="top-bar">
 	      <div class="top-bar-left">
 	        <ul class="menu">
 				<li class="menu-text">Кофейня 14</li>
-				<li><a href="#">Меню</a></li>
-				<li><a href="#">Корзина</a></li>
+				<li><a ng-click="main.go_to_menu()">Меню</a></li>
+				<li><a ng-click="main.go_to_cart()">Корзина <span>({{main.get_cart_products_qty()}})</span></a></li>
 	        </ul>
 	      </div>
 	      
@@ -32,8 +32,8 @@
 		    
 		        <div class="medium-6 cell">
 		         	<ul class="menu">
-						<li><a href="#">Меню</a></li>
-						<li><a href="#">Корзина</a></li>
+						<li><a ng-click="main.go_to_menu()">Меню</a></li>
+						<li><a href="main.go_to_cart()">Корзина</a></li>
 		        	</ul>
 		        </div>
 		    
@@ -47,6 +47,7 @@
 		    </footer>
 		<script src="lib/angular/angular.min.js"></script>
 		<script src="lib/angular-ui-router/release/angular-ui-router.min.js"></script>
+		<script src="lib/underscore/underscore-min.js"></script>
 		<script src="drinks-app.js"></script>
 	</body>
 </html>

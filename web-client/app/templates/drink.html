@@ -1,3 +1,4 @@
+<br>
 <article class="grid-container">
   <div class="grid-x cell">
     <nav aria-label="You are here:" role="navigation">
@@ -19,7 +20,7 @@
       <div ng-if="drink.sizes">
         <h5>Размер</h5>
         <label>
-        <select ng-options="size.id as (size.name + ' - ' + size.volume) for size in drink.sizes" ng-model="DraftCartDrink.size.id">
+        <select ng-options="size.id as (size.name + ' - ' + size.volume) for size in drink.sizes" ng-model="draft_cart_product.size.id">
           <option value="" disabled="">Выберите размер</option>
         </select>
         </label>
@@ -27,7 +28,7 @@
         <div class="grid-x">
           <h5>Добавки</h5>
         </div>
-        <div class="grid-x" ng-repeat="addin in add_ins">
+        <div class="grid-x" ng-repeat="addin in draft_cart_product.addins">
           <div class="small-1 cell">
             <input type="checkbox" ng-attr-id="{{ 'addin-' + addin.id }}" ng-value="addin.id"  ng-checked="addin.selected" ng-model="addin.selected" style="margin-top: 1.5rem;"/>
           </div>

@@ -1,0 +1,32 @@
+<br>
+<article class="grid-container">
+  <div class="grid-x cell">
+    <nav aria-label="You are here:" role="navigation">
+      <ul class="breadcrumbs">
+        <li><a ui-sref="drinks">Меню</a></li>
+        <li>
+          Корзина
+        </li>
+      </ul>
+    </nav>
+  </div>
+  <div class="grid-x">
+    <div>
+      <h1>Корзина</h1>
+      <div class="media-object stack-for-small" ng-repeat="product in products">
+        <div class="media-object-section">
+          <img class="thumbnail" ng-src="{{product.product.drink_image}}" width="200">
+        </div>
+        <div class="media-object-section">
+          <h5>{{product.product.drink_name}}</h5>
+          <p>Размер: {{product.product.size_volume}}</p>
+          <p>Добавки: <span ng-repeat="addin in product.product.addins">{{addin.name}}</span></p>
+          <p>Количество: {{product.qty}}</p>
+          <p>Цена: {{product.price * product.qty}} ₽</p>
+        </div>
+      </div>
+      <h4>Сумма заказа: {{total_price}} ₽</h4>
+      <button class="button">Оформить заказ</button>
+    </div>
+  </div>
+</article>
