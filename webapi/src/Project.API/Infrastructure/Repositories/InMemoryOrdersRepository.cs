@@ -42,7 +42,7 @@ namespace Project.API.Infrastructure.Repositories
 
         public Task<Order> Save(Order order, CancellationToken token = default)
         {
-            var persistedOrder = order.Id == null
+            var persistedOrder = order.Id == default
                 ? CreateNewOrder(order)
                 : UpdateExistingOrder(order);
 
