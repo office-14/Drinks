@@ -2,7 +2,7 @@ using System;
 
 namespace Project.API.Domain.Orders
 {
-    public sealed class OrderNumber
+    public readonly struct OrderNumber
     {
         public OrderNumber(string value)
         {
