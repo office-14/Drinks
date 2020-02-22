@@ -1,0 +1,20 @@
+{
+  "name": "web-client",
+  "version": "1.0.0",
+  "description": "",
+  "main": "drinks-app.js",
+  "dependencies": {
+    "angular": "^1.7.9",
+    "angular-ui-router": "^1.0.25",
+    "cpx": "^1.5.0",
+    "underscore": "^1.9.2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "postinstall": "npm run copy-libs",
+    "copy-libs": "cpx \"node_modules/{angular,angular-*,underscore}/**/*\" app/lib -C",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
