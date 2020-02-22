@@ -2,7 +2,7 @@ using System;
 
 namespace Project.API.Domain.Core
 {
-    public sealed class Roubles
+    public readonly struct Roubles
     {
         public static readonly Roubles Zero = From(0);
 
@@ -10,10 +10,7 @@ namespace Project.API.Domain.Core
 
         public int Amount { get; }
 
-        public Roubles Add(Roubles other)
-        {
-            return From(Amount + other.Amount);
-        }
+        public Roubles Add(Roubles other) => From(Amount + other.Amount);
 
         public static Roubles From(int amount)
         {

@@ -2,7 +2,7 @@ using System;
 
 namespace Project.API.Domain.Drinks
 {
-    public sealed class Volume
+    public readonly struct Volume
     {
         private Volume(string value) => Value = value;
 

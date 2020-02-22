@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mime;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Project.API.Domain.AddIns;
@@ -17,6 +18,7 @@ namespace Project.API.WebApi.Endpoints.AvailableAddIns
         }
 
         [HttpGet("api/add-ins")]
+        [Produces(MediaTypeNames.Application.Json)]
         public async Task<ResponseWrapper<IEnumerable<AvailableAddIn>>> AvailableAddIns()
         {
             var addIns = await addInsRepository.ListAvailableAddIns();

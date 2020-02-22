@@ -1,3 +1,4 @@
+using System.Net.Mime;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Project.API.Application.OrderDetails;
@@ -21,6 +22,8 @@ namespace Project.API.WebApi.Endpoints.CreateOrder
         }
 
         [HttpPost("api/orders")]
+        [Consumes(MediaTypeNames.Application.Json)]
+        [Produces(MediaTypeNames.Application.Json)]
         public async Task<ResponseWrapper<SingleOrder>> createNewOrder([FromBody] CreateOrderDetails orderDetails)
         {
             var clientOrder = orderDetails.AsClientOrder();

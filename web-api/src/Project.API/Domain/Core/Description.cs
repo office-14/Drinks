@@ -2,7 +2,7 @@ using System;
 
 namespace Project.API.Domain.Core
 {
-    public sealed class Description
+    public readonly struct Description
     {
         private Description(string value) => Value = value;
 

@@ -1,3 +1,4 @@
+using System.Net.Mime;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -23,6 +24,7 @@ namespace Project.API.WebApi.Endpoints.OrderWithId
         }
 
         [HttpGet("api/orders/{id}")]
+        [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(ResponseWrapper<SingleOrder>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<ResponseWrapper<SingleOrder>>> Get([FromRoute] int id)

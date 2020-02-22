@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mime;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Project.API.Application.DrinkDetails;
@@ -18,6 +19,7 @@ namespace Project.API.WebApi.Endpoints.AvailableDrinks
         }
 
         [HttpGet("api/drinks")]
+        [Produces(MediaTypeNames.Application.Json)]
         public async Task<ResponseWrapper<IEnumerable<AvailableDrink>>> AvailableDrinks()
         {
             var drinks = await drinksRepository.AvailableDrinkDetails();
