@@ -14,8 +14,7 @@
             android:id="@+id/dialogEditText"
             style="@style/Base.EditText"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Base URL"/>
+            android:layout_height="wrap_content"/>
 
     </com.google.android.material.textfield.TextInputLayout>
 </LinearLayout>
