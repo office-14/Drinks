@@ -30,7 +30,8 @@
           </div>
         </div>
         <h4>Сумма заказа: {{get_total_price()}} ₽</h4>
-        <button class="button">Оформить заказ</button>
+        <button class="button" ng-click="create_order()" ng-hide="if_order_exist()">Оформить заказ</button>
+        <p ng-show="if_order_exist()">Вы не можете оформить новый заказ, так как есть текщий заказ</button>
       </div>
     </div>
   </div>

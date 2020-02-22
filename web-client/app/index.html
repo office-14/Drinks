@@ -20,6 +20,7 @@
 				<li class="menu-text">Кофейня 14</li>
 				<li><a ng-click="main.go_to_menu()">Меню</a></li>
 				<li><a ng-click="main.go_to_cart()">Корзина <span>({{main.get_cart_products_qty()}})</span></a></li>
+				<li ng-show="main.if_order_exist()"><a ng-click="main.go_to_order()">Заказ</a></li>
 	        </ul>
 	      </div>
 	      

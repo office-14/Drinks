@@ -6,6 +6,7 @@
       .controller('DrinksListController', DrinksListController)
       .controller('DrinkController', DrinkController)
       .controller('CartController', CartController)
+      .controller('OrderController', OrderController)
       .factory('DrinksService', function ($http) {
         var  all_drinks = [];
         var selected_drink = {};
@@ -138,6 +139,25 @@
             });
             angular.copy(new_cart_products, cart_products);
           },
+          generate_products_request_body: function() {
+            var products_request_body = [];
+            angular.forEach(cart_products, function(cart_product) {
+              for (var i = 0; i < cart_product.qty; i++) {
+                var addins_ids = [];
+                angular.forEach(cart_product.product.addins, function(addin) {
+                  addins_ids.push(addin.id);
+                });
+                products_request_body.push(
+                  {
+                    "drink_id": cart_product.product.drink_id,
+                    "size_id": cart_product.product.size_id,
+                    "add-ins": addins_ids
+                  }
+                );
+              }
+            });
+            return products_request_body;
+          },
           get_products: function() {
             return cart_products;
           },
@@ -154,6 +174,36 @@
               total_price += cart_product.qty * cart_product.price;
             });
             return total_price;
+          },
+          clear_cart: function() {
+            angular.copy([], cart_products);
+          }
+        };
+
+        return service;
+      }).factory('OrderService', function () {
+        var current_order = {};
+
+        var service = {
+          set_order: function(order, order_products) {
+            var new_order = {
+              id: order.id,
+              status_code: order.status_code,
+              status_name: order.status_name,
+              order_number: order.order_number,
+              total_price: order.total_price,
+              order_products: order_products
+            };
+            angular.copy(new_order, current_order);
+          },
+          get_order: function() {
+            return current_order;
+          },
+          if_order_exist: function() {
+            if (current_order.hasOwnProperty('id')) {
+              return true;
+            }
+            return false;
           }
         };
 
@@ -180,6 +230,11 @@
           url: "/",
           templateUrl: "templates/cart.html",
           controller: 'CartController'
+        })
+        .state('order', {
+          url: "/",
+          templateUrl: "templates/order.html",
+          controller: 'OrderController'
         })
     }
 
@@ -275,7 +330,7 @@
       }
     }
 
-    function CartController($scope, CartService) {
+    function CartController($scope, $http, CartService, OrderService) {
       $scope.products = CartService.get_products();
       $scope.get_total_price = function() {
         return CartService.get_total_price();
@@ -288,17 +343,54 @@
           product.qty = 1;
         }
       }
+      $scope.create_order = function() {
+        if (OrderService.if_order_exist()) {
+
+        } else {
+          var products_request_body = CartService.generate_products_request_body();
+          var post_data = {
+            "drinks": products_request_body
+          };
+          $http.post('http://localhost:5000/api/orders', post_data)
+          .then(function (res){
+            if (res.data.payload) {
+              OrderService.set_order(res.data.payload, CartService.get_products());
+              CartService.clear_cart();
+            }
+          })
+          .catch(function (res) {
+          })
+          .finally(function () {
+          });
+        }
+      }
+      $scope.if_order_exist = function() {
+        return OrderService.if_order_exist();
+      };
     }
 
-    function MainController($scope, $state, CartService) {
+    function OrderController($scope, OrderService) {
+      $scope.order = OrderService.get_order();
+      $scope.if_order_exist = function() {
+        return OrderService.if_order_exist();
+      };
+    }
+
+    function MainController($scope, $state, CartService, OrderService) {
       this.go_to_menu = function() {
         $state.go('drinks');
       };
       this.go_to_cart = function() {
         $state.go('cart');
       };
+      this.go_to_order = function() {
+        $state.go('order');
+      };
       this.get_cart_products_qty = function() {
         return CartService.get_products_qty();
+      };
+      this.if_order_exist = function() {
+        return OrderService.if_order_exist();
       };
     }
 })();
