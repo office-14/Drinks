@@ -119,16 +119,22 @@
               );
             }
             angular.copy(new_cart_products, cart_products);
-            qty_products += 1;
-            total_price += draft_cart_product.price;
           },
           get_products: function() {
             return cart_products;
           },
           get_products_qty: function() {
+            qty_products = 0;
+            angular.forEach(cart_products, function(cart_product) {
+              qty_products += cart_product.qty;
+            });
             return qty_products;
           },
           get_total_price: function() {
+            total_price = 0;
+            angular.forEach(cart_products, function(cart_product) {
+              total_price += cart_product.qty * cart_product.price;
+            });
             return total_price;
           }
         };
@@ -253,7 +259,17 @@
 
     function CartController($scope, CartService) {
       $scope.products = CartService.get_products();
-      $scope.total_price = CartService.get_total_price();
+      $scope.get_total_price = function() {
+        return CartService.get_total_price();
+      }
+      $scope.remove_from_cart = function() {
+
+      }
+      $scope.change_product_qty = function(product) {
+        if (typeof product.qty == 'undefined') {
+          product.qty = 1;
+        }
+      }
     }
 
     function MainController($scope, $state, CartService) {

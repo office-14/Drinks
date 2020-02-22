@@ -13,20 +13,25 @@
   <div class="grid-x">
     <div>
       <h1>Корзина</h1>
-      <div class="media-object stack-for-small" ng-repeat="product in products">
-        <div class="media-object-section">
-          <img class="thumbnail" ng-src="{{product.product.drink_image}}" width="200">
+      <div ng-show="products.length == 0">Нет товаров</div>
+      <div ng-show="products.length > 0">
+        <div class="media-object stack-for-small" ng-repeat="product in products">
+          <div class="media-object-section">
+            <img class="thumbnail" ng-src="{{product.product.drink_image}}" width="200">
+          </div>
+          <div class="media-object-section">
+            <h5>{{product.product.drink_name}}</h5>
+            <p>Размер: {{product.product.size_volume}}</p>
+            <p>Добавки: <span ng-repeat="addin in product.product.addins">{{addin.name}}</span></p>
+            <p>Количество:</p>
+            <input type="number" min="1" ng-model="product.qty" ng-change="change_product_qty(product)">
+            <p ng-show="product.qty > 0">Цена: {{product.price * product.qty}} ₽</p>
+            <button class="button" ng-click="remove_from_cart(product.product)">Удалить</button>
+          </div>
         </div>
-        <div class="media-object-section">
-          <h5>{{product.product.drink_name}}</h5>
-          <p>Размер: {{product.product.size_volume}}</p>
-          <p>Добавки: <span ng-repeat="addin in product.product.addins">{{addin.name}}</span></p>
-          <p>Количество: {{product.qty}}</p>
-          <p>Цена: {{product.price * product.qty}} ₽</p>
-        </div>
+        <h4>Сумма заказа: {{get_total_price()}} ₽</h4>
+        <button class="button">Оформить заказ</button>
       </div>
-      <h4>Сумма заказа: {{total_price}} ₽</h4>
-      <button class="button">Оформить заказ</button>
     </div>
   </div>
 </article>
