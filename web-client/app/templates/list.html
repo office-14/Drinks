@@ -9,7 +9,7 @@
       <a ui-sref="drink({id:drink.id})"><img class="thumbnail" ng-src="{{drink.photo_url}}"></a>
       <a ui-sref="drink({id:drink.id})"><h5>{{drink.name}}</h5></a>
       <p>{{drink.smallest_size_price}} ₽</p>
-      <a href="#" class="button expanded">Add to cart</a>
+      <a ui-sref="drink({id:drink.id})" class="button expanded">Подробнее</a>
     </div>
   </div>
 </article>

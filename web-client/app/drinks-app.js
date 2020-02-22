@@ -204,6 +204,9 @@
               return true;
             }
             return false;
+          },
+          clear_order: function() {
+            angular.copy({}, current_order);
           }
         };
 
@@ -369,11 +372,26 @@
       };
     }
 
-    function OrderController($scope, OrderService) {
+    function OrderController($scope, $http, OrderService) {
       $scope.order = OrderService.get_order();
       $scope.if_order_exist = function() {
         return OrderService.if_order_exist();
       };
+      $scope.finish_order = function() {
+        if (OrderService.if_order_exist()) {
+          var current_order = OrderService.get_order();
+          $http.post('http://localhost:5000/api/orders/'+current_order.id+'/finish')
+          .then(function (res){
+            if (res.status == 204) {
+              OrderService.clear_order();
+            }
+          })
+          .catch(function (res) {
+          })
+          .finally(function () {
+          });
+        }
+      }
     }
 
     function MainController($scope, $state, CartService, OrderService) {
