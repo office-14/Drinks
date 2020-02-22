@@ -80,6 +80,10 @@
         var qty_products = 0;
         var total_price = 0;
 
+        var generate_alias = function(drink_id, size_id, addins_ids) {
+          return drink_id.toString(10) + '_' + size_id.toString(10) + '_' + addins_ids.join('#');
+        }
+
         var service = {
           add_product: function(draft_cart_product) {
             var new_cart_products = angular.copy(cart_products);
@@ -103,8 +107,13 @@
               }
             });
             if (!product_isset) {
+              var addins_ids = [];
+              angular.forEach(draft_cart_product.addins, function(addin) {
+                addins_ids.push(addin.id);
+              });
               new_cart_products.push(
                 {
+                  alias: generate_alias(draft_cart_product.drink_id, draft_cart_product.size_id, addins_ids),
                   product: {
                     drink_id: draft_cart_product.drink_id,
                     drink_name: draft_cart_product.drink_name,   
@@ -118,6 +127,15 @@
                 }
               );
             }
+            angular.copy(new_cart_products, cart_products);
+          },
+          remove_product: function(product_alias) {
+            var new_cart_products = [];
+            angular.forEach(cart_products, function(cart_product) {
+              if (cart_product.alias != product_alias) {
+                new_cart_products.push(cart_product);
+              }
+            });
             angular.copy(new_cart_products, cart_products);
           },
           get_products: function() {
@@ -262,8 +280,8 @@
       $scope.get_total_price = function() {
         return CartService.get_total_price();
       }
-      $scope.remove_from_cart = function() {
-
+      $scope.remove_from_cart = function(product_alias) {
+        CartService.remove_product(product_alias);
       }
       $scope.change_product_qty = function(product) {
         if (typeof product.qty == 'undefined') {

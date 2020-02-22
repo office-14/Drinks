@@ -26,7 +26,7 @@
             <p>Количество:</p>
             <input type="number" min="1" ng-model="product.qty" ng-change="change_product_qty(product)">
             <p ng-show="product.qty > 0">Цена: {{product.price * product.qty}} ₽</p>
-            <button class="button" ng-click="remove_from_cart(product.product)">Удалить</button>
+            <button class="button" ng-click="remove_from_cart(product.alias)">Удалить</button>
           </div>
         </div>
         <h4>Сумма заказа: {{get_total_price()}} ₽</h4>
