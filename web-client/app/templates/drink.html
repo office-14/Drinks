@@ -44,6 +44,14 @@
           </div>
         </div>
         <div class="grid-x">
+          <div class="small-4 cell">
+            <h5>Количество</h5>
+          </div>
+          <div class="small-4 cell">
+            <input type="number" placeholder="Укажите кол-во напитков" ng-model="draft_cart_product.qty" min="1" ng-change="change_draft_cart_product_qty()">
+          </div>
+        </div>
+        <div class="grid-x">
           <h3>Цена: {{get_selected_price()}} ₽</h3>
         </div>
 

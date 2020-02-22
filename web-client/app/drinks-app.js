@@ -97,7 +97,7 @@
                 });
                 if (_.difference(dr_c_p_addin_ids, c_p_addin_ids).length == 0
                 && _.difference(c_p_addin_ids, dr_c_p_addin_ids).length == 0) {
-                  cart_product.qty += 1;
+                  cart_product.qty += draft_cart_product.qty;
                   product_isset = true;
                 }
               }
@@ -113,7 +113,7 @@
                     size_volume: draft_cart_product.size_volume,
                     addins: draft_cart_product.addins
                   },
-                  qty: 1,
+                  qty: draft_cart_product.qty,
                   price: draft_cart_product.price
                 }
               );
@@ -181,7 +181,8 @@
       DrinksService.get_selected_drink_sizes();
       $scope.draft_cart_product = {
         size: DrinksService.get_first_selected_drink_size(),
-        addins: []
+        addins: [],
+        qty: 1
       };
 
       $http.get('http://localhost:5000/api/add-ins')
@@ -237,9 +238,16 @@
           size_id: $scope.draft_cart_product.size.id,
           size_volume: DrinksService.get_selected_drink_size_volume(),
           addins: selected_addins,
-          price: total_price
+          price: total_price,
+          qty: $scope.draft_cart_product.qty
         }
         );
+      }
+
+      $scope.change_draft_cart_product_qty = function() {
+        if (typeof $scope.draft_cart_product.qty == 'undefined') {
+          $scope.draft_cart_product.qty = 1;
+        }
       }
     }
 
