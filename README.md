@@ -15,4 +15,4 @@ $ docker-compose -f docker-compose.yml -f docker-compose-dev.yml up --build
 If everything's fine, you should be able to visit:
 
 - `http://localhost:8080` to see web client;
-- `http://localhost:5000/swagger` to see OpenAPI/Swagge documentation.
+- `http://localhost:5000/swagger` to see web API OpenAPI/Swagger documentation.
