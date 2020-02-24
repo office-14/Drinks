@@ -1,19 +1,22 @@
 package com.coffeedose.ui
 
 
+import android.content.DialogInterface
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
+import android.widget.Button
 import android.widget.ListView
 import android.widget.Spinner
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-
+import androidx.navigation.fragment.findNavController
 import com.coffeedose.R
 import com.coffeedose.databinding.FragmentSelectDoseAndAddinsBinding
 import com.coffeedose.ui.Adapters.AddinCheckListener
@@ -21,6 +24,7 @@ import com.coffeedose.ui.Adapters.AddinsListAdapter
 import com.coffeedose.ui.Adapters.SizeSpinnerAdapter
 import com.coffeedose.viewmodels.SelectDoseAndAddinsViewModel
 import com.shawnlin.numberpicker.NumberPicker
+
 
 /**
  * A simple [Fragment] subclass.
@@ -44,6 +48,7 @@ class SelectDoseAndAddinsFragment : Fragment() {
         initSpinner(binding.spinnerSelectSize)
         initAddinsAdapter(binding.addinsListView)
         initCountPicker(binding.numberPicker)
+        initProceedButton(binding.addButton)
 
         initToolbar(drinkName)
 
@@ -95,6 +100,27 @@ class SelectDoseAndAddinsFragment : Fragment() {
         viewModel.count.observe(this, Observer { numberPicker.value = viewModel.count.value!! })
 
         numberPicker.setOnValueChangedListener { picker, oldVal, newVal -> viewModel.updateCount(newVal) }
+    }
+
+    private fun initProceedButton(button:Button){
+        button.setOnClickListener {
+            viewModel.saveOrderDetails()
+            showAddOrProceedDialog()
+        }
+    }
+
+    private fun showAddOrProceedDialog(){
+        val builder: AlertDialog.Builder = AlertDialog.Builder(this.context!!)
+        builder.setMessage(R.string.AddOrProceedDialogMessage)
+            .setNegativeButton(R.string.ContinueChoice,
+                DialogInterface.OnClickListener { dialog, id ->
+                    findNavController().navigate(SelectDoseAndAddinsFragmentDirections.actionSelectDoseAndAddinsFragmentToDrinksFragment())
+                })
+            .setPositiveButton(R.string.OrderDetails,
+                DialogInterface.OnClickListener { dialog, id ->
+                    findNavController().navigate(SelectDoseAndAddinsFragmentDirections.actionSelectDoseAndAddinsFragmentToOrderFragment())
+                })
+        builder.create().show()
     }
 
 }

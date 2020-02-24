@@ -20,7 +20,7 @@ class AddinsRepository(private val addinsDatabaseDao: AddinDao) {
         try {
             withContext(Dispatchers.IO){
                 val addinsResponse = CoffeeApi.retrofitService.getAddinsAsync().await()
-                addinsDatabaseDao.insertAllAddins(*addinsResponse.payload.map { it.toDataBaseModel() }.toTypedArray())
+                addinsDatabaseDao.refreshAddins(addinsResponse.payload.map { it.toDataBaseModel() })
             }
         }
         catch (ex: Exception){

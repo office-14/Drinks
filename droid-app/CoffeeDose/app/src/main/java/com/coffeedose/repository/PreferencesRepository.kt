@@ -24,6 +24,10 @@ object PreferencesRepository {
 
     fun getBaseUrl() = prefs.getString(BASE_URL_KEY,BASE_URL)
 
+    fun getLastOrderId() = prefs.getInt(ORDER_ID_KEY,-1)
+
+    fun saveLastOrderId(orderId:Int) = putValue(ORDER_ID_KEY to orderId)
+
     fun saveAppTheme(theme: Int) {
         putValue(APP_THEME_KEY to theme)
     }

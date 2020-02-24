@@ -20,7 +20,7 @@ class CoffeeRepository (private val coffeeDao: CoffeeDao) {
         try {
             withContext(Dispatchers.IO){
                 val drinksResponse = CoffeeApi.retrofitService.getDrinksAsync().await()
-                coffeeDao.insertAllDrinks(*drinksResponse.payload.map { it.toDataBaseModel() }.toTypedArray())
+                coffeeDao.refreshDrinks(drinksResponse.payload.map { it.toDataBaseModel() })
             }
         }
         catch (ex:Exception){

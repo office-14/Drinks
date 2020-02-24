@@ -1,10 +1,7 @@
 package com.coffeedose.database
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 
 @Dao
 interface SizeDao {
@@ -20,4 +17,14 @@ interface SizeDao {
 
     @Query("delete from drink_size where drink_id = :id")
     fun deleteByDrinkId(id:Int)
+
+    @Query("delete from drink_size where id not in (:idsList)")
+    fun clearByNotInList(idsList:List<Int>)
+
+
+    @Transaction
+    fun refreshSizes(addins:List<SizeDbo>){
+        insertAllSizes(*addins.toTypedArray())
+        clearByNotInList(addins.map { it.id })
+    }
 }

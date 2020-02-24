@@ -21,7 +21,7 @@ class SizesRepository (private val sizesDao: SizeDao) {
         try {
             withContext(Dispatchers.IO){
                 val sizesResponse = CoffeeApi.retrofitService.getSizesByDrinkIdAsync(drinkId).await()
-                sizesDao.insertAllSizes(*sizesResponse.payload.map { it.toDatabaseModel(drinkId) }.toTypedArray())
+                sizesDao.refreshSizes(sizesResponse.payload.map { it.toDatabaseModel(drinkId) })
             }
         }
         catch (ex: Exception){

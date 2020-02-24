@@ -1,10 +1,7 @@
 package com.coffeedose.database
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 
 
 @Dao
@@ -15,8 +12,17 @@ interface CoffeeDao {
     fun getAllDrinks(): LiveData<List<CoffeeDbo>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAllDrinks(vararg videos: CoffeeDbo)
+    fun insertAllDrinks(vararg drinks: CoffeeDbo)
 
     @Query("delete from drinks")
     fun clear()
+
+    @Query("delete from drinks where id not in (:idsList)")
+    fun clearByNotInList(idsList:List<Int>)
+
+    @Transaction
+    fun refreshDrinks(drinks : List<CoffeeDbo>){
+        insertAllDrinks(*drinks.toTypedArray())
+        clearByNotInList(drinks.map { it.id })
+    }
 }

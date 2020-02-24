@@ -1,10 +1,7 @@
 package com.coffeedose.database
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 
 @Dao
 interface AddinDao {
@@ -16,4 +13,13 @@ interface AddinDao {
 
     @Query("delete from add_ins")
     fun clear()
+
+    @Query("delete from add_ins where id not in (:idsList)")
+    fun clearByNotInList(idsList:List<Int>)
+
+    @Transaction
+    fun refreshAddins(addins:List<AddinDbo>){
+        insertAllAddins(*addins.toTypedArray())
+        clearByNotInList(addins.map { it.id })
+    }
 }

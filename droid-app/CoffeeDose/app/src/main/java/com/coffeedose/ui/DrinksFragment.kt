@@ -93,6 +93,10 @@ class DrinksFragment : Fragment() {
                 showEditBaseUrlDialog()
                 return true
             }
+            R.id.goToOrderDetails -> {
+                findNavController().navigate(DrinksFragmentDirections.actionDrinksFragmentToOrderFragment())
+                return true
+            }
             else -> return false
         }
     }

@@ -1,8 +1,9 @@
 package com.coffeedose.domain
 
 data class Coffee(
-    var id: Int,
-    var name: String,
-    var description: String,
-    var photoUrl:String
+    val id: Int,
+    val name: String,
+    val description: String,
+    val smallestSizePrice : Int,
+    val photoUrl:String
 )

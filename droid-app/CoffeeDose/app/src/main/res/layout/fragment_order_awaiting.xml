@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.coffeedose.viewmodels.OrderAwaitingViewModel" />
+
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".ui.OrderAwaitingFragment">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_order_status"
+            style="@style/Base.TextView"
+            android:layout_margin="@dimen/spacing_normal_16"
+            android:layout_gravity="top"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/bv_approve"
+            android:layout_width="200dp"
+            android:visibility="gone"
+            android:layout_gravity="bottom|center_horizontal"
+            android:text="@string/ApproveOrder"
+            android:layout_height="@dimen/default_button_height"
+            android:layout_margin="@dimen/spacing_normal_16"/>
+
+    </FrameLayout>
+</layout>

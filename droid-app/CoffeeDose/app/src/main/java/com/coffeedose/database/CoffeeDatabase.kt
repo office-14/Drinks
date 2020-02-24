@@ -5,7 +5,8 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [CoffeeDbo::class,SizeDbo::class,AddinDbo::class,OrderDetailDbo::class], version = 4, exportSchema = false)
+@Database(entities = [CoffeeDbo::class,SizeDbo::class,AddinDbo::class,OrderDetailDbo::class,OrderDbo::class,OrderDetailsAndAddinsCrossRef::class],
+    version = 6, exportSchema = false)
 abstract class CoffeeDatabase : RoomDatabase() {
 
     abstract val drinksDatabaseDao: CoffeeDao
@@ -15,6 +16,9 @@ abstract class CoffeeDatabase : RoomDatabase() {
     abstract val addinsDatabaseDao: AddinDao
 
     abstract val orderDetailsDatabaseDao: OrderDetailDao
+
+    abstract val ordersDatabaseDao: OrderDao
+
 
     companion object {
 

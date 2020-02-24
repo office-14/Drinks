@@ -54,7 +54,7 @@ class SizeSpinnerAdapter(private val context : Context) : BaseAdapter() {
         }
 
         fun rebindViewHolder(item:CoffeeSize){
-            name.text = item.name
+            name.text = "${item.name} ( ${item.volume} )"
             price.text = "${item.price} Р."
         }
     }

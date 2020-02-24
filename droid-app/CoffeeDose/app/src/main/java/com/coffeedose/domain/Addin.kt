@@ -5,5 +5,6 @@ data class Addin(
     val name:String,
     val description:String,
     val photoUrl:String,
-    val price : Int
+    val price : Int,
+    var isSelected:Boolean = false
 )

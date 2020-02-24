@@ -46,9 +46,12 @@ class CoffeeSpinnerAdapter(private val context : Context) : BaseAdapter() {
 
     private class ItemRowHolder(row: View) {
         private val name: TextView = row.findViewById<TextView>(R.id.tv_coffee_name)
+        private val price: TextView = row.findViewById<TextView>(R.id.tv_coffee_smallest_price)
+
 
         fun rebindViewHolder(item: Coffee){
             name.text = item.name
+            price.text="${item.smallestSizePrice}+"
         }
     }
 }

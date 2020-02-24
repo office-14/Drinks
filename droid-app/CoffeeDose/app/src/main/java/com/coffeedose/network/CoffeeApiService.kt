@@ -6,9 +6,12 @@ import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import kotlinx.coroutines.Deferred
 import okhttp3.ConnectionSpec
+import okhttp3.RequestBody
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import retrofit2.http.Body
 import retrofit2.http.GET
+import retrofit2.http.POST
 import retrofit2.http.Path
 
 private val moshi = Moshi.Builder()
@@ -30,6 +33,13 @@ interface CoffeeApiService {
 
     @GET("add-ins")
     fun getAddinsAsync():Deferred<ResponseContainer<List<AddinJso>>>
+
+    @GET("/api/orders/{orderId}")
+    fun getOrderById(@Path(value = "orderId", encoded = true) orderId : Int):Deferred<ResponseContainer<OrderJso>>
+
+    @POST("/api/orders")
+    fun createOrder( @Body body : CreateOrderBody) :Deferred<ResponseContainer<OrderJso>>
+
 
 }
 

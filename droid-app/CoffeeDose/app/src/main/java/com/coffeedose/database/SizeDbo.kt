@@ -20,6 +20,5 @@ data class SizeDbo (
 ){
     fun toDomainModel() = CoffeeSize(
         id,drinkId,volume,name,price
-
     )
 }

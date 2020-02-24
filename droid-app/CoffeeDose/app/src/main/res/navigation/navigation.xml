@@ -17,6 +17,13 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
+        <action
+            android:id="@+id/action_drinksFragment_to_orderFragment"
+            app:destination="@id/orderFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
     </fragment>
     <fragment
         android:id="@+id/selectDoseAndAddinsFragment"
@@ -26,8 +33,8 @@
         <action
             android:id="@+id/action_selectDoseAndAddinsFragment_to_orderFragment"
             app:destination="@id/orderFragment"
-            app:enterAnim="@anim/fade_in"
-            app:exitAnim="@anim/fade_out"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
         <argument
@@ -36,10 +43,38 @@
         <argument
             android:name="drinkName"
             app:argType="string" />
+        <action
+            android:id="@+id/action_selectDoseAndAddinsFragment_to_drinksFragment"
+            app:destination="@id/drinksFragment"
+            app:popUpTo="@+id/drinksFragment"
+            app:popUpToInclusive="false" />
     </fragment>
     <fragment
         android:id="@+id/orderFragment"
-        android:name="com.coffeedose.ui.OrderFragment"
+        android:name="com.coffeedose.ui.OrderDetailsFragment"
         android:label="fragment_order"
-        tools:layout="@layout/fragment_order" />
+        tools:layout="@layout/fragment_order" >
+        <action
+            android:id="@+id/action_orderFragment_to_drinksFragment"
+            app:destination="@id/drinksFragment" />
+        <action
+            android:id="@+id/action_orderFragment_to_orderAwaitingFragment"
+            app:destination="@id/orderAwaitingFragment"
+            app:enterAnim="@anim/slide_in_right"
+            app:exitAnim="@anim/slide_out_left"
+            app:popEnterAnim="@anim/slide_in_left"
+            app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+    <fragment
+        android:id="@+id/orderAwaitingFragment"
+        android:name="com.coffeedose.ui.OrderAwaitingFragment"
+        android:label="fragment_order_awaiting"
+        tools:layout="@layout/fragment_order_awaiting" >
+        <argument
+            android:name="orderId"
+            app:argType="integer" />
+        <action
+            android:id="@+id/action_orderAwaitingFragment_to_drinksFragment"
+            app:destination="@id/drinksFragment" />
+    </fragment>
 </navigation>

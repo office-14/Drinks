@@ -20,6 +20,11 @@ data class AddinDbo(
 
     val price : Int
 ){
+
+    constructor(addInDomain : Addin) : this(
+        addInDomain.id,addInDomain.name,addInDomain.description,addInDomain.photoUrl,addInDomain.price
+    )
+
     fun toDomainModel() = Addin(
         id,name,description,photoUrl,price
     )

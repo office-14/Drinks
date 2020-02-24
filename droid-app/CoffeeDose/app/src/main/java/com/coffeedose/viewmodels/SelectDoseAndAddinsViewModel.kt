@@ -1,12 +1,15 @@
 package com.coffeedose.viewmodels
 
 import android.app.Application
+import android.util.Log
 import androidx.lifecycle.*
 import com.coffeedose.database.CoffeeDatabase
 import com.coffeedose.domain.Addin
 import com.coffeedose.domain.CoffeeSize
+import com.coffeedose.domain.OrderDetail
 import com.coffeedose.extensions.mutableLiveData
 import com.coffeedose.repository.AddinsRepository
+import com.coffeedose.repository.OrderDetailsRepository
 import com.coffeedose.repository.SizesRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -21,6 +24,7 @@ class SelectDoseAndAddinsViewModel(application: Application,var drinkId : Int) :
 
     private val sizesRepository = SizesRepository(CoffeeDatabase.getInstance(application).sizeDatabaseDao)
     private val addinsRepository = AddinsRepository(CoffeeDatabase.getInstance(application).addinsDatabaseDao)
+    private val orderDetailsRepository= OrderDetailsRepository(CoffeeDatabase.getInstance(application).orderDetailsDatabaseDao)
 
     private val addinsTotal = mutableLiveData(0)
 
@@ -79,10 +83,35 @@ class SelectDoseAndAddinsViewModel(application: Application,var drinkId : Int) :
     fun updateTotalOnAddinCheck(addin : Addin, isChecked : Boolean){
         if (isChecked) addinsTotal.value = addinsTotal.value?.plus(addin.price)
         else addinsTotal.value = addinsTotal.value?.minus(addin.price)
+
+        addin.isSelected = isChecked
     }
 
     fun updateCount(newValue : Int){
         if (count.value!! != newValue) count.value = newValue
+    }
+
+    private fun getAddinsToString() : String? {
+        if (addins.value?.size == 0) return null
+        else return addins.value!!.filter { it.isSelected }.map { it.price }.joinToString()
+    }
+
+    fun saveOrderDetails(){
+        viewModelScope.launch {
+            try {
+                orderDetailsRepository.insertNew( OrderDetail(
+                    id = 0,
+                    drinkId = drinkId,
+                    sizeId = selectedSize.value!!.id,
+                    addIns = addins.value?.filter { it.isSelected } ?: listOf(),
+                    count = count.value!!,
+                    orderId = null
+                ))
+            }
+            catch (ex:Exception){
+                Log.d("SelectDoseAndAddinsViewModel.saveOrderDetails",ex.message)
+            }
+        }
     }
 
 

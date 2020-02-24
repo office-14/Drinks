@@ -6,14 +6,17 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class CoffeeJso (
-    var id: Int,
+    val id: Int,
     val name: String,
-    var description: String,
+    val description: String,
+
+    @Json(name = "smallest_size_price")
+    val smallestSizePrice:Int,
 
     @Json(name = "photo_url")
-    var photoUrl:String
+    val photoUrl:String
 ){
     fun toDataBaseModel() = CoffeeDbo(
-        id,name,description,photoUrl
+        id,name,description,smallestSizePrice,photoUrl
     )
 }
