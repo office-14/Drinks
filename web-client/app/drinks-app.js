@@ -1,13 +1,48 @@
 (function () {
   "use strict";
-    angular.module('drinksApp', ['ui.router'])
+    angular.module('drinksApp', ['ui.router', 'ngMaterial'])
       .config(configHandler)
       .controller('MainController', MainController)
       .controller('DrinksListController', DrinksListController)
       .controller('DrinkController', DrinkController)
       .controller('CartController', CartController)
       .controller('OrderController', OrderController)
-      .factory('DrinksService', function ($http) {
+      .factory('NoticeHandler', function($mdToast) {
+        var service = {
+          show_success: function(message) {
+            $mdToast.show($mdToast.simple()
+              .textContent(message)
+              .position('top right')
+              .theme('success-toast')
+              .hideDelay(3000)
+            );
+          },
+          show_error: function(message) {
+            $mdToast.show($mdToast.simple()
+              .textContent(message)
+              .position('top right')
+              .theme('error-toast')
+              .hideDelay(3000)
+            );
+          }
+        }
+
+        return service;
+      })
+      .factory('ErrorHandler', function(NoticeHandler) {
+        var service = {
+          show_error: function(response) {
+            if (response.status == 404) {
+              NoticeHandler.show_error('Ошибка при получении данных: ' + response.data.title);
+            } else {
+              NoticeHandler.show_error('Ошибка при обращении к серверу. Код ошибки: ' + response.data.title);
+            }
+          }
+        }
+
+        return service;
+      })
+      .factory('DrinksService', function ($http, ErrorHandler) {
         var  all_drinks = [];
         var selected_drink = {};
         var selected_drink_size = {};
@@ -39,17 +74,18 @@
               var drink = angular.copy(selected_drink);
               if (drink.hasOwnProperty('id')) {
                 if (!drink.hasOwnProperty('sizes')) {
-                  $http.get('http://localhost:5000/api/drinks/'+ drink.id +'/sizes')
+                  $http.get('http://localhost:5000/api/drinks/'+drink.id+'/sizes')
                   .then(function (res){
                     if (res.data.payload) {
                       drink.sizes = res.data.payload;
                       angular.copy(drink, selected_drink);
                       angular.copy(selected_drink.sizes[0], selected_drink_size);
+                    } else {
+                      ErrorHandler.show_error(res);
                     }
                   })
                   .catch(function (res) {
-                  })
-                  .finally(function () {
+                    ErrorHandler.show_error(res);
                   });
                 }
               }
@@ -241,7 +277,7 @@
         })
     }
 
-    function DrinksListController($scope, $http, DrinksService) {
+    function DrinksListController($scope, $http, DrinksService, ErrorHandler) {
       $scope.drinks = [];
 
       $http.get('http://localhost:5000/api/drinks')
@@ -249,15 +285,16 @@
         if (res.data.payload) {
           DrinksService.set_drinks(res.data.payload);
           $scope.drinks = DrinksService.get_drinks();
+        } else {
+          ErrorHandler.show_error(res);
         }
       })
       .catch(function (res) {
-      })
-      .finally(function () {
+        ErrorHandler.show_error(res);
       });
     }
 
-    function DrinkController($scope, $http, $stateParams, DrinksService, CartService) {
+    function DrinkController($scope, $http, $stateParams, DrinksService, CartService, NoticeHandler, ErrorHandler) {
       DrinksService.set_selected_drink($stateParams.id);
       $scope.drink = DrinksService.get_selected_drink();
       DrinksService.get_selected_drink_sizes();
@@ -274,11 +311,12 @@
           angular.forEach($scope.draft_cart_product.addins, function(addin) {
             addin.selected = false;
           });
+        } else {
+          ErrorHandler.show_error(res);
         }
       })
       .catch(function (res) {
-      })
-      .finally(function () {
+        ErrorHandler.show_error(res);
       });
 
       $scope.get_selected_price = function() {
@@ -324,6 +362,7 @@
           qty: $scope.draft_cart_product.qty
         }
         );
+        NoticeHandler.show_success('Товар успешно добавлен в корзину!');
       }
 
       $scope.change_draft_cart_product_qty = function() {
@@ -333,7 +372,7 @@
       }
     }
 
-    function CartController($scope, $http, CartService, OrderService) {
+    function CartController($scope, $http, CartService, OrderService, NoticeHandler, ErrorHandler) {
       $scope.products = CartService.get_products();
       $scope.get_total_price = function() {
         return CartService.get_total_price();
@@ -359,11 +398,13 @@
             if (res.data.payload) {
               OrderService.set_order(res.data.payload, CartService.get_products());
               CartService.clear_cart();
+              NoticeHandler.show_success('Заказ успешно сформирован!');
+            } else {
+              ErrorHandler.show_error(res);
             }
           })
           .catch(function (res) {
-          })
-          .finally(function () {
+            ErrorHandler.show_error(res);
           });
         }
       }
@@ -372,7 +413,7 @@
       };
     }
 
-    function OrderController($scope, $http, OrderService) {
+    function OrderController($scope, $http, OrderService, ErrorHandler) {
       $scope.order = OrderService.get_order();
       $scope.if_order_exist = function() {
         return OrderService.if_order_exist();
@@ -384,11 +425,12 @@
           .then(function (res){
             if (res.status == 204) {
               OrderService.clear_order();
+            } else {
+              ErrorHandler.show_error(res);
             }
           })
           .catch(function (res) {
-          })
-          .finally(function () {
+            ErrorHandler.show_error(res);
           });
         }
       }

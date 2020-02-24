@@ -9,10 +9,20 @@
 	    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/motion-ui/1.2.3/motion-ui.min.css">
 	    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/foundation/6.4.3/css/foundation-prototype.min.css">
 	    <link href='https://cdnjs.cloudflare.com/ajax/libs/foundicons/3.0.0/foundation-icons.css' rel='stylesheet' type='text/css'>
+	    <link rel="stylesheet" href="lib/angular-material/angular-material.min.css">
   		<base href="/">
 	</head>
 
 	<body ng-controller="MainController as main">
+		<style>
+			md-toast.md-success-toast-theme .md-toast-content {
+			    background-color: #4CAF50;
+			}
+
+			md-toast.md-error-toast-theme .md-toast-content {
+			    background-color: #F44336;
+			}
+		</style>
 		<!-- Start Top Bar -->
 	    <div class="top-bar">
 	      <div class="top-bar-left">
@@ -49,6 +59,9 @@
 		<script src="lib/angular/angular.min.js"></script>
 		<script src="lib/angular-ui-router/release/angular-ui-router.min.js"></script>
 		<script src="lib/underscore/underscore-min.js"></script>
+		<script src="lib/angular-material/angular-material.min.js"></script>
+		<script src="lib/angular-aria/angular-aria.min.js"></script>
+		<script src="lib/angular-animate/angular-animate.min.js"></script>
 		<script src="drinks-app.js"></script>
 	</body>
 </html>
