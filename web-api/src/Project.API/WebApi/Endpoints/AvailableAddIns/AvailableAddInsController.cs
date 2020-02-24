@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mime;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Project.API.Domain.AddIns;
 using Project.API.WebApi.Endpoints.Shared;
@@ -19,6 +20,8 @@ namespace Project.API.WebApi.Endpoints.AvailableAddIns
 
         [HttpGet("api/add-ins")]
         [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(typeof(ResponseWrapper<IEnumerable<AvailableAddIn>>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
         public async Task<ResponseWrapper<IEnumerable<AvailableAddIn>>> AvailableAddIns()
         {
             var addIns = await addInsRepository.ListAvailableAddIns();

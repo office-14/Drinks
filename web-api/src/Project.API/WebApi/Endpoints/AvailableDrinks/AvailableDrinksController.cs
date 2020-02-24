@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mime;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Project.API.Application.DrinkDetails;
 using Project.API.Domain.Drinks;
@@ -20,6 +21,8 @@ namespace Project.API.WebApi.Endpoints.AvailableDrinks
 
         [HttpGet("api/drinks")]
         [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(typeof(ResponseWrapper<IEnumerable<AvailableDrink>>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
         public async Task<ResponseWrapper<IEnumerable<AvailableDrink>>> AvailableDrinks()
         {
             var drinks = await drinksRepository.AvailableDrinkDetails();

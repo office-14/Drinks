@@ -28,6 +28,7 @@ namespace Project.API.WebApi.Endpoints.AvailableDrinkSizes
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(ResponseWrapper<IEnumerable<AvailableSize>>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<ResponseWrapper<IEnumerable<AvailableSize>>>> AvailableSizesOfDrink([FromRoute] int id)
         {
             var availableSizes = await drinkSizesRepository.ListSizesOfDrink(DrinkId.From(id));

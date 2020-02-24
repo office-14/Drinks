@@ -18,7 +18,9 @@ namespace Project.API.WebApi.Endpoints.FinishOrder
         [HttpPost("/api/orders/{id}/finish")]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> FinishOrderWithId([FromRoute] int id)
         {
             var order = await ordersRepository.OrderWithId(OrderId.From(id));

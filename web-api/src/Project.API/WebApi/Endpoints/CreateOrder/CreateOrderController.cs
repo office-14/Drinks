@@ -1,5 +1,6 @@
 using System.Net.Mime;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Project.API.Application.OrderDetails;
 using Project.API.Application.OrderService;
@@ -24,6 +25,10 @@ namespace Project.API.WebApi.Endpoints.CreateOrder
         [HttpPost("api/orders")]
         [Consumes(MediaTypeNames.Application.Json)]
         [Produces(MediaTypeNames.Application.Json)]
+        [ProducesResponseType(typeof(ResponseWrapper<SingleOrder>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
+
         public async Task<ResponseWrapper<SingleOrder>> createNewOrder([FromBody] CreateOrderDetails orderDetails)
         {
             var clientOrder = orderDetails.AsClientOrder();
