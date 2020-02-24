@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/iv_addin_icon"
+        android:layout_width="@dimen/addin_icon_size"
+        android:layout_height="@dimen/addin_icon_size"
+        android:layout_marginTop="@dimen/spacing_tiny_4"
+        android:layout_marginBottom="@dimen/spacing_tiny_4"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tv_addin_name"
+        style="@style/Base.TextView.Single"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/spacing_small_8"
+        android:ellipsize="end"
+        android:singleLine="true"
+        app:layout_constraintEnd_toStartOf="@+id/tv_addin_price"
+        app:layout_constraintStart_toEndOf="@+id/iv_addin_icon"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="big dose" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tv_addin_price"
+        style="@style/Base.TextView"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="8dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/spacing_small_8"
+        android:textSize="@dimen/font_small_12"
+        app:layout_constraintEnd_toStartOf="@+id/cb_addin_select"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="10 P." />
+
+    <!---->
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tv_addin_desc"
+        style="@style/Base.TextView.Multiline"
+        android:textSize="@dimen/font_small_12"
+        android:fontFamily="sans-serif-thin"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tv_addin_name"
+        android:layout_margin="@dimen/spacing_small_8"
+        app:layout_constraintTop_toBottomOf="@+id/tv_addin_name"
+        app:layout_constraintStart_toEndOf="@+id/iv_addin_icon"
+        app:layout_constraintEnd_toStartOf="@+id/cb_addin_select"
+        tools:text="so good" />
+
+    <com.google.android.material.checkbox.MaterialCheckBox
+        android:id="@+id/cb_addin_select"
+        style="@style/Base.CheckBox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:paddingTop="@dimen/spacing_small_8"
+        android:paddingBottom="@dimen/spacing_small_8"
+        android:paddingLeft="@dimen/spacing_small_8"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
