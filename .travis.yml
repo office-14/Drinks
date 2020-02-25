@@ -1,7 +1,19 @@
-language: csharp
-solution: web-api/Project.sln
-mono: none
-dotnet: 3.1
-script:
-  - dotnet restore web-api/Project.sln
-  - dotnet test -c Release web-api/Project.sln
+matrix:
+  include:
+    - language: csharp
+      solution: web-api/Project.sln
+      mono: none
+      dotnet: 3.1
+      script:
+        - dotnet restore web-api/Project.sln
+        - dotnet test -c Release web-api/Project.sln
+
+    - language: node_js
+      node_js:
+        - 12
+      cache:
+        directories:
+          - web-admin/node_modules
+      script:
+        - npm run build web-admin
+        - npm test web-admin
