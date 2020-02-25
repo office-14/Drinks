@@ -329,6 +329,8 @@
             total_price += addin.price;
           }
         });
+        console.log($scope.draft_cart_product.qty);
+        total_price *= $scope.draft_cart_product.qty;
 
         return total_price;
       };

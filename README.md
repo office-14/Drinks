@@ -1,3 +1,4 @@
+[![Build Status](https://img.shields.io/travis/office-14/Drinks?style=for-the-badge)](https://travis-ci.com/office-14/Drinks)
 [![Built by engineers](https://img.shields.io/badge/built_by-engineers-success?style=for-the-badge)](https://github.com/office-14)
 
 # Drinks
