@@ -9,8 +9,7 @@ matrix:
         - dotnet test -c Release web-api/Project.sln
 
     - language: node_js
-      node_js:
-        - 12
+      node_js: 12
       before_script:
         - cd web-admin
       script:
