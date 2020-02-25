@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">CoffeeDose</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="DoProceed">Продолжить</string>
+    <string name="DoAdd">Добавить</string>
+    <string name="DoAddMore">Добавить еще</string>
+    <string name="BaseURL">Base URL</string>
+    <string name="ConfirmOrder">Подтвердить заказ</string>
+    <string name="OrderDetails">Корзина</string>
+    <string name="DropInassignedOrderDetails">Очистить корзину</string>
+    <string name="ContinueChoice">Продолжить выбор</string>
+    <string name="ApproveOrder">Получил</string>
+
+    <string name="AddOrProceedDialogMessage">Заказ добавлен в корзину\nХотите продолжить выбор или перейти в корзину?</string>
+</resources>

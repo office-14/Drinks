@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"    >
+
+    <data>
+        <variable
+            name="viewModel"
+            type="com.coffeedose.viewmodels.OrderDetailsViewModel" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/rl_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context=".ui.OrderDetailsFragment">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_order_details"
+                android:layout_alignParentTop="true"
+                android:layout_above="@id/confirmButton"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/confirmButton"
+                android:layout_width="200dp"
+                android:text="@string/ConfirmOrder"
+                android:layout_centerHorizontal="true"
+                android:layout_height="@dimen/default_button_height"
+                android:layout_alignParentBottom="true"
+                android:layout_margin="@dimen/spacing_normal_16"/>
+
+        </RelativeLayout>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_empty_order_details"
+            style="@style/Base.TextView"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </LinearLayout>
+</layout>

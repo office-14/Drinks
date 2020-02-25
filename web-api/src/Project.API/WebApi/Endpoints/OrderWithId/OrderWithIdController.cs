@@ -27,6 +27,7 @@ namespace Project.API.WebApi.Endpoints.OrderWithId
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(ResponseWrapper<SingleOrder>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
         public async Task<ActionResult<ResponseWrapper<SingleOrder>>> Get([FromRoute] int id)
         {
             var order = await orderDetailsRepository.OrderDetailsWithId(OrderId.From(id));
