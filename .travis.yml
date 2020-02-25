@@ -14,5 +14,6 @@ matrix:
       before_script:
         - cd web-admin
       script:
+        - npm install
         - npm run build
         - npm test
