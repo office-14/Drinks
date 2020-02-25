@@ -11,9 +11,8 @@ matrix:
     - language: node_js
       node_js:
         - 12
-      cache:
-        directories:
-          - web-admin/node_modules
+      before_script:
+        - cd web-admin
       script:
-        - npm run build web-admin
-        - npm test web-admin
+        - npm run build
+        - npm test
