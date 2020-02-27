@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.coffeedose.R
 import com.coffeedose.domain.OrderDetailFull
@@ -14,8 +15,18 @@ class OrderDetailsAdapter() : RecyclerView.Adapter<OrderDetailsAdapter.OrderDeta
     var items : List<OrderDetailFull> = listOf()
 
     fun setSource(source : List<OrderDetailFull>){
+
+        val diffCallback = object:  DiffUtil.Callback(){
+            override fun areItemsTheSame(oldPos: Int, newPos: Int): Boolean = items[oldPos].id == source[newPos].id
+            override fun getOldListSize(): Int  = items.size
+            override fun getNewListSize(): Int  = source.size
+            override fun areContentsTheSame(oldPos: Int, newPos: Int): Boolean = items[oldPos].hashCode() == source[newPos].hashCode()
+        }
+
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
+
         items = source
-        notifyDataSetChanged() //TODO add diffutil callback
+        diffResult.dispatchUpdatesTo(this)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OrderDetailViewHolder {
