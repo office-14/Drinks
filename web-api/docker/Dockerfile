@@ -3,6 +3,7 @@ WORKDIR /app
 
 COPY *.sln .
 COPY src/Project.API/Project.API.csproj src/Project.API/Project.API.csproj
+COPY src/Project.IntegrationTests/Project.IntegrationTests.csproj src/Project.IntegrationTests/Project.IntegrationTests.csproj
 RUN dotnet restore
 
 COPY src/. ./src/
