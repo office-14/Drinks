@@ -18,6 +18,11 @@ class OrderAwaitingViewModel(application : Application, private val orderId:Int)
         it.first()
     }
 
+    private var keepRefresh = Transformations.map(order){
+        if (it == null) return@map true
+        else return@map it!!.statusName.toLowerCase() != "ready"
+    }
+
     private val viewModelJob = Job()
 
     private val viewModelScope = CoroutineScope(viewModelJob + Dispatchers.Main)
@@ -30,7 +35,7 @@ class OrderAwaitingViewModel(application : Application, private val orderId:Int)
     private fun longPollingOrder(){
         viewModelScope.launch {
             //getOrderPeriodically()
-            while (true) {
+            while (keepRefresh.value != false) {
                 ordersRepository.refreshOrder(orderId)
             }
         }

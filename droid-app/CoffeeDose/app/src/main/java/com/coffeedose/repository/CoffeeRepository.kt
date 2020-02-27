@@ -6,6 +6,7 @@ import androidx.lifecycle.Transformations
 import com.coffeedose.database.CoffeeDao
 import com.coffeedose.domain.Coffee
 import com.coffeedose.network.CoffeeApi
+import com.coffeedose.network.HttpExceptionEx
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.lang.Exception
@@ -20,11 +21,14 @@ class CoffeeRepository (private val coffeeDao: CoffeeDao) {
         try {
             withContext(Dispatchers.IO){
                 val drinksResponse = CoffeeApi.retrofitService.getDrinksAsync().await()
-                coffeeDao.refreshDrinks(drinksResponse.payload.map { it.toDataBaseModel() })
+                if (drinksResponse.hasError())
+                    throw HttpExceptionEx(drinksResponse.getError())
+                else
+                    coffeeDao.refreshDrinks(drinksResponse.payload!!.map { it.toDataBaseModel() })
             }
         }
         catch (ex:Exception){
-            Log.d("CoffeeRepository.refreshDrinks", ex.message)
+            Log.d("CoffeeRepository.refreshDrinks", ex.message?:"")
         }
     }
 }

@@ -26,7 +26,7 @@ class OrderDetailsRepository(private val orderDetailsDao : OrderDetailDao) {
             }
         }
         catch (ex:Exception){
-            Log.d("OrderDetailsRepository.deleteById", ex.message)
+            Log.d("OrderDetailsRepository.deleteById", ex.message?:"")
         }
     }
 
@@ -37,7 +37,7 @@ class OrderDetailsRepository(private val orderDetailsDao : OrderDetailDao) {
             }
         }
         catch (ex:Exception){
-            Log.d("OrderDetailsRepository.deleteUnAttached", ex.message)
+            Log.d("OrderDetailsRepository.deleteUnAttached", ex.message?:"")
         }
     }
 
@@ -48,7 +48,7 @@ class OrderDetailsRepository(private val orderDetailsDao : OrderDetailDao) {
             }
         }
         catch (ex:Exception){
-            Log.d("OrderDetailsRepository.insertAll", ex.message)
+            Log.d("OrderDetailsRepository.insertAll", ex.message?:"")
         }
     }
 
@@ -59,7 +59,7 @@ class OrderDetailsRepository(private val orderDetailsDao : OrderDetailDao) {
             }
         }
         catch (ex:Exception){
-            Log.d("OrderDetailsRepository.insertAll", ex.message)
+            Log.d("OrderDetailsRepository.insertAll", ex.message?:"")
         }
     }
 }

@@ -6,6 +6,7 @@ import androidx.lifecycle.Transformations
 import com.coffeedose.database.SizeDao
 import com.coffeedose.domain.CoffeeSize
 import com.coffeedose.network.CoffeeApi
+import com.coffeedose.network.HttpExceptionEx
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.lang.Exception
@@ -21,11 +22,14 @@ class SizesRepository (private val sizesDao: SizeDao) {
         try {
             withContext(Dispatchers.IO){
                 val sizesResponse = CoffeeApi.retrofitService.getSizesByDrinkIdAsync(drinkId).await()
-                sizesDao.refreshSizes(sizesResponse.payload.map { it.toDatabaseModel(drinkId) })
+                if (sizesResponse.hasError())
+                    throw HttpExceptionEx(sizesResponse.getError())
+                else
+                    sizesDao.refreshSizes(sizesResponse.payload!!.map { it.toDatabaseModel(drinkId) })
             }
         }
         catch (ex: Exception){
-            Log.d("SizesRepository.refreshSizes", ex.message)
+            Log.d("SizesRepository.refreshSizes", ex.message?:"")
         }
     }
 }
