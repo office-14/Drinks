@@ -2,6 +2,7 @@ import React from 'react'
 import MaterialTable from 'material-table'
 import DoneOutline from '@material-ui/icons/DoneOutline'
 import Refresh from '@material-ui/icons/Refresh'
+import { useSnackbar } from 'notistack'
 
 async function handleDataUpdate(): Promise<any> {
   const ordersResponse = await fetch('http://localhost:5000/api/orders/booked')
@@ -17,6 +18,8 @@ async function handleDataUpdate(): Promise<any> {
 function onRowClick() {}
 
 function BookedOrders() {
+  const { enqueueSnackbar: notify } = useSnackbar()
+
   const tableRef: any = React.useRef()
 
   const handleRefresh = React.useCallback(() => {
@@ -25,14 +28,38 @@ function BookedOrders() {
 
   const handleFinishOrder = React.useCallback(
     async (event, rowData) => {
-      await fetch(`http://localhost:5000/api/orders/${rowData.id}/finish`, {
-        method: 'POST'
+      let response
+      try {
+        response = await fetch(
+          `http://localhost:5000/api/orders/${rowData.id}/finish`,
+          {
+            method: 'POST'
+          }
+        )
+      } catch (e) {
+        notify(e, { variant: 'error' })
+        return
+      }
+
+      if (response.status > 299) {
+        const message = (await response.json()).title
+        notify(`Cannot finish order: ${message}`, { variant: 'error' })
+        return
+      }
+
+      notify(`Order ${rowData.order_number} was finished`, {
+        variant: 'success'
       })
 
       handleRefresh()
     },
-    [handleRefresh]
+    [handleRefresh, notify]
   )
+
+  React.useEffect(() => {
+    const interval = setInterval(handleRefresh, 5000)
+    return () => clearInterval(interval)
+  }, [handleRefresh])
 
   return (
     <MaterialTable
