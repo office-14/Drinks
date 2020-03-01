@@ -12,3 +12,10 @@ services:
       dockerfile: docker/Dockerfile
     depends_on:
       - webapi
+
+  webadmin:
+    build:
+      context: web-admin
+      dockerfile: docker/Dockerfile
+    depends_on:
+      - webapi
