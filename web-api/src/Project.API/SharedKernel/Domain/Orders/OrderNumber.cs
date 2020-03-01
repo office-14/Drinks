@@ -1,6 +1,6 @@
 using System;
 
-namespace Project.API.Ordering.Domain.Orders
+namespace Project.API.SharedKernel.Domain.Orders
 {
     public readonly struct OrderNumber
     {

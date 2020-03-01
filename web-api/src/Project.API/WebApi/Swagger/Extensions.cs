@@ -35,7 +35,7 @@ namespace Project.API.WebApi.Swagger
                 c.SwaggerEndpoint($"/swagger/{AvailableDocuments.Ordering}/swagger.json",
                     "Drinks Ordering API v1");
                 c.SwaggerEndpoint($"/swagger/{AvailableDocuments.Servicing}/swagger.json",
-                    "Drinks Service API v1");
+                    "Drinks Servicing API v1");
             });
 
             return app;

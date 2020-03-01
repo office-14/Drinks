@@ -22,7 +22,7 @@ namespace Project.API.WebApi.Endpoints.Servicing.BookedOrders
 
         [HttpGet("api/orders/booked")]
         [Produces(MediaTypeNames.Application.Json)]
-        [ProducesResponseType(typeof(ResponseWrapper<IEnumerable<object>>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ResponseWrapper<IEnumerable<BookedOrder>>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
         public async Task<ResponseWrapper<IEnumerable<BookedOrder>>> BookedOrders()
         {

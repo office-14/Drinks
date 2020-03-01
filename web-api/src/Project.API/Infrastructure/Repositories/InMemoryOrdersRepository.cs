@@ -104,7 +104,12 @@ namespace Project.API.Infrastructure.Repositories
                     .Where(o => o.Value.Status.Equals(Status.Cooking))
                     .Select(o =>
                     {
-                        return BookedOrder.Available(o.Value.Id);
+                        var order = o.Value;
+                        return BookedOrder.Available(
+                            order.Id,
+                            order.OrderNumber,
+                            order.TotalPrice
+                        );
                     }));
             }
         }

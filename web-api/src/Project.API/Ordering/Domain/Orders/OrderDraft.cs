@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Project.API.Ordering.Domain.Core;
+using Project.API.SharedKernel.Domain.Core;
 
 namespace Project.API.Ordering.Domain.Orders
 {

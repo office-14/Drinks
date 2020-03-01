@@ -1,6 +1,7 @@
 using System;
 using Project.API.Ordering.Domain.Core;
 using Project.API.Ordering.Domain.Orders;
+using Project.API.SharedKernel.Domain.Core;
 using Project.API.SharedKernel.Domain.Orders;
 
 namespace Project.API.Ordering.Application.OrderDetails

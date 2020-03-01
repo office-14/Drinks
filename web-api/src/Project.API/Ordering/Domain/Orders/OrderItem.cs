@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Project.API.Ordering.Domain.Drinks;
 using Project.API.Ordering.Domain.Core;
+using Project.API.SharedKernel.Domain.Core;
 
 namespace Project.API.Ordering.Domain.Orders
 {
