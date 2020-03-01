@@ -19,7 +19,7 @@ class SizesRepository (private val sizesDao: SizeDao) {
 
 
     suspend fun refreshSizes(drinkId:Int){
-        try {
+        /*try {*/
             withContext(Dispatchers.IO){
                 val sizesResponse = CoffeeApi.retrofitService.getSizesByDrinkIdAsync(drinkId).await()
                 if (sizesResponse.hasError())
@@ -27,9 +27,9 @@ class SizesRepository (private val sizesDao: SizeDao) {
                 else
                     sizesDao.refreshSizes(sizesResponse.payload!!.map { it.toDatabaseModel(drinkId) })
             }
-        }
+        /*}
         catch (ex: Exception){
             Log.d("SizesRepository.refreshSizes", ex.message?:"")
-        }
+        }*/
     }
 }

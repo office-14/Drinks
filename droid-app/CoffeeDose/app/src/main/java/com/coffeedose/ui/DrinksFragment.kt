@@ -3,7 +3,9 @@ package com.coffeedose.ui
 import android.os.Bundle
 import android.view.*
 import android.widget.AdapterView
+import android.widget.Button
 import android.widget.EditText
+import android.widget.Spinner
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -11,9 +13,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
 import com.coffeedose.R
 import com.coffeedose.databinding.FragmentDrinksBinding
+import com.coffeedose.extensions.setBooleanVisibility
 import com.coffeedose.repository.PreferencesRepository
 import com.coffeedose.ui.Adapters.CoffeeSpinnerAdapter
 import com.coffeedose.viewmodels.DrinksViewModel
@@ -39,22 +43,59 @@ class DrinksFragment : Fragment() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
 
-        binding.proceedButton.setOnClickListener {
-            findNavController().navigate(DrinksFragmentDirections.actionDrinksFragmentToSelectDoseAndAddinsFragment(viewModel.selectedDrink.value!!.id,viewModel.selectedDrink.value!!.name))
-        }
+        initProceedButton(binding.proceedButton)
 
+        initDrinksSpinner(binding.drinksSpinner)
+
+        initSwipeToRefresh(binding.swipeRefresh)
+
+        initErrorHandling(binding)
+
+        initToolbar()
+
+        initObserveListeners()
+
+        return binding.root
+    }
+
+    private fun initErrorHandling(binding: FragmentDrinksBinding) {
+        viewModel.errorMessage.observe(this, Observer {
+
+            if (it != null){
+                binding.drinksRootLayout.setBooleanVisibility(false)
+                binding.viewErrorDrinks.setBooleanVisibility(true)
+                binding.tvErrorTextDrinks.text = it
+                //viewModel.errorMessage.value ?: "Ошибка получения данных"
+            }
+            else {
+                binding.drinksRootLayout.setBooleanVisibility(true)
+                binding.viewErrorDrinks.setBooleanVisibility(false)
+            }
+        })
+    }
+
+    private fun initSwipeToRefresh(swipeRefresh: SwipeRefreshLayout) {
+        swipeRefresh.setOnRefreshListener { viewModel.refreshData(true) }
+        viewModel.isRefreshing.observe(this, Observer {
+            if (it != null){
+                swipeRefresh.isRefreshing = it
+            }
+        } )
+    }
+
+    private fun initDrinksSpinner(drinksSpinner: Spinner) {
         val spinnerAdapter = CoffeeSpinnerAdapter(this.context!!)
-        binding.drinksSpinner.adapter = spinnerAdapter
+        drinksSpinner.adapter = spinnerAdapter
 
         viewModel.drinks.observe(this, Observer {
             if (viewModel.drinks.value != null && viewModel.drinks.value!!.isNotEmpty()) {
                 spinnerAdapter.setItems(viewModel.drinks.value!!)
-                binding.drinksSpinner.setSelection(0)
+                drinksSpinner.setSelection(0)
             }
 
         })
 
-        binding.drinksSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
+        drinksSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
             override fun onNothingSelected(parent: AdapterView<*>?) {
                 TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
             }
@@ -65,11 +106,12 @@ class DrinksFragment : Fragment() {
             }
 
         }
+    }
 
-        initToolbar()
-        initObserveListeners()
-
-        return binding.root
+    private fun initProceedButton(proceedButton: Button) {
+        proceedButton.setOnClickListener {
+            findNavController().navigate(DrinksFragmentDirections.actionDrinksFragmentToSelectDoseAndAddinsFragment(viewModel.selectedDrink.value!!.id,viewModel.selectedDrink.value!!.name))
+        }
     }
 
     private fun initToolbar(){

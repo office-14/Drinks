@@ -17,8 +17,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.coffeedose.R
+import com.coffeedose.databinding.FragmentDrinksBinding
 import com.coffeedose.databinding.FragmentSelectDoseAndAddinsBinding
+import com.coffeedose.extensions.setBooleanVisibility
 import com.coffeedose.ui.Adapters.AddinCheckListener
 import com.coffeedose.ui.Adapters.AddinsListAdapter
 import com.coffeedose.ui.Adapters.SizeSpinnerAdapter
@@ -51,8 +54,35 @@ class SelectDoseAndAddinsFragment : Fragment() {
         initProceedButton(binding.addButton)
 
         initToolbar(drinkName)
+        initErrorHandling(binding)
+        initSwipeToRefresh(binding.swipeRefresh)
 
         return binding.root
+    }
+
+    private fun initSwipeToRefresh(swipeRefresh: SwipeRefreshLayout) {
+        swipeRefresh.setOnRefreshListener { viewModel.refreshData(true) }
+        viewModel.isRefreshing.observe(this, Observer {
+            if (it != null){
+                swipeRefresh.isRefreshing = it
+            }
+        } )
+    }
+
+    private fun initErrorHandling(binding: FragmentSelectDoseAndAddinsBinding) {
+        viewModel.errorMessage.observe(this, Observer {
+
+            if (it != null){
+                binding.viewAddinsRoot.setBooleanVisibility(false)
+                binding.viewAddinsError.setBooleanVisibility(true)
+                binding.tvErrorText.text = it
+                //viewModel.errorMessage.value ?: "Ошибка получения данных"
+            }
+            else {
+                binding.viewAddinsRoot.setBooleanVisibility(true)
+                binding.viewAddinsError.setBooleanVisibility(false)
+            }
+        })
     }
 
     private  fun initSpinner(view : Spinner){

@@ -2,6 +2,7 @@ package com.coffeedose.viewmodels
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.Observer
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -18,11 +19,6 @@ class OrderAwaitingViewModel(application : Application, private val orderId:Int)
         it.first()
     }
 
-    private var keepRefresh = Transformations.map(order){
-        if (it == null) return@map true
-        else return@map it!!.statusName.toLowerCase() != "ready"
-    }
-
     private val viewModelJob = Job()
 
     private val viewModelScope = CoroutineScope(viewModelJob + Dispatchers.Main)
@@ -34,11 +30,19 @@ class OrderAwaitingViewModel(application : Application, private val orderId:Int)
 
     private fun longPollingOrder(){
         viewModelScope.launch {
-            //getOrderPeriodically()
-            while (keepRefresh.value != false) {
+
+            order.observeForever(Observer {
+                if (it?.statusName?.toLowerCase() != "ready"){
+                    cancel()
+                }
+            })
+
+            while (isActive) { //keepRefresh.value != false
                 ordersRepository.refreshOrder(orderId)
             }
         }
+
+
     }
 
     fun approve(){

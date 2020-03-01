@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
@@ -36,7 +37,21 @@ class OrderAwaitingFragment : Fragment() {
 
         initToolbar()
 
+        initToolbarTitle()
 
+        initNavigateOutOnApprove(binding.bvApprove)
+
+        return binding.root
+    }
+
+    private fun initNavigateOutOnApprove(bvApprove: Button) {
+        bvApprove.setOnClickListener {
+            viewModel.approve()
+            findNavController().navigate(OrderAwaitingFragmentDirections.actionOrderAwaitingFragmentToDrinksFragment())
+        }
+    }
+
+    private fun initToolbarTitle() {
         viewModel.order.observe(this, Observer {
             if (it != null)
             {
@@ -49,16 +64,6 @@ class OrderAwaitingFragment : Fragment() {
                 }
             }
         })
-
-
-
-        binding.bvApprove.setOnClickListener {
-            viewModel.approve()
-            findNavController().navigate(OrderAwaitingFragmentDirections.actionOrderAwaitingFragmentToDrinksFragment())
-        }
-
-
-        return binding.root
     }
 
 

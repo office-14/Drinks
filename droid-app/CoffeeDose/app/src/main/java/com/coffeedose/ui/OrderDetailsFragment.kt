@@ -3,6 +3,7 @@ package com.coffeedose.ui
 
 import android.os.Bundle
 import android.view.*
+import android.widget.Button
 import androidx.fragment.app.Fragment
 import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
@@ -48,17 +49,25 @@ class OrderDetailsFragment : Fragment() {
 
         handleVisibility()
 
-        binding.confirmButton.setOnClickListener {
-            viewModel.confirmOrder()
-        }
+        initConfirmOrderClick(binding.confirmButton)
 
+        initNavigateOutUnSuccess()
+
+        return binding.root
+
+    }
+
+    private fun initNavigateOutUnSuccess() {
         viewModel.orderId.observe(this, Observer {
             if (it != -1)
                 findNavController().navigate(OrderDetailsFragmentDirections.actionOrderFragmentToOrderAwaitingFragment(it))
         })
+    }
 
-        return binding.root
-
+    private fun initConfirmOrderClick(confirmButton: Button) {
+        confirmButton.setOnClickListener {
+            viewModel.confirmOrder()
+        }
     }
 
     private fun initOnbackPressedCallBack(){

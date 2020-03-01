@@ -18,7 +18,7 @@ class AddinsRepository(private val addinsDatabaseDao: AddinDao) {
     }
 
     suspend fun refreshAddins(){
-        try {
+        /*try {*/
             withContext(Dispatchers.IO){
                 val addinsResponse = CoffeeApi.retrofitService.getAddinsAsync().await()
                 if (addinsResponse.hasError())
@@ -26,9 +26,9 @@ class AddinsRepository(private val addinsDatabaseDao: AddinDao) {
                 else
                     addinsDatabaseDao.refreshAddins(addinsResponse.payload!!.map { it.toDataBaseModel() })
             }
-        }
+        /*}
         catch (ex: Exception){
             Log.d("AddinsRepository.refreshAddins", ex.message?:"")
-        }
+        }*/
     }
 }

@@ -18,17 +18,17 @@ class CoffeeRepository (private val coffeeDao: CoffeeDao) {
     }
 
     suspend fun refreshDrinks(){
-        try {
-            withContext(Dispatchers.IO){
+        /*try {*/
+            withContext(Dispatchers.IO) {
                 val drinksResponse = CoffeeApi.retrofitService.getDrinksAsync().await()
                 if (drinksResponse.hasError())
                     throw HttpExceptionEx(drinksResponse.getError())
                 else
                     coffeeDao.refreshDrinks(drinksResponse.payload!!.map { it.toDataBaseModel() })
             }
-        }
+        /*}
         catch (ex:Exception){
-            Log.d("CoffeeRepository.refreshDrinks", ex.message?:"")
-        }
+            throw ex
+        }*/
     }
 }
