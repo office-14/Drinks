@@ -7,13 +7,14 @@ namespace Project.API.WebApi.Swagger
 {
     internal static class Extensions
     {
-        private static readonly string DocumentName = "drinks-1";
-
         public static IServiceCollection AddCustomSwagger(this IServiceCollection services)
         {
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc(DocumentName, new OpenApiInfo { Title = "Drinks API", Version = "v1" });
+                c.SwaggerDoc(AvailableDocuments.Ordering,
+                    new OpenApiInfo { Title = "Drinks Ordering API", Version = "v1" });
+                c.SwaggerDoc(AvailableDocuments.Servicing,
+                    new OpenApiInfo { Title = "Drinks Servicing API", Version = "v1" });
             });
 
             return services;
@@ -31,7 +32,10 @@ namespace Project.API.WebApi.Swagger
             });
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint($"/swagger/{DocumentName}/swagger.json", "Drinks API v1");
+                c.SwaggerEndpoint($"/swagger/{AvailableDocuments.Ordering}/swagger.json",
+                    "Drinks Ordering API v1");
+                c.SwaggerEndpoint($"/swagger/{AvailableDocuments.Servicing}/swagger.json",
+                    "Drinks Service API v1");
             });
 
             return app;

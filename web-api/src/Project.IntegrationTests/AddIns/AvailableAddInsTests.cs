@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
-using Project.API.Domain.AddIns;
+using Project.API.Ordering.Domain.Drinks;
 using Project.API.WebApi;
 using Xunit;
 

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
-using Project.API.Domain.Exceptions;
+using Project.API.Ordering.Domain.Exceptions;
 
 namespace Project.API.WebApi.Errors
 {

@@ -1,12 +1,16 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Project.API.Application.OrderDetails;
-using Project.API.Domain.Orders;
+using Project.API.Ordering.Application.OrderDetails;
+using Project.API.Ordering.Domain.Orders;
+using Project.API.Servicing.Application.BookedOrders;
+using Project.API.SharedKernel.Domain.Orders;
 
 namespace Project.API.Infrastructure.Repositories
 {
-    public sealed class InMemoryOrdersRepository : IOrderDetailsRepository, IOrdersRepository
+    public sealed class InMemoryOrdersRepository
+        : IOrderDetailsRepository, IOrdersRepository, IBookedOrdersRepository
     {
         private int IdCounter = 0;
 
@@ -90,6 +94,19 @@ namespace Project.API.Infrastructure.Repositories
             }
 
             return order;
+        }
+
+        public Task<IEnumerable<BookedOrder>> BookedOrders(CancellationToken token = default)
+        {
+            lock (syncLock)
+            {
+                return Task.FromResult(orders
+                    .Where(o => o.Value.Status.Equals(Status.Cooking))
+                    .Select(o =>
+                    {
+                        return BookedOrder.Available(o.Value.Id);
+                    }));
+            }
         }
     }
 }

@@ -9,16 +9,15 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.OpenApi.Models;
-using Project.API.Application;
-using Project.API.Application.DrinkDetails;
-using Project.API.Application.OrderDetails;
-using Project.API.Application.OrderService;
-using Project.API.Domain.AddIns;
-using Project.API.Domain.Drinks;
-using Project.API.Domain.Orders;
+using Project.API.Ordering.Application;
+using Project.API.Ordering.Application.DrinkDetails;
+using Project.API.Ordering.Application.OrderDetails;
+using Project.API.Ordering.Application.OrderService;
+using Project.API.Ordering.Domain.Drinks;
+using Project.API.Ordering.Domain.Orders;
 using Project.API.Infrastructure.Repositories;
 using Project.API.WebApi.Swagger;
+using Project.API.Servicing.Application.BookedOrders;
 
 [assembly: ApiController]
 namespace Project.API.WebApi
@@ -55,6 +54,7 @@ namespace Project.API.WebApi
             services.AddSingleton<InMemoryOrdersRepository>();
             services.AddSingleton<IOrderDetailsRepository>(provider => provider.GetRequiredService<InMemoryOrdersRepository>());
             services.AddSingleton<IOrdersRepository>(provider => provider.GetRequiredService<InMemoryOrdersRepository>());
+            services.AddSingleton<IBookedOrdersRepository>(provider => provider.GetRequiredService<InMemoryOrdersRepository>());
             services.AddSingleton<OrderService>();
             services.AddSingleton<OrderNumberProvider>();
         }

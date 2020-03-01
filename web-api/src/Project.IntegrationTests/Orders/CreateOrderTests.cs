@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Project.API.WebApi;
-using Project.API.WebApi.Endpoints.CreateOrder;
+using Project.API.WebApi.Endpoints.Ordering.CreateOrder;
 using Xunit;
 
 namespace Project.IntegrationTests.Orders

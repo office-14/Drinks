@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Project.API.Application.DrinkDetails;
-using Project.API.Domain.Core;
-using Project.API.Domain.Drinks;
+using Project.API.Ordering.Application.DrinkDetails;
+using Project.API.Ordering.Domain.Core;
+using Project.API.Ordering.Domain.Drinks;
 
 namespace Project.API.Infrastructure.Repositories
 {
