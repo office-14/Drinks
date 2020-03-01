@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Project.API.WebApi;
+using Project.API.WebApi.Swagger;
 using Xunit;
 
 namespace Project.IntegrationTests.Infrastructure
@@ -28,12 +29,13 @@ namespace Project.IntegrationTests.Infrastructure
         }
 
         [Theory]
-        [InlineData("swagger/drinks-1/swagger.json")]
+        [InlineData(AvailableDocuments.Ordering)]
+        [InlineData(AvailableDocuments.Servicing)]
         public async Task Swagger_API_page_should_be_accessible(string apiPage)
         {
             var client = factory.CreateClient();
 
-            var response = await client.GetAsync(apiPage);
+            var response = await client.GetAsync($"swagger/{apiPage}/swagger.json");
 
             response.EnsureSuccessStatusCode();
             Assert.Equal("application/json; charset=utf-8",

@@ -5,7 +5,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Project.API.WebApi;
-using Project.API.WebApi.Endpoints.CreateOrder;
+using Project.API.WebApi.Endpoints.Ordering.CreateOrder;
+using Project.API.WebApi.Endpoints.Ordering.Shared;
 using Project.API.WebApi.Endpoints.Shared;
 using Xunit;
 

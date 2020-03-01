@@ -17,4 +17,9 @@ jobs:
       script:
         - npm install
         - npm run build
-        - npm test
+        # - npm test
+
+    - services:
+        - docker
+      script:
+        - docker-compose -f docker-compose.yml -f docker-compose-ci.yml build
