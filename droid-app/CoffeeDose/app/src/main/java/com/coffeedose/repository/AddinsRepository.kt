@@ -6,6 +6,7 @@ import androidx.lifecycle.Transformations
 import com.coffeedose.database.AddinDao
 import com.coffeedose.domain.Addin
 import com.coffeedose.network.CoffeeApi
+import com.coffeedose.network.HttpExceptionEx
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.lang.Exception
@@ -17,14 +18,17 @@ class AddinsRepository(private val addinsDatabaseDao: AddinDao) {
     }
 
     suspend fun refreshAddins(){
-        try {
+        /*try {*/
             withContext(Dispatchers.IO){
                 val addinsResponse = CoffeeApi.retrofitService.getAddinsAsync().await()
-                addinsDatabaseDao.refreshAddins(addinsResponse.payload.map { it.toDataBaseModel() })
+                if (addinsResponse.hasError())
+                    throw HttpExceptionEx(addinsResponse.getError())
+                else
+                    addinsDatabaseDao.refreshAddins(addinsResponse.payload!!.map { it.toDataBaseModel() })
             }
-        }
+        /*}
         catch (ex: Exception){
-            Log.d("AddinsRepository.refreshAddins", ex.message)
-        }
+            Log.d("AddinsRepository.refreshAddins", ex.message?:"")
+        }*/
     }
 }

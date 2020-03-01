@@ -8,6 +8,7 @@ import com.coffeedose.domain.Addin
 import com.coffeedose.domain.CoffeeSize
 import com.coffeedose.domain.OrderDetail
 import com.coffeedose.extensions.mutableLiveData
+import com.coffeedose.network.HttpExceptionEx
 import com.coffeedose.repository.AddinsRepository
 import com.coffeedose.repository.OrderDetailsRepository
 import com.coffeedose.repository.SizesRepository
@@ -29,6 +30,10 @@ class SelectDoseAndAddinsViewModel(application: Application,var drinkId : Int) :
     private val addinsTotal = mutableLiveData(0)
 
     val count = mutableLiveData(1)
+
+    var isRefreshing = mutableLiveData(false)
+
+    var errorMessage : MutableLiveData<String?> = mutableLiveData(null)
 
     fun getSummary() : LiveData<String>{
         var result = MediatorLiveData<String>()
@@ -67,6 +72,29 @@ class SelectDoseAndAddinsViewModel(application: Application,var drinkId : Int) :
         viewModelScope.launch {
             sizesRepository.refreshSizes(drinkId)
             addinsRepository.refreshAddins()
+        }
+    }
+
+    fun refreshData(showRefresh:Boolean = false){
+        viewModelScope.launch {
+            try {
+
+                if (showRefresh) isRefreshing.value = true
+
+                sizesRepository.refreshSizes(drinkId)
+                addinsRepository.refreshAddins()
+
+                errorMessage.value = null
+            }
+            catch (responseEx: HttpExceptionEx){
+                errorMessage.value = responseEx.error.title
+            }
+            catch (ex: java.lang.Exception){
+                errorMessage.value = ex.message
+            }
+            finally {
+                if (showRefresh) isRefreshing.value = false
+            }
         }
     }
 
