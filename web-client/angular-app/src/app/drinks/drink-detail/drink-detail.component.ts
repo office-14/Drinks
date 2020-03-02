@@ -83,7 +83,6 @@ export class DrinkDetailComponent implements OnInit {
 	        return prev + cur.price;
 	    }, 0);
     
-    total_price *= this.draft_cart_product.qty;
   	return total_price;
   }
 
