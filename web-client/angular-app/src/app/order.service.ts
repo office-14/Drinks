@@ -20,13 +20,16 @@ export class OrderService {
   }
 
   create_order(cart_products): Observable<AjaxResponse<any>> {
-  	let order_products = cart_products.map(function(product) {
-	  return {
-	  	"drink_id": product.drink_id,
-	  	"size_id": product.size_id,
-	  	"add-ins": product.addins.map(addin => addin.id)
-	  };
-	});
+  	let order_products = [];
+  	for (let product of cart_products) {
+	    for (let i = product.qty; i > 0; i--) {
+			order_products.push({
+				"drink_id": product.drink_id,
+				"size_id": product.size_id,
+				"add-ins": product.addins.map(addin => addin.id)
+			});
+		}
+	}
 
   	return this.http.post<AjaxResponse<any>>('http://localhost:5000/api/orders', { drinks: order_products });
   }
