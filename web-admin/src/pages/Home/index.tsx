@@ -2,10 +2,20 @@ import React from 'react'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
+import Container from '@material-ui/core/Container'
+import { makeStyles } from '@material-ui/core/styles'
 
 import BookedOrders from './BookedOrders'
 
+const useStyles = makeStyles(theme => ({
+  container: {
+    paddingTop: theme.spacing(4)
+  }
+}))
+
 function Home() {
+  const classes = useStyles()
+
   return (
     <>
       <AppBar position="static">
@@ -16,7 +26,9 @@ function Home() {
         </Toolbar>
       </AppBar>
       <main>
-        <BookedOrders />
+        <Container maxWidth="lg" className={classes.container}>
+          <BookedOrders />
+        </Container>
       </main>
     </>
   )
