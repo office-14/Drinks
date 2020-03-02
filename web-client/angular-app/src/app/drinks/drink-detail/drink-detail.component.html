@@ -55,7 +55,7 @@
           </div>
         </div>
         <div class="grid-x">
-          <h3>Цена: {{get_selected_price()}} ₽</h3>
+          <h3>Цена: {{get_selected_price()*draft_cart_product.qty}} ₽</h3>
         </div>
 
         <a href="#" class="button large expanded" (click)="addToCart($event)">В корзину</a>
