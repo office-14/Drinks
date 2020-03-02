@@ -2,17 +2,18 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { AjaxResponse } from "./ajax-response";
 import { Observable, of } from 'rxjs';
+import { Order } from './order/order';
 
 @Injectable({
   providedIn: 'root'
 })
 export class OrderService {
-  order = {};
+  order: Order;
 
   constructor(private http: HttpClient) { }
 
   if_order_exist() {
-  	if (this.order.hasOwnProperty('id')) {
+  	if (this.order) {
   		return true;
   	}
   	return false;
@@ -35,7 +36,7 @@ export class OrderService {
   }
 
   clear_order() {
-  	this.order = {};
+  	this.order = null;
   }
 
   get_order() {
