@@ -11,11 +11,20 @@ jobs:
         - dotnet test -c Release
 
     - language: node_js
-      node_js: 12
+      node_js: 13
       before_script:
         - cd web-admin
       script:
         - npm install
+        - npm run build
+        # - npm test
+
+    - language: node_js
+      node_js: 13
+      before_script:
+        - cd web-client
+      script:
+        - npm install --silent
         - npm run build
         # - npm test
 
