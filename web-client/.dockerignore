@@ -20,3 +20,4 @@ packages/
 test-results/
 TestResults/
 .DS_Store
+dist/
