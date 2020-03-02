@@ -1,0 +1,38 @@
+<br>
+<article class="grid-container">
+  <div class="grid-x cell">
+    <nav aria-label="You are here:" role="navigation">
+      <ul class="breadcrumbs">
+        <li><a ui-sref="drinks">Меню</a></li>
+        <li>
+          Корзина
+        </li>
+      </ul>
+    </nav>
+  </div>
+  <div class="grid-x">
+    <div>
+      <h1>Корзина</h1>
+      <div *ngIf="products.length == 0">Нет товаров</div>
+      <div *ngIf="products.length > 0">
+        <div class="media-object stack-for-small" *ngFor="let product of products; index as i">
+          <div class="media-object-section">
+            <img class="thumbnail" src="{{product.drink_image}}" width="200">
+          </div>
+          <div class="media-object-section">
+            <h5>{{product.drink_name}}</h5>
+            <p>Размер: {{product.size_volume}}</p>
+            <p>Добавки: <span *ngFor="let addin of product.addins">{{addin.name}}</span></p>
+            <p>Количество:</p>
+            <input type="number" min="1" [(ngModel)]="product.qty" ng-change="change_product_qty(product)">
+            <p *ngIf="product.qty > 0">Цена: {{product.price * product.qty}} ₽</p>
+            <button class="button" (click)="remove_from_cart(i)">Удалить</button>
+          </div>
+        </div>
+        <h4>Сумма заказа: {{get_total_price()}} ₽</h4>
+        <button class="button" (click)="create_order()" *ngIf="!if_order_exist()">Оформить заказ</button>
+        <p *ngIf="if_order_exist()">Вы не можете оформить новый заказ, так как есть текщий заказ</p>
+      </div>
+    </div>
+  </div>
+</article>

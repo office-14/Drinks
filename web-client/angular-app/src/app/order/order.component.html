@@ -1,0 +1,37 @@
+<br>
+<article class="grid-container">
+  <div class="grid-x cell">
+    <nav aria-label="You are here:" role="navigation">
+      <ul class="breadcrumbs">
+        <li><a ui-sref="drinks">Меню</a></li>
+        <li>
+          Заказ
+        </li>
+      </ul>
+    </nav>
+  </div>
+  <div class="grid-x">
+    <div>
+      <h1>Заказ</h1>
+      <div *ngIf="!if_order_exist()">Нет заказов</div>
+      <div *ngIf="if_order_exist()">
+        <h3>Заказ № {{order.order_number}}</h3>
+        <div class="media-object stack-for-small" *ngFor="let product of order.products">
+          <div class="media-object-section">
+            <img class="thumbnail" src="{{product.drink_image}}" width="200">
+          </div>
+          <div class="media-object-section">
+            <h5>{{product.drink_name}}</h5>
+            <p>Размер: {{product.size_volume}}</p>
+            <p>Добавки: <span *ngFor="let addin of product.addins">{{addin.name}}</span></p>
+            <p>Количество: {{product.qty}}</p>
+            <p>Цена: {{product.price * product.qty}} ₽</p>
+          </div>
+        </div>
+        <h4>Сумма заказа: {{order.total_price}} ₽</h4>
+        <p>Статус: {{order.status_name}}</p>
+        <button class="button" (click)="finish_order()">Завершить заказ</button>
+      </div>
+    </div>
+  </div>
+</article>

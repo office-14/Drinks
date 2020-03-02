@@ -1,0 +1,65 @@
+<br>
+<article class="grid-container" *ngIf="drink">
+  <div class="grid-x cell">
+    <nav aria-label="You are here:" role="navigation">
+      <ul class="breadcrumbs">
+        <li><a ui-sref="drinks">Меню</a></li>
+        <li>
+          <span class="show-for-sr">Страница: </span> {{drink.name}}
+        </li>
+      </ul>
+    </nav>
+  </div>
+  <div class="grid-x grid-margin-x">
+    <div class="medium-6 cell">
+      <img class="thumbnail" src="{{drink.photo_url}}">
+    </div>
+    <div class="medium-6 large-5 cell large-offset-1">
+      <h3>{{drink.name}}</h3>
+      <p>{{drink.description}}</p>
+      <div *ngIf="drink.sizes">
+        <h5>Размер</h5>
+        <label>
+	        <select [(ngModel)]="draft_cart_product.size">
+		        <option [value]="" disabled>Выберите размер</option>
+		        <option *ngFor="let size of drink.sizes" [ngValue]="size">
+		          {{ size.name + ' - ' + size.volume }}
+		        </option>
+		      </select>
+        </label>
+
+        <div class="grid-x">
+          <h5>Добавки</h5>
+        </div>
+        <div class="grid-x" *ngFor="let addin of draft_cart_product.addins">
+          <div class="small-1 cell">
+          	<input type="checkbox" [(ngModel)]="addin.selected" [attr.id]="'addin-' + addin.id" [value]="addin.id" [checked]="addin.selected" style="margin-top: 1.5rem;">
+          </div>
+          <div class="small-5 cell">
+            <label [attr.for]="'addin-' + addin.id" class="middle">
+              <img src="{{addin.photo_url}}" width="50"/>
+              <span style="margin-left: 10px;">{{addin.name}}</span>
+            </label>
+            
+          </div>
+          <div class="small-4 cell">
+            <label [attr.for]="'addin-' + addin.id" style="margin-top: 1.3rem;">{{addin.price}} ₽</label>
+          </div>
+        </div>
+        <div class="grid-x">
+          <div class="small-4 cell">
+            <h5>Количество</h5>
+          </div>
+          <div class="small-2 cell">
+            <input type="number" placeholder="Укажите кол-во напитков" [(ngModel)]="draft_cart_product.qty" min="1" (change)="change_draft_cart_product_qty()">
+          </div>
+        </div>
+        <div class="grid-x">
+          <h3>Цена: {{get_selected_price()}} ₽</h3>
+        </div>
+
+        <a href="#" class="button large expanded" (click)="addToCart($event)">В корзину</a>
+      </div>
+    </div>
+  </div>
+</article>

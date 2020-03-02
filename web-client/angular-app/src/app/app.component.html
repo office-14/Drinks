@@ -1,0 +1,32 @@
+<!-- Start Top Bar -->
+  <div class="top-bar">
+    <div class="top-bar-left">
+    <ul class="menu">
+      <li class="menu-text">Кофейня 14</li>
+      <li><a uiSref="drinks" uiSrefActive="active">Меню</a></li>
+      <li><a uiSref="cart" uiSrefActive="active">Корзина <span *ngIf="get_cart_products_qty() > 0">({{get_cart_products_qty()}})</span></a></li>
+      <li *ngIf="if_order_exist()"><a uiSref="order" uiSrefActive="active">Заказ</a></li>
+    </ul>
+    </div>
+    
+  </div>
+  <!-- End Top Bar -->
+<ui-view></ui-view>
+<footer class="callout secondary">
+  <div class="grid-x grid-margin-y expanded">
+
+    <div class="medium-6 cell">
+      <ul class="menu">
+    <li uiSref="drinks"><a>Меню</a></li>
+    <li><a>Корзина <span *ngIf="get_cart_products_qty() > 0">({{get_cart_products_qty()}})</span></a></li>
+      </ul>
+    </div>
+
+    <div class="medium-6 cell">
+      <ul class="menu align-right">
+        <li class="menu-text">Copyright © 2020 Кофейня 14</li>
+      </ul>
+    </div>
+  </div>
+
+</footer>
