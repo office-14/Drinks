@@ -1,4 +1,4 @@
-package com.coffeedose.bindings
+package com.office14.coffeedose.bindings
 
 import androidx.databinding.DataBindingComponent
 
