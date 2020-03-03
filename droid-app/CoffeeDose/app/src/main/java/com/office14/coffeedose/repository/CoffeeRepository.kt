@@ -1,0 +1,32 @@
+package com.office14.coffeedose.repository
+
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Transformations
+import com.office14.coffeedose.database.CoffeeDao
+import com.office14.coffeedose.domain.Coffee
+import com.office14.coffeedose.network.CoffeeApi
+import com.office14.coffeedose.network.HttpExceptionEx
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+
+class CoffeeRepository (private val coffeeDao: CoffeeDao) {
+
+    val drinks: LiveData<List<Coffee>> = Transformations.map(coffeeDao.getAllDrinks()){ itDbo ->
+        itDbo.map { it.toDomainModel() }
+    }
+
+    suspend fun refreshDrinks(){
+        /*try {*/
+            withContext(Dispatchers.IO) {
+                val drinksResponse = CoffeeApi.retrofitService.getDrinksAsync().await()
+                if (drinksResponse.hasError())
+                    throw HttpExceptionEx(drinksResponse.getError())
+                else
+                    coffeeDao.refreshDrinks(drinksResponse.payload!!.map { it.toDataBaseModel() })
+            }
+        /*}
+        catch (ex:Exception){
+            throw ex
+        }*/
+    }
+}

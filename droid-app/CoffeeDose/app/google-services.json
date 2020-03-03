@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "245962998291",
+    "firebase_url": "https://coffedose-70278.firebaseio.com",
+    "project_id": "coffedose-70278",
+    "storage_bucket": "coffedose-70278.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:245962998291:android:d1f412bf5a448ae55275e6",
+        "android_client_info": {
+          "package_name": "com.office14.coffeedose"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "245962998291-9ti3hcd5qdjunmmkb4b775it5t2ud3v7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCC8_8XbTn9iWNyiZTNNvXFepkRAOp3Rbw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "245962998291-9ti3hcd5qdjunmmkb4b775it5t2ud3v7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
