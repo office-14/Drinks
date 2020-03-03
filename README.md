@@ -18,3 +18,9 @@ If everything's fine, you should be able to visit:
 - `http://localhost:8080` to see web client;
 - `http://localhost:8081` to see web admin;
 - `http://localhost:5000/swagger` to see web API OpenAPI/Swagger documentation.
+
+If you want to start only one of the components (Web API or anything) then use the following command:
+
+```bash
+$ docker-compose -f docker-compose.yml -f docker-compose-dev.yml up --build webapi
+```
