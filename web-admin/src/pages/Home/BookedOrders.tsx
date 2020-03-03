@@ -4,6 +4,21 @@ import DoneOutline from '@material-ui/icons/DoneOutline'
 import Refresh from '@material-ui/icons/Refresh'
 import { useSnackbar } from 'notistack'
 
+function renderOrderDetails(items: any[]) {
+  return <>{items.map(renderOrderItem)}</>
+}
+
+function renderOrderItem(
+  { drink_name, drink_volume, 'add-ins': addIns }: any,
+  idx: number
+) {
+  let formattedItem = `${drink_name} (${drink_volume})`
+  if (addIns.length > 0) {
+    formattedItem += ` (+ ${addIns.toString()})`
+  }
+  return <p key={idx}>{formattedItem}</p>
+}
+
 async function handleDataUpdate(): Promise<any> {
   const ordersResponse = await fetch('http://localhost:5000/api/orders/booked')
   const orders = await ordersResponse.json()
@@ -62,18 +77,24 @@ function BookedOrders() {
   }, [handleRefresh])
 
   return (
+    //@ts-ignore
     <MaterialTable
       title="Booked orders"
       tableRef={tableRef}
       onRowClick={onRowClick} // Used to enable row highlight
       columns={[
-        //@ts-ignore
         { title: '#', field: 'index', width: 60 },
-        { title: 'Order number', field: 'order_number' },
+        { title: 'Order number', field: 'order_number', width: 150 },
         {
           title: 'Total price',
           field: 'total_price',
-          render: row => `${row.total_price} ₽`
+          render: row => `${row.total_price} ₽`,
+          width: 150
+        },
+        {
+          title: 'Details',
+          field: 'items',
+          render: row => renderOrderDetails(row.items)
         }
       ]}
       data={handleDataUpdate}

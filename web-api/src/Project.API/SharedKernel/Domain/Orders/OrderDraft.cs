@@ -1,15 +1,18 @@
 using System.Collections.Generic;
-using System.Linq;
-using Project.API.Ordering.Domain.Core;
 using Project.API.SharedKernel.Domain.Core;
 
-namespace Project.API.Ordering.Domain.Orders
+namespace Project.API.SharedKernel.Domain.Orders
 {
     public sealed class OrderDraft
     {
         private readonly List<OrderItem> orderItems = new List<OrderItem>();
 
         private OrderDraft() { }
+
+        public IReadOnlyCollection<OrderItem> Items
+        {
+            get => orderItems.AsReadOnly();
+        }
 
         public void AddOrderItem(OrderItem orderItem)
         {

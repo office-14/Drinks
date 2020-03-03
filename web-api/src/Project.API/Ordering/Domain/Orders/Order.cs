@@ -12,8 +12,11 @@ namespace Project.API.Ordering.Domain.Orders
             OrderId id,
             OrderNumber orderNumber,
             Roubles totalPrice,
-            Status status
-        ) => (Id, OrderNumber, TotalPrice, Status) = (id, orderNumber, totalPrice, status);
+            Status status,
+            OrderDraft draft
+        ) =>
+            (Id, OrderNumber, TotalPrice, Status, Draft) =
+            (id, orderNumber, totalPrice, status, draft);
 
         public OrderId Id { get; private set; }
 
@@ -22,6 +25,8 @@ namespace Project.API.Ordering.Domain.Orders
         public Roubles TotalPrice { get; private set; }
 
         public Status Status { get; private set; }
+
+        public OrderDraft Draft { get; private set; }
 
         public void Finish()
         {
@@ -43,14 +48,18 @@ namespace Project.API.Ordering.Domain.Orders
 
         public override int GetHashCode() => Id.GetHashCode();
 
-        public static Order New(OrderNumber orderNumber, Roubles totalPrice) =>
-            new Order(default, orderNumber, totalPrice, Status.Cooking);
+        public static Order New(
+            OrderNumber orderNumber,
+            Roubles totalPrice,
+            OrderDraft draft
+        ) => new Order(default, orderNumber, totalPrice, Status.Cooking, draft);
 
         public static Order Existing(
             OrderId id,
             OrderNumber orderNumber,
             Roubles totalPrice,
-            Status status
-        ) => new Order(id, orderNumber, totalPrice, status);
+            Status status,
+            OrderDraft draft
+        ) => new Order(id, orderNumber, totalPrice, status, draft);
     }
 }

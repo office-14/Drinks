@@ -8,10 +8,11 @@ namespace Project.API.Servicing.Application.BookedOrders
         private BookedOrder(
             OrderId orderId,
             OrderNumber orderNumber,
-            Roubles totalPrice
+            Roubles totalPrice,
+            BookedItem[] items
         ) =>
-            (Id, OrderNumber, TotalPrice) =
-            (orderId, orderNumber, totalPrice);
+            (Id, OrderNumber, TotalPrice, Items) =
+            (orderId, orderNumber, totalPrice, items);
 
         public OrderId Id { get; }
 
@@ -19,14 +20,18 @@ namespace Project.API.Servicing.Application.BookedOrders
 
         public Roubles TotalPrice { get; }
 
+        public BookedItem[] Items { get; }
+
         public static BookedOrder Available(
             OrderId orderId,
             OrderNumber orderNumber,
-            Roubles totalPrice
+            Roubles totalPrice,
+            BookedItem[] items
         ) => new BookedOrder(
             orderId,
             orderNumber,
-            totalPrice
+            totalPrice,
+            items
         );
     }
 }
