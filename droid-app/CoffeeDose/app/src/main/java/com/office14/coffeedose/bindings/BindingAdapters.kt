@@ -1,13 +1,10 @@
-package com.coffeedose.bindings
+package com.office14.coffeedose.bindings
 
-import android.content.res.ColorStateList
 import android.view.View
 import android.widget.ImageView
-import androidx.core.widget.ImageViewCompat
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
 import com.coffeedose.R
-import com.coffeedose.extensions.setBooleanVisibility
 
 @BindingAdapter("imageUrl")
 fun bindImage(imgView: ImageView, imgUrl: String?) {
