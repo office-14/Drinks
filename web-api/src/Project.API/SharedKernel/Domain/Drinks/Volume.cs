@@ -1,6 +1,6 @@
 using System;
 
-namespace Project.API.Ordering.Domain.Drinks
+namespace Project.API.SharedKernel.Domain.Drinks
 {
     public readonly struct Volume
     {

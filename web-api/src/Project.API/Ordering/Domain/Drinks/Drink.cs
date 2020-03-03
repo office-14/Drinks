@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using Project.API.Ordering.Domain.Core;
+using Project.API.SharedKernel.Domain.Core;
 
 namespace Project.API.Ordering.Domain.Drinks
 {

@@ -14,33 +14,30 @@ namespace Project.API.Infrastructure.Repositories
     {
         private int IdCounter = 0;
 
-        private readonly Dictionary<OrderId, OrderDetails> orders =
-            new Dictionary<OrderId, OrderDetails>();
+        private readonly Dictionary<OrderId, Order> orders =
+            new Dictionary<OrderId, Order>();
 
         private readonly object syncLock = new object();
 
         public Task<OrderDetails?> OrderDetailsWithId(OrderId id, CancellationToken token = default)
         {
+            Order? order;
+
             lock (syncLock)
             {
-                return Task.FromResult<OrderDetails?>(orders.GetValueOrDefault(id));
+                order = orders.GetValueOrDefault(id);
             }
+
+            if (order == null) return Task.FromResult<OrderDetails?>(null);
+
+            return Task.FromResult<OrderDetails?>(ToOrderDetails(order));
         }
 
         public Task<Order?> OrderWithId(OrderId id, CancellationToken token = default)
         {
             lock (syncLock)
             {
-                var orderDetails = orders.GetValueOrDefault(id);
-
-                if (orderDetails == null) return Task.FromResult<Order?>(null);
-
-                return Task.FromResult<Order?>(Order.Existing(
-                    orderDetails.Id,
-                    orderDetails.OrderNumber,
-                    orderDetails.TotalPrice,
-                    orderDetails.Status
-                ));
+                return Task.FromResult<Order?>(orders.GetValueOrDefault(id));
             }
         }
 
@@ -57,23 +54,25 @@ namespace Project.API.Infrastructure.Repositories
         {
             var nextId = OrderId.From(Interlocked.Increment(ref IdCounter));
 
-            var orderDetails = OrderDetails.Available(
+            var newOrder = Order.Existing(
                 nextId,
                 order.OrderNumber,
                 order.TotalPrice,
-                order.Status
+                order.Status,
+                order.Draft
             );
 
             lock (syncLock)
             {
-                orders.Add(nextId, orderDetails);
+                orders.Add(nextId, newOrder);
             }
 
             var persistedOrder = Order.Existing(
                 nextId,
-                order.OrderNumber,
-                order.TotalPrice,
-                order.Status
+                newOrder.OrderNumber,
+                newOrder.TotalPrice,
+                newOrder.Status,
+                newOrder.Draft
             );
 
             return persistedOrder;
@@ -81,16 +80,17 @@ namespace Project.API.Infrastructure.Repositories
 
         private Order UpdateExistingOrder(Order order)
         {
-            var orderDetails = OrderDetails.Available(
+            var updatedOrder = Order.Existing(
                 order.Id,
                 order.OrderNumber,
                 order.TotalPrice,
-                order.Status
+                order.Status,
+                order.Draft
             );
 
             lock (syncLock)
             {
-                orders[order.Id] = orderDetails;
+                orders[order.Id] = updatedOrder;
             }
 
             return order;
@@ -100,18 +100,34 @@ namespace Project.API.Infrastructure.Repositories
         {
             lock (syncLock)
             {
-                return Task.FromResult(orders
-                    .Where(o => o.Value.Status.Equals(Status.Cooking))
-                    .Select(o =>
-                    {
-                        var order = o.Value;
-                        return BookedOrder.Available(
-                            order.Id,
-                            order.OrderNumber,
-                            order.TotalPrice
-                        );
-                    }));
+                return Task.FromResult<IEnumerable<BookedOrder>>(orders.Values
+                    .Where(o => o.Status.Equals(Status.Cooking))
+                    .Select(ToBookedOrder)
+                    .OrderBy(o => o.Id.Value));
             }
         }
+
+        private static OrderDetails ToOrderDetails(Order order) =>
+            OrderDetails.Available(
+                order.Id,
+                order.OrderNumber,
+                order.TotalPrice,
+                order.Status
+            );
+
+        private static BookedOrder ToBookedOrder(Order order) =>
+            BookedOrder.Available(
+                order.Id,
+                order.OrderNumber,
+                order.TotalPrice,
+                order.Draft.Items.Select(ToBookedItem).ToArray()
+            );
+
+        private static BookedItem ToBookedItem(OrderItem item) =>
+            BookedItem.Ordered(
+                item.Drink.Name,
+                item.Size.Volume,
+                item.AddIns.Select(a => a.Name).ToArray()
+            );
     }
 }

@@ -56,7 +56,8 @@ namespace Project.API.Ordering.Application.OrderService
 
             var persistedOrder = await orders.Save(Order.New(
                 orderNumbers.Generate(),
-                orderDraft.TotalPrice()
+                orderDraft.TotalPrice(),
+                orderDraft
             ));
 
             return persistedOrder.Id;

@@ -1,6 +1,6 @@
 using System;
 
-namespace Project.API.Ordering.Domain.Core
+namespace Project.API.SharedKernel.Domain.Core
 {
     public readonly struct Name
     {

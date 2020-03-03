@@ -1,23 +1,24 @@
 using System;
 using System.Collections.Generic;
 using Project.API.Ordering.Domain.Drinks;
-using Project.API.Ordering.Domain.Core;
 using Project.API.SharedKernel.Domain.Core;
 
-namespace Project.API.Ordering.Domain.Orders
+namespace Project.API.SharedKernel.Domain.Orders
 {
     public sealed class OrderItem
     {
-        private readonly Drink drink;
-
-        private readonly DrinkSize drinkSize;
-
         private readonly List<AddIn> addIns = new List<AddIn>();
 
-        private OrderItem(Drink drink, DrinkSize drinkSize)
+        private OrderItem(Drink drink, DrinkSize drinkSize) =>
+            (Drink, Size) = (drink, drinkSize);
+
+        public Drink Drink { get; }
+
+        public DrinkSize Size { get; }
+
+        public IReadOnlyCollection<AddIn> AddIns
         {
-            this.drink = drink;
-            this.drinkSize = drinkSize;
+            get => addIns.AsReadOnly();
         }
 
         public void AddAddIn(AddIn addIn)
@@ -30,7 +31,7 @@ namespace Project.API.Ordering.Domain.Orders
 
         public Roubles TotalPrice()
         {
-            var drinkPrice = drinkSize.Price;
+            var drinkPrice = Size.Price;
 
             foreach (var addIn in addIns)
             {
