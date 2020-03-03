@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/drinksFragment"
-        android:name="com.coffeedose.ui.DrinksFragment"
+        android:name="com.office14.coffeedose.ui.DrinksFragment"
         android:label="fragment_coffe_list"
         tools:layout="@layout/fragment_drinks" >
         <action
@@ -27,7 +27,7 @@
     </fragment>
     <fragment
         android:id="@+id/selectDoseAndAddinsFragment"
-        android:name="com.coffeedose.ui.SelectDoseAndAddinsFragment"
+        android:name="com.office14.coffeedose.ui.SelectDoseAndAddinsFragment"
         android:label="fragment_select_dose_and_addins"
         tools:layout="@layout/fragment_select_dose_and_addins" >
         <action
@@ -51,7 +51,7 @@
     </fragment>
     <fragment
         android:id="@+id/orderFragment"
-        android:name="com.coffeedose.ui.OrderDetailsFragment"
+        android:name="com.office14.coffeedose.ui.OrderDetailsFragment"
         android:label="fragment_order"
         tools:layout="@layout/fragment_order" >
         <action
@@ -67,7 +67,7 @@
     </fragment>
     <fragment
         android:id="@+id/orderAwaitingFragment"
-        android:name="com.coffeedose.ui.OrderAwaitingFragment"
+        android:name="com.office14.coffeedose.ui.OrderAwaitingFragment"
         android:label="fragment_order_awaiting"
         tools:layout="@layout/fragment_order_awaiting" >
         <argument

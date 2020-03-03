@@ -5,7 +5,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.coffeedose.viewmodels.OrderDetailsViewModel" />
+            type="com.office14.coffeedose.viewmodels.OrderDetailsViewModel" />
     </data>
 
     <LinearLayout
@@ -17,7 +17,7 @@
             android:id="@+id/rl_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:context=".ui.OrderDetailsFragment">
+            tools:context="com.office14.coffeedose.ui.OrderDetailsFragment">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_order_details"

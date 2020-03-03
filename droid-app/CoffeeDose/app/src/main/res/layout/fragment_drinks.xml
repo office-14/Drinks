@@ -6,7 +6,7 @@
     <data>
         <variable
             name="viewModel"
-            type="com.coffeedose.viewmodels.DrinksViewModel" />
+            type="com.office14.coffeedose.viewmodels.DrinksViewModel" />
     </data>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout

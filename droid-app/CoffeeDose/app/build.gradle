@@ -1,15 +1,16 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.firebase.crashlytics'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
-//apply plugin: 'androidx.navigation.safeargs'
-apply plugin: "androidx.navigation.safeargs.kotlin"
 apply plugin: 'kotlin-android-extensions'
+apply plugin: "androidx.navigation.safeargs.kotlin"
 
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.3"
     defaultConfig {
-        applicationId "com.coffeedose"
+        applicationId "com.office14.coffeedose"
         minSdkVersion 26
         targetSdkVersion 29
         versionCode 1
@@ -31,7 +32,7 @@ android {
         debug {
             minifyEnabled false
             debuggable true
-            applicationIdSuffix ".debug"
+            //applicationIdSuffix ".debug"
             versionNameSuffix "-debug"
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             resValue "string", "app_name", "CoffeDose (debug)"
@@ -107,4 +108,8 @@ dependencies {
     implementation 'com.shawnlin:number-picker:2.4.8'
 
     implementation "androidx.preference:preference-ktx:$version_preferences_manager"
+
+    // Add the Firebase SDK for Google Analytics
+    implementation "com.google.firebase:firebase-analytics:$versiob_firebase_analytics"
+    implementation 'com.google.firebase:firebase-crashlytics:17.0.0-beta01'
 }
