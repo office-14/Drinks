@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { MessageService } from './message.service';
 
 @Injectable({
   providedIn: 'root'
@@ -7,7 +8,7 @@ export class CartService {
 
   cart_products = [];
 
-  constructor() {
+  constructor(private messageService: MessageService) {
   	this.cart_products = [];
   }
 
@@ -36,7 +37,7 @@ export class CartService {
   	if (add_new) {
   		this.cart_products.push(cart_product);
   	}
-  	
+    this.messageService.show_success('Товар успешно добавлен в корзину!');
   }
 
   get_products() {
@@ -53,7 +54,8 @@ export class CartService {
   remove_product(index) {
   	if (index > -1) {
 	   this.cart_products.splice(index, 1);
-	}
+     this.messageService.show_success('Товар удалён из корзины!');
+	  }
   }
 
   get_total_price() {

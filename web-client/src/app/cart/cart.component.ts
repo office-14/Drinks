@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { CartService } from '../cart.service';
 import { OrderService } from '../order.service';
+import { MessageService } from '../message.service';
 
 @Component({
   selector: 'app-cart',
@@ -12,7 +13,8 @@ export class CartComponent implements OnInit {
 
   constructor(
   	private cart_service: CartService,
-  	private order_service: OrderService
+  	private order_service: OrderService,
+    private messageService: MessageService
   ) { }
 
   ngOnInit(): void {
@@ -40,11 +42,14 @@ export class CartComponent implements OnInit {
   create_order() {
   	if (!this.if_order_exist()) {
   		this.order_service.create_order(this.products).subscribe(data => {
-  			let order = data.payload;
-  			order['products'] = this.products;
-		    this.order_service.set_order(order);
-		    this.cart_service.clear_cart();
-		    this.products = this.cart_service.get_products();
+        if (data.payload) {
+          let order = data.payload;
+          order['products'] = this.products;
+          this.order_service.set_order(order);
+          this.cart_service.clear_cart();
+          this.products = this.cart_service.get_products();
+          this.messageService.show_success('Заказ оформлен!');
+        }
 		});
   	}
   }
