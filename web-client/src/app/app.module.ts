@@ -13,6 +13,10 @@ import { HttpClientModule } from '@angular/common/http';
 import { UIRouterModule } from "@uirouter/angular";
 
 import { FormsModule } from '@angular/forms';
+import {
+  MatSnackBarModule
+} from '@angular/material/snack-bar';
+
 
 @NgModule({
   declarations: [
@@ -24,7 +28,8 @@ import { FormsModule } from '@angular/forms';
     AppRoutingModule,
     HttpClientModule,
     DrinksModule,
-    FormsModule
+    FormsModule,
+    MatSnackBarModule
   ],
   providers: [
   	HttpErrorHandler,
