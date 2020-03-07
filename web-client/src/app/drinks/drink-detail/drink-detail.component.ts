@@ -10,7 +10,6 @@ import { DraftCartProduct } from "../draft-cart-product";
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { CartService } from '../../cart.service';
-import { MessageService } from '../../message.service';
 
 
 @Component({
@@ -32,8 +31,7 @@ export class DrinkDetailComponent implements OnInit {
   constructor (
     private service: DrinksService,
     private trans: Transition,
-    private cart_service: CartService,
-    private messageService: MessageService
+    private cart_service: CartService
   ) {}
 
   ngOnInit() {
@@ -65,7 +63,6 @@ export class DrinkDetailComponent implements OnInit {
 		price: this.get_selected_price(),
 		qty: this.draft_cart_product.qty
   	});
-    this.messageService.add('Товар успешно добавлен в корзину!');
   }
 
   public change_draft_cart_product_qty() {
