@@ -36,7 +36,7 @@ export class DrinkDetailComponent implements OnInit {
 
   ngOnInit() {
   	this.getDrink();
-  	this.service.getAddins().subscribe(addins => this.draft_cart_product.addins = addins.payload);
+  	this.service.getAddins().subscribe(addins => this.draft_cart_product.addins = addins);
   }
 
   getDrink() {
@@ -44,7 +44,7 @@ export class DrinkDetailComponent implements OnInit {
   		drink => (
   			this.service.getSizes(this.trans.params().drink_id).subscribe(size => {
 		  		this.drink = drink;
-				  this.drink.sizes = size.payload;
+				  this.drink.sizes = size;
   				this.draft_cart_product.size = this.drink.sizes[0];
   				this.get_selected_price();
 			})

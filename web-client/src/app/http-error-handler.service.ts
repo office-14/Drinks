@@ -31,10 +31,10 @@ export class HttpErrorHandler {
 
       const message = (error.error instanceof ErrorEvent) ?
         error.error.message :
-       `server returned code ${error.status} with body "${error.error}"`;
+       `Сервер вернул код ${error.status} с описанием ошибки "${error.error.title}"`;
 
       // TODO: better job of transforming error for user consumption
-      this.messageService.show_error(`${serviceName}: ${operation} failed: ${message}`);
+      this.messageService.show_error(`${serviceName}: ${operation} ошибка: ${message}`);
 
       // Let the app keep running by returning a safe result.
       return of( result );

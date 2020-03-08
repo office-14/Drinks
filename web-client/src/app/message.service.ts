@@ -5,8 +5,8 @@ import {MatSnackBar, MatSnackBarConfig, MatSnackBarHorizontalPosition, MatSnackB
 export class MessageService {
   messages: string[] = [];
   action: boolean = true;
-  setAutoHide: boolean = true;
-  autoHide: number = 1500;
+  autoHide_success: number = 1500;
+  autoHide_error: number = 15000;
   horizontalPosition: MatSnackBarHorizontalPosition = 'center';
   verticalPosition: MatSnackBarVerticalPosition = 'top';
   success_extra_class = 'success-message';
@@ -18,7 +18,7 @@ export class MessageService {
     let config = new MatSnackBarConfig();
     config.verticalPosition = this.verticalPosition;
     config.horizontalPosition = this.horizontalPosition;
-    config.duration = this.setAutoHide ? this.autoHide : 0;
+    config.duration = this.autoHide_success;
     config.panelClass = this.success_extra_class;
     this._snackBar.open(message, undefined, config);
   }
@@ -27,7 +27,7 @@ export class MessageService {
     let config = new MatSnackBarConfig();
     config.verticalPosition = this.verticalPosition;
     config.horizontalPosition = this.horizontalPosition;
-    config.duration = this.setAutoHide ? this.autoHide : 0;
+    config.duration = this.autoHide_error;
     config.panelClass = this.error_extra_class;
     this._snackBar.open(message, undefined, config);
   }

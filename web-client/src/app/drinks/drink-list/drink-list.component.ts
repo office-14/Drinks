@@ -23,7 +23,7 @@ export class DrinkListComponent implements OnInit {
 
   getDrinks(): void {
     this.service.getDrinks()
-      .subscribe(drinks => (this.drinks = drinks.payload));
+      .subscribe(drinks => (this.drinks = drinks));
   }
 
 }

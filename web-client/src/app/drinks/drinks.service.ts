@@ -18,8 +18,8 @@ export class DrinksService {
   addinsUrl = 'http://localhost:5000/api/add-ins';
 
   private handleError: HandleError;
-  private drinks: Observable<AjaxResponse<Drink[]>>;
-  private addins: Observable<AjaxResponse<Addin[]>>;
+  private drinks: Observable<Drink[]>;
+  private addins: Observable<Addin[]>;
 
   constructor(
     private http: HttpClient,
@@ -29,29 +29,41 @@ export class DrinksService {
     this.addins = this.loadAddins();
   }
 
-  loadDrinks (): Observable<AjaxResponse<Drink[]>> {
-    return this.http.get<AjaxResponse<Drink[]>>(this.drinksUrl);
+  loadDrinks (): Observable<Drink[]> {
+    return this.http.get<AjaxResponse<Drink[]>>(this.drinksUrl)
+      .pipe(
+        catchError(this.handleError('loadDrinks')),
+        map((ajax_response: AjaxResponse<Drink[]>) => ajax_response.payload)
+      );
   }
 
-  loadAddins (): Observable<AjaxResponse<Addin[]>> {
-    return this.http.get<AjaxResponse<Addin[]>>(this.addinsUrl);
+  loadAddins (): Observable<Addin[]> {
+    return this.http.get<AjaxResponse<Addin[]>>(this.addinsUrl).pipe(
+      catchError(this.handleError('loadAddins')),
+      map((ajax_response: AjaxResponse<Addin[]>) => ajax_response.payload)
+    );
   }
 
-  getSizes (drink_id: string): Observable<AjaxResponse<Size[]>> {
-    return this.http.get<AjaxResponse<Size[]>>(`http://localhost:5000/api/drinks/${drink_id}/sizes`);
+  getSizes (drink_id: string):Observable<Size[]> {
+    return this.http.get<AjaxResponse<Size[]>>(`http://localhost:5000/api/drinks/${drink_id}/sizes`)
+    .pipe(
+      catchError(this.handleError('getSizes')),
+      map((ajax_response: AjaxResponse<Size[]>) => ajax_response.payload)
+    );
   }
 
-  getDrinks (): Observable<AjaxResponse<Drink[]>> {
+  getDrinks (): Observable<Drink[]> {
     return this.drinks;
   }
 
-  getAddins (): Observable<AjaxResponse<Addin[]>> {
+  getAddins (): Observable<Addin[]> {
     return this.addins;
   }
 
-  getDrink(id: number | string) {
-    return this.getDrinks().pipe(
-      map((drinks: AjaxResponse<Drink[]>) => drinks.payload.find(drink => drink.id === +id))
+  getDrink(id: number | string): Observable<Drink> {
+    return this.getDrinks()
+    .pipe(
+      map((drinks: Drink[]) => drinks.find(drink => drink.id === +id))
     );
   }
 }
