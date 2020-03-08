@@ -12,6 +12,7 @@
     <string name="DropInassignedOrderDetails">Очистить корзину</string>
     <string name="ContinueChoice">Продолжить выбор</string>
     <string name="ApproveOrder">Получил</string>
+    <string name="EmptyOrderDetails">Список заказов пуст</string>
 
     <string name="AddOrProceedDialogMessage">Заказ добавлен в корзину\nХотите продолжить выбор или перейти в корзину?</string>
 </resources>

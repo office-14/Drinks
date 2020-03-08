@@ -7,6 +7,7 @@ import com.office14.coffeedose.domain.Coffee
 import com.office14.coffeedose.extensions.mutableLiveData
 import com.office14.coffeedose.network.HttpExceptionEx
 import com.office14.coffeedose.repository.CoffeeRepository
+import com.office14.coffeedose.repository.OrderDetailsRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -24,7 +25,7 @@ class DrinksViewModel(application:Application) : AndroidViewModel(application) {
     private val database = CoffeeDatabase.getInstance(application)
     private val coffeeRepository = CoffeeRepository(database.drinksDatabaseDao)
 
-
+    private val orderDetailsRepository = OrderDetailsRepository(CoffeeDatabase.getInstance(application).orderDetailsDatabaseDao)
     // list of drinks
     val drinks = coffeeRepository.drinks
 
@@ -33,6 +34,14 @@ class DrinksViewModel(application:Application) : AndroidViewModel(application) {
     var errorMessage: MutableLiveData<String?> = mutableLiveData(null)
 
     private val _selectedId = mutableLiveData(notDefinedId)
+    private val _navigatingOrders = MutableLiveData<Boolean>()
+
+    val ordersButtonVisible = Transformations.map(orderDetailsRepository.unAttachedOrderDetails){
+         return@map  (it != null && it.isNotEmpty())
+    }
+
+    val navigatingOrders : LiveData<Boolean>
+        get() = _navigatingOrders
 
     val selectedId: LiveData<Int>
         get() = _selectedId
@@ -71,12 +80,20 @@ class DrinksViewModel(application:Application) : AndroidViewModel(application) {
         }
     }
 
-    fun doneNavigating() {
+    fun doneNavigatingDose() {
+        _selectedId.value = notDefinedId
+    }
+
+    fun doneNavigatingOrders() {
         _selectedId.value = notDefinedId
     }
 
     fun selectDrink(id: Int) {
         _selectedId.value = id
+    }
+
+    fun navigateOrders(){
+        _navigatingOrders.value = true
     }
 
 
