@@ -4,7 +4,7 @@
     <item
         android:id="@+id/showEnvDialog"
         android:title="@string/BaseURL" />
-    <item
+    <!--<item
         android:id="@+id/goToOrderDetails"
-        android:title="@string/OrderDetails" />
+        android:title="@string/OrderDetails" />-->
 </menu>

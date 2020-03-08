@@ -2,6 +2,7 @@ package com.office14.coffeedose.ui
 
 import android.os.Bundle
 import android.view.*
+import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -9,13 +10,14 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.coffeedose.R
 import com.coffeedose.databinding.FragmentDrinksBinding
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.office14.coffeedose.extensions.setBooleanVisibility
 import com.office14.coffeedose.repository.PreferencesRepository
 import com.office14.coffeedose.ui.Adapters.DrinksListAdapter
@@ -55,22 +57,43 @@ class DrinksFragment : Fragment() {
 
         handleSelectItem()
 
+        handleOrdersNavigation()
+
+        initOrdersButtonVisibility(binding.ordersFab)
+
             //initObserveListeners()
 
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        if (PreferencesRepository.getLastOrderId() != -1)
+            findNavController().navigate(DrinksFragmentDirections.actionDrinksFragmentToOrderAwaitingFragment(PreferencesRepository.getLastOrderId()))
+    }
+
+    private fun handleOrdersNavigation() {
+        viewModel.navigatingOrders.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                if (it){
+                    findNavController().navigate(DrinksFragmentDirections.actionDrinksFragmentToOrderFragment())
+                    viewModel.doneNavigatingOrders()
+                }
+            }
+        })
     }
 
     private fun initErrorHandling(binding: FragmentDrinksBinding) {
         viewModel.errorMessage.observe(viewLifecycleOwner, Observer {
 
             if (it != null){
-                binding.drinksRv.setBooleanVisibility(false)
+                binding.rootFl.setBooleanVisibility(false)
                 binding.viewErrorDrinks.setBooleanVisibility(true)
                 binding.tvErrorTextDrinks.text = it
                 //viewModel.errorMessage.value ?: "Ошибка получения данных"
             }
             else {
-                binding.drinksRv.setBooleanVisibility(true)
+                binding.rootFl.setBooleanVisibility(true)
                 binding.viewErrorDrinks.setBooleanVisibility(false)
             }
         })
@@ -116,6 +139,13 @@ class DrinksFragment : Fragment() {
         }
     }*/
 
+    private fun initOrdersButtonVisibility(button: FloatingActionButton){
+        viewModel.ordersButtonVisible.observe(viewLifecycleOwner, Observer {
+            it?.let { button.setBooleanVisibility(it) }
+        })
+    }
+
+
     private fun initToolbar(){
         val toolbar = (activity as AppCompatActivity).supportActionBar
         toolbar?.let {
@@ -137,10 +167,10 @@ class DrinksFragment : Fragment() {
                 showEditBaseUrlDialog()
                 return true
             }
-            R.id.goToOrderDetails -> {
+            /*R.id.goToOrderDetails -> {
                 findNavController().navigate(DrinksFragmentDirections.actionDrinksFragmentToOrderFragment())
                 return true
-            }
+            }*/
             else -> return false
         }
     }
@@ -191,11 +221,13 @@ class DrinksFragment : Fragment() {
             it?.let {
                 if (it != -1){
                     findNavController().navigate(DrinksFragmentDirections.actionDrinksFragmentToSelectDoseAndAddinsFragment(it,viewModel.getDrinkName()))
-                    viewModel.doneNavigating()
+                    viewModel.doneNavigatingDose()
                 }
             }
         })
     }
+
+
 
     private fun showEditBaseUrlDialog() {
 

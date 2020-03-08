@@ -2,6 +2,7 @@ package com.office14.coffeedose.viewmodels
 
 import android.app.Application
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.*
 import com.office14.coffeedose.database.CoffeeDatabase
 import com.office14.coffeedose.domain.Addin
@@ -34,6 +35,11 @@ class SelectDoseAndAddinsViewModel(application: Application,var drinkId : Int) :
     var isRefreshing = mutableLiveData(false)
 
     var errorMessage : MutableLiveData<String?> = mutableLiveData(null)
+
+    private val _navigateOrderDetails = MutableLiveData<Boolean>()
+
+    val navigateOrderDetails : LiveData<Boolean>
+        get() = _navigateOrderDetails
 
     fun getSummary() : LiveData<String>{
         var result = MediatorLiveData<String>()
@@ -135,11 +141,16 @@ class SelectDoseAndAddinsViewModel(application: Application,var drinkId : Int) :
                     count = count.value!!,
                     orderId = null
                 ))
+                _navigateOrderDetails.value = true
             }
             catch (ex:Exception){
                 Log.d("SelectDoseAndAddinsViewModel.saveOrderDetails",ex.message)
             }
         }
+    }
+
+    fun doneNavigating(){
+        _navigateOrderDetails.value = false
     }
 
 

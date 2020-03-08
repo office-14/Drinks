@@ -39,17 +39,11 @@ class OrderAwaitingFragment : Fragment() {
 
         initToolbarTitle()
 
-        initNavigateOutOnApprove(binding.bvApprove)
+        initNavigation()
 
         return binding.root
     }
 
-    private fun initNavigateOutOnApprove(bvApprove: Button) {
-        bvApprove.setOnClickListener {
-            viewModel.approve()
-            findNavController().navigate(OrderAwaitingFragmentDirections.actionOrderAwaitingFragmentToDrinksFragment())
-        }
-    }
 
     private fun initToolbarTitle() {
         viewModel.order.observe(viewLifecycleOwner, Observer {
@@ -73,5 +67,16 @@ class OrderAwaitingFragment : Fragment() {
             it.setDisplayHomeAsUpEnabled(false)
             it.setDisplayShowHomeEnabled(false)
         }
+    }
+
+    private fun initNavigation(){
+        viewModel.naviagateToCoffeeList.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                if (it) {
+                    findNavController().navigate(OrderAwaitingFragmentDirections.actionOrderAwaitingFragmentToDrinksFragment())
+                    viewModel.doneNavigation()
+                }
+            }
+        })
     }
 }

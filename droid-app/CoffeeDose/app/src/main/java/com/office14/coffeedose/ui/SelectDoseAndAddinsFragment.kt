@@ -55,6 +55,7 @@ class SelectDoseAndAddinsFragment : Fragment() {
         initToolbar(drinkName)
         initErrorHandling(binding)
         initSwipeToRefresh(binding.swipeRefresh)
+        handleNavigating()
 
         return binding.root
     }
@@ -134,11 +135,22 @@ class SelectDoseAndAddinsFragment : Fragment() {
     private fun initProceedButton(button:Button){
         button.setOnClickListener {
             viewModel.saveOrderDetails()
-            showAddOrProceedDialog()
+            //showAddOrProceedDialog()
         }
     }
 
-    private fun showAddOrProceedDialog(){
+    private fun handleNavigating(){
+        viewModel.navigateOrderDetails.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                if (it){
+                    findNavController().navigate(SelectDoseAndAddinsFragmentDirections.actionSelectDoseAndAddinsFragmentToOrderFragment())
+                    viewModel.doneNavigating()
+                }
+            }
+        })
+    }
+
+    /*private fun showAddOrProceedDialog(){
         val builder: AlertDialog.Builder = AlertDialog.Builder(requireContext())
         builder.setMessage(R.string.AddOrProceedDialogMessage)
             .setNegativeButton(R.string.ContinueChoice,
@@ -150,6 +162,6 @@ class SelectDoseAndAddinsFragment : Fragment() {
                     findNavController().navigate(SelectDoseAndAddinsFragmentDirections.actionSelectDoseAndAddinsFragmentToOrderFragment())
                 })
         builder.create().show()
-    }
+    }*/
 
 }

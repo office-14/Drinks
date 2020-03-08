@@ -17,14 +17,40 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+            <FrameLayout
+                android:id="@+id/root_fl"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/drinks_rv"
-                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-                android:layout_marginTop="@dimen/spacing_normal_16"
-                android:orientation="vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/drinks_rv"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                    android:layout_marginTop="@dimen/spacing_normal_16"
+                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+
+                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                    android:id="@+id/orders_fab"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="right|bottom"
+                    android:visibility="invisible"
+                    android:layout_margin="@dimen/spacing_small_8"
+                    android:elevation="@dimen/spacing_tiny_4"
+                    android:onClick="@{() -> viewModel.navigateOrders()}"
+                    android:src="@drawable/ic_assignment"
+                    app:fabSize="normal" />
+
+
+                <!--//app:rippleColor="@color/color_primary"
+                app:rippleColor="@color/color_accent"
+                android:theme="@style/PrimaryActionButton"
+                -->
+
+            </FrameLayout>
+
 
                <LinearLayout
                     android:id="@+id/view_error_drinks"
