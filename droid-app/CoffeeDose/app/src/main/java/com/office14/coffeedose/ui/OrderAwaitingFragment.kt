@@ -28,7 +28,7 @@ class OrderAwaitingFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View? {
 
-        val orderId = OrderAwaitingFragmentArgs.fromBundle(arguments!!).orderId
+        val orderId = OrderAwaitingFragmentArgs.fromBundle(requireArguments()).orderId
 
         viewModel = ViewModelProvider(this,OrderAwaitingViewModel.Factory(requireNotNull(this.activity).application,orderId)).get(OrderAwaitingViewModel::class.java)
         val binding : FragmentOrderAwaitingBinding = DataBindingUtil.inflate(inflater,R.layout.fragment_order_awaiting,container,false)
@@ -52,11 +52,11 @@ class OrderAwaitingFragment : Fragment() {
     }
 
     private fun initToolbarTitle() {
-        viewModel.order.observe(this, Observer {
+        viewModel.order.observe(viewLifecycleOwner, Observer {
             if (it != null)
             {
-                val toolbar = (activity as AppCompatActivity)?.supportActionBar
-                toolbar?.setTitle("Заказ ${it.orderNumber}")
+                val toolbar = (activity as AppCompatActivity).supportActionBar
+                toolbar?.title = "Заказ ${it.orderNumber}"
                 tv_order_status.text = "Статус: ${it.statusName}"
 
                 if (it.statusCode.toLowerCase() == "ready"){
@@ -68,7 +68,7 @@ class OrderAwaitingFragment : Fragment() {
 
 
     private fun initToolbar(){
-        val toolbar = (activity as AppCompatActivity)?.supportActionBar
+        val toolbar = (activity as AppCompatActivity).supportActionBar
         toolbar?.let {
             it.setDisplayHomeAsUpEnabled(false)
             it.setDisplayShowHomeEnabled(false)

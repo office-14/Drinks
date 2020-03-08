@@ -37,8 +37,8 @@ class SelectDoseAndAddinsFragment : Fragment() {
     private lateinit var viewModel : SelectDoseAndAddinsViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View? {
-        val drinkId = SelectDoseAndAddinsFragmentArgs.fromBundle(arguments!!).drinkId
-        val drinkName = SelectDoseAndAddinsFragmentArgs.fromBundle(arguments!!).drinkName
+        val drinkId = SelectDoseAndAddinsFragmentArgs.fromBundle(requireArguments()).drinkId
+        val drinkName = SelectDoseAndAddinsFragmentArgs.fromBundle(requireArguments()).drinkName
 
         viewModel = ViewModelProvider(this, SelectDoseAndAddinsViewModel
             .Factory(requireNotNull(this.activity).application,drinkId)).get(SelectDoseAndAddinsViewModel::class.java)
@@ -61,7 +61,7 @@ class SelectDoseAndAddinsFragment : Fragment() {
 
     private fun initSwipeToRefresh(swipeRefresh: SwipeRefreshLayout) {
         swipeRefresh.setOnRefreshListener { viewModel.refreshData(true) }
-        viewModel.isRefreshing.observe(this, Observer {
+        viewModel.isRefreshing.observe(viewLifecycleOwner, Observer {
             if (it != null){
                 swipeRefresh.isRefreshing = it
             }
@@ -69,7 +69,7 @@ class SelectDoseAndAddinsFragment : Fragment() {
     }
 
     private fun initErrorHandling(binding: FragmentSelectDoseAndAddinsBinding) {
-        viewModel.errorMessage.observe(this, Observer {
+        viewModel.errorMessage.observe(viewLifecycleOwner, Observer {
 
             if (it != null){
                 binding.viewAddinsRoot.setBooleanVisibility(false)
@@ -85,10 +85,10 @@ class SelectDoseAndAddinsFragment : Fragment() {
     }
 
     private  fun initSpinner(view : Spinner){
-        val spinnerAdapter = SizeSpinnerAdapter(this.context!!)
+        val spinnerAdapter = SizeSpinnerAdapter(requireContext())
         view.adapter = spinnerAdapter
 
-        viewModel.sizes.observe(this, Observer {
+        viewModel.sizes.observe(viewLifecycleOwner, Observer {
             if (viewModel.sizes.value != null)
                 spinnerAdapter.setItems(viewModel.sizes.value!!)
         })
@@ -107,7 +107,7 @@ class SelectDoseAndAddinsFragment : Fragment() {
     }
 
     private fun initToolbar(title:String){
-        val toolbar = (activity as AppCompatActivity)?.supportActionBar
+        val toolbar = (activity as AppCompatActivity).supportActionBar
         toolbar?.let {
             it.setDisplayHomeAsUpEnabled(true)
             it.setDisplayShowHomeEnabled(true)
@@ -116,17 +116,17 @@ class SelectDoseAndAddinsFragment : Fragment() {
     }
 
     private fun initAddinsAdapter(view : ListView){
-        val addinsListAdapter = AddinsListAdapter(this.context!!, AddinCheckListener { addin, isChecked  -> viewModel.updateTotalOnAddinCheck(addin, isChecked)})
+        val addinsListAdapter = AddinsListAdapter(requireContext(), AddinCheckListener { addin, isChecked  -> viewModel.updateTotalOnAddinCheck(addin, isChecked)})
         view.adapter = addinsListAdapter
 
-        viewModel.addins.observe(this, Observer {
+        viewModel.addins.observe(viewLifecycleOwner, Observer {
             if (viewModel.addins.value != null)
                 addinsListAdapter.setItems(viewModel.addins.value!!)
         })
     }
 
     private fun initCountPicker(numberPicker : NumberPicker){
-        viewModel.count.observe(this, Observer { numberPicker.value = viewModel.count.value!! })
+        viewModel.count.observe(viewLifecycleOwner, Observer { numberPicker.value = viewModel.count.value!! })
 
         numberPicker.setOnValueChangedListener { picker, oldVal, newVal -> viewModel.updateCount(newVal) }
     }
@@ -139,14 +139,14 @@ class SelectDoseAndAddinsFragment : Fragment() {
     }
 
     private fun showAddOrProceedDialog(){
-        val builder: AlertDialog.Builder = AlertDialog.Builder(this.context!!)
+        val builder: AlertDialog.Builder = AlertDialog.Builder(requireContext())
         builder.setMessage(R.string.AddOrProceedDialogMessage)
             .setNegativeButton(R.string.ContinueChoice,
-                DialogInterface.OnClickListener { dialog, id ->
+                DialogInterface.OnClickListener { _, _ ->
                     findNavController().navigate(SelectDoseAndAddinsFragmentDirections.actionSelectDoseAndAddinsFragmentToDrinksFragment())
                 })
             .setPositiveButton(R.string.OrderDetails,
-                DialogInterface.OnClickListener { dialog, id ->
+                DialogInterface.OnClickListener { _, _ ->
                     findNavController().navigate(SelectDoseAndAddinsFragmentDirections.actionSelectDoseAndAddinsFragmentToOrderFragment())
                 })
         builder.create().show()
