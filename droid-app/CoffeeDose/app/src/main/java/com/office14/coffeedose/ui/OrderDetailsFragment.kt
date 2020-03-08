@@ -58,7 +58,7 @@ class OrderDetailsFragment : Fragment() {
     }
 
     private fun initNavigateOutUnSuccess() {
-        viewModel.orderId.observe(this, Observer {
+        viewModel.orderId.observe(viewLifecycleOwner, Observer {
             if (it != -1)
                 findNavController().navigate(OrderDetailsFragmentDirections.actionOrderFragmentToOrderAwaitingFragment(it))
         })
@@ -75,11 +75,11 @@ class OrderDetailsFragment : Fragment() {
             findNavController().navigate(OrderDetailsFragmentDirections.actionOrderFragmentToDrinksFragment())
         }
 
-        requireActivity().onBackPressedDispatcher.addCallback(this,callback)
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner,callback)
     }
 
-    fun handleVisibility(){
-        viewModel.isEmpty.observe(this, Observer {
+    private fun handleVisibility(){
+        viewModel.isEmpty.observe(viewLifecycleOwner, Observer {
             rl_content.setBooleanVisibility(!it)
             tv_empty_order_details.setBooleanVisibility(it)
         })
@@ -89,7 +89,7 @@ class OrderDetailsFragment : Fragment() {
     private  fun initRecyclerView( recyclerView: RecyclerView){
         val rvAdapter = OrderDetailsAdapter()
 
-        val touchCallback = OrderDetailsItemTouchHelperCallback(this.context!!,rvAdapter, SwipeListener { orderDetails -> viewModel.deleteOrderDetailsItem(orderDetails) })
+        val touchCallback = OrderDetailsItemTouchHelperCallback(requireContext(),rvAdapter, SwipeListener { orderDetails -> viewModel.deleteOrderDetailsItem(orderDetails) })
 
         ItemTouchHelper(touchCallback).attachToRecyclerView(recyclerView)
 
@@ -101,13 +101,13 @@ class OrderDetailsFragment : Fragment() {
             addItemDecoration(dividerDecor)
         }
 
-        viewModel.unAttachedOrders.observe(this, Observer {
+        viewModel.unAttachedOrders.observe(viewLifecycleOwner, Observer {
             rvAdapter.setSource(it)
         })
     }
 
     private fun initToolbar(){
-        val toolbar = (activity as AppCompatActivity)?.supportActionBar
+        val toolbar = (activity as AppCompatActivity).supportActionBar
         toolbar?.let {
             it.setDisplayHomeAsUpEnabled(true)
             it.setDisplayShowHomeEnabled(true)
@@ -121,16 +121,16 @@ class OrderDetailsFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId){
+        return when(item.itemId){
             R.id.clearOrderDetails -> {
                 viewModel.clearOrderDetails()
-                return true
+                true
             }
             R.id.addMore -> {
                 findNavController().navigate(OrderDetailsFragmentDirections.actionOrderFragmentToDrinksFragment())
-                return true
+                true
             }
-            else ->  return false
+            else -> false
         }
     }
 

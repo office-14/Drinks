@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+
+    <data>
+        <variable
+            name="item"
+            type="com.office14.coffeedose.domain.Coffee" />
+        
+        <variable
+            name="clickListener"
+            type="com.office14.coffeedose.ui.CoffeeItemClickListener" />
+
+    </data>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:padding="@dimen/zero_padding"
+        android:layout_marginRight="@dimen/spacing_normal_16"
+        android:layout_marginLeft="@dimen/spacing_normal_16"
+        android:layout_marginBottom="@dimen/spacing_normal_16"
+        android:background="?android:attr/selectableItemBackground"
+        android:foreground="@drawable/bg_round_border"
+        android:clickable="true"
+        android:onClick="@{() -> clickListener.onClick(item.id)}"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <!---->
+
+
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/drinkName"
+            style="@style/Base.TextView"
+            android:fontFamily="sans-serif-light"
+            android:textSize="@dimen/font_large_20"
+            android:layout_gravity="center_horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/spacing_normal_16"
+            android:text="@{item.name}"
+            android:gravity="left" />
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/drinkPhoto"
+            android:padding="@dimen/zero_padding"
+            style="@style/Base.TextView"
+            app:imageUrl="@{item.photoUrl}"
+            android:layout_width="match_parent"
+            android:layout_height="240dp" />
+
+        <!---->
+
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/drinkDescription"
+            style="@style/Base.TextView"
+            android:fontFamily="sans-serif-light"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/spacing_normal_16"
+            android:text="@{item.description}"
+            android:gravity="left" />
+    </LinearLayout>
+</layout>

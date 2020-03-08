@@ -14,7 +14,7 @@ fun bindImage(imgView: ImageView, imgUrl: String?) {
             .load(imgUrl)
             .placeholder(R.drawable.loading_animation)
             .error(R.drawable.ic_broken_image)
-            .centerInside()
+            .centerCrop()
             .into(imgView)
     }
 }

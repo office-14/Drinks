@@ -15,6 +15,8 @@ import java.lang.Exception
 
 class DrinksViewModel(application:Application) : AndroidViewModel(application) {
 
+    private val notDefinedId = -1
+
     private val viewModelJob = SupervisorJob()
 
     private val viewModelScope = CoroutineScope(viewModelJob + Dispatchers.Main)
@@ -22,24 +24,24 @@ class DrinksViewModel(application:Application) : AndroidViewModel(application) {
     private val database = CoffeeDatabase.getInstance(application)
     private val coffeeRepository = CoffeeRepository(database.drinksDatabaseDao)
 
-    private var selectedItemIndex = mutableLiveData(-1)
 
     // list of drinks
     val drinks = coffeeRepository.drinks
 
     var isRefreshing = mutableLiveData(false)
 
-    var errorMessage : MutableLiveData<String?> = mutableLiveData(null)
+    var errorMessage: MutableLiveData<String?> = mutableLiveData(null)
 
+    private val _selectedId = mutableLiveData(notDefinedId)
 
-    val selectedDrink : LiveData<Coffee?>
-    get() = _selectedDrink
+    val selectedId: LiveData<Int>
+        get() = _selectedId
 
-    private var _selectedDrink  = Transformations.map(selectedItemIndex){
-        if (drinks.value?.isEmpty() != false)
-            return@map null
-        else return@map drinks.value!![selectedItemIndex.value!!]
+    fun getDrinkName(): String {
+        val coffee = drinks.value?.firstOrNull{ coffee -> coffee.id == _selectedId.value }
+        return coffee?.name ?: "Not defined"
     }
+
 
     init {
         refreshData()
@@ -50,7 +52,7 @@ class DrinksViewModel(application:Application) : AndroidViewModel(application) {
         viewModelJob.cancel()
     }
 
-    fun refreshData( showRefresh: Boolean = false  ){
+    fun refreshData(showRefresh: Boolean = false) {
         viewModelScope.launch {
             try {
 
@@ -59,22 +61,22 @@ class DrinksViewModel(application:Application) : AndroidViewModel(application) {
                 coffeeRepository.refreshDrinks()
 
                 errorMessage.value = null
-            }
-            catch (responseEx:HttpExceptionEx){
+            } catch (responseEx: HttpExceptionEx) {
                 errorMessage.value = responseEx.error.title
-            }
-            catch (ex:Exception){
+            } catch (ex: Exception) {
                 errorMessage.value = ex.message
-            }
-            finally {
+            } finally {
                 if (showRefresh) isRefreshing.value = false
             }
         }
     }
 
-    fun onSelectedItemIndexChanged(newIndex : Int){
-        if (newIndex != selectedItemIndex.value)
-            selectedItemIndex.value = newIndex
+    fun doneNavigating() {
+        _selectedId.value = notDefinedId
+    }
+
+    fun selectDrink(id: Int) {
+        _selectedId.value = id
     }
 
 
@@ -87,4 +89,5 @@ class DrinksViewModel(application:Application) : AndroidViewModel(application) {
             throw IllegalArgumentException("Unable to construct viewmodel")
         }
     }
+
 }

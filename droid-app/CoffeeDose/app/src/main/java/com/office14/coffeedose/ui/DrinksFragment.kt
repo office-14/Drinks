@@ -2,10 +2,7 @@ package com.office14.coffeedose.ui
 
 import android.os.Bundle
 import android.view.*
-import android.widget.AdapterView
-import android.widget.Button
 import android.widget.EditText
-import android.widget.Spinner
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -13,15 +10,16 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.bumptech.glide.Glide
 import com.coffeedose.R
 import com.coffeedose.databinding.FragmentDrinksBinding
 import com.office14.coffeedose.extensions.setBooleanVisibility
 import com.office14.coffeedose.repository.PreferencesRepository
-import com.office14.coffeedose.ui.Adapters.CoffeeSpinnerAdapter
+import com.office14.coffeedose.ui.Adapters.DrinksListAdapter
 import com.office14.coffeedose.viewmodels.DrinksViewModel
-import kotlinx.android.synthetic.main.fragment_drinks.*
 
 
 /**
@@ -43,9 +41,9 @@ class DrinksFragment : Fragment() {
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
 
-        initProceedButton(binding.proceedButton)
+       // initProceedButton(binding.proceedButton)
 
-        initDrinksSpinner(binding.drinksSpinner)
+        //initDrinksSpinner(binding.drinksSpinner)
 
         initSwipeToRefresh(binding.swipeRefresh)
 
@@ -53,22 +51,26 @@ class DrinksFragment : Fragment() {
 
         initToolbar()
 
-        initObserveListeners()
+        initDrinksRecyclerView(binding.drinksRv)
+
+        handleSelectItem()
+
+            //initObserveListeners()
 
         return binding.root
     }
 
     private fun initErrorHandling(binding: FragmentDrinksBinding) {
-        viewModel.errorMessage.observe(this, Observer {
+        viewModel.errorMessage.observe(viewLifecycleOwner, Observer {
 
             if (it != null){
-                binding.drinksRootLayout.setBooleanVisibility(false)
+                binding.drinksRv.setBooleanVisibility(false)
                 binding.viewErrorDrinks.setBooleanVisibility(true)
                 binding.tvErrorTextDrinks.text = it
                 //viewModel.errorMessage.value ?: "Ошибка получения данных"
             }
             else {
-                binding.drinksRootLayout.setBooleanVisibility(true)
+                binding.drinksRv.setBooleanVisibility(true)
                 binding.viewErrorDrinks.setBooleanVisibility(false)
             }
         })
@@ -76,14 +78,14 @@ class DrinksFragment : Fragment() {
 
     private fun initSwipeToRefresh(swipeRefresh: SwipeRefreshLayout) {
         swipeRefresh.setOnRefreshListener { viewModel.refreshData(true) }
-        viewModel.isRefreshing.observe(this, Observer {
+        viewModel.isRefreshing.observe(viewLifecycleOwner, Observer {
             if (it != null){
                 swipeRefresh.isRefreshing = it
             }
         } )
     }
 
-    private fun initDrinksSpinner(drinksSpinner: Spinner) {
+    /*private fun initDrinksSpinner(drinksSpinner: Spinner) {
         val spinnerAdapter = CoffeeSpinnerAdapter(this.context!!)
         drinksSpinner.adapter = spinnerAdapter
 
@@ -106,16 +108,16 @@ class DrinksFragment : Fragment() {
             }
 
         }
-    }
+    }*/
 
-    private fun initProceedButton(proceedButton: Button) {
+    /*private fun initProceedButton(proceedButton: Button) {
         proceedButton.setOnClickListener {
             findNavController().navigate(DrinksFragmentDirections.actionDrinksFragmentToSelectDoseAndAddinsFragment(viewModel.selectedDrink.value!!.id,viewModel.selectedDrink.value!!.name))
         }
-    }
+    }*/
 
     private fun initToolbar(){
-        val toolbar = (activity as AppCompatActivity)?.supportActionBar
+        val toolbar = (activity as AppCompatActivity).supportActionBar
         toolbar?.let {
             it.setDisplayHomeAsUpEnabled(false)
             it.setDisplayShowHomeEnabled(false)
@@ -144,7 +146,7 @@ class DrinksFragment : Fragment() {
     }
 
 
-    private fun initObserveListeners(){
+    /*private fun initObserveListeners(){
         viewModel.selectedDrink?.observe(this, Observer {
             it?.let {
                 drinkDescription.text = it.description
@@ -159,11 +161,45 @@ class DrinksFragment : Fragment() {
         })
 
         viewModel.drinks.observe(this, Observer { viewModel.onSelectedItemIndexChanged(0) }) // TODO drop and do well
+    }*/
+
+    private fun initDrinksRecyclerView(recyclerView: RecyclerView){
+
+        val drinksAdapter = DrinksListAdapter(CoffeeItemClickListener { viewModel.selectDrink(it) })
+
+        //val divDecor = DividerItemDecoration(this.context,DividerItemDecoration.VERTICAL)
+        //divDecor.setDrawable(R.layout.)
+        //divDecor.setDrawable(R.layout.view)
+
+        with(recyclerView){
+            adapter = drinksAdapter
+            layoutManager = LinearLayoutManager(this.context)
+            //addItemDecoration(divDecor)
+        }
+
+
+        viewModel.drinks.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                drinksAdapter.submitList(it)
+            }
+        })
+
+    }
+
+    private fun handleSelectItem(){
+        viewModel.selectedId.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                if (it != -1){
+                    findNavController().navigate(DrinksFragmentDirections.actionDrinksFragmentToSelectDoseAndAddinsFragment(it,viewModel.getDrinkName()))
+                    viewModel.doneNavigating()
+                }
+            }
+        })
     }
 
     private fun showEditBaseUrlDialog() {
 
-        val builder = AlertDialog.Builder(this.context!!)
+        val builder = AlertDialog.Builder(this.requireContext())
         builder.setTitle(R.string.BaseURL)
 
         val view = layoutInflater.inflate(R.layout.view_edit_text_dialog, null)
@@ -180,4 +216,8 @@ class DrinksFragment : Fragment() {
 
         builder.show()
     }
+}
+
+class CoffeeItemClickListener(val clickListener: (Int) -> Unit) {
+    fun onClick(id: Int) = clickListener(id)
 }
