@@ -4,6 +4,7 @@ package com.office14.coffeedose.ui
 import android.os.Bundle
 import android.view.*
 import android.widget.Button
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
@@ -53,6 +54,8 @@ class OrderDetailsFragment : Fragment() {
 
         initNavigateOutUnSuccess()
 
+        handleShowError()
+
         return binding.root
 
     }
@@ -82,6 +85,15 @@ class OrderDetailsFragment : Fragment() {
         viewModel.isEmpty.observe(viewLifecycleOwner, Observer {
             rl_content.setBooleanVisibility(!it)
             tv_empty_order_details.setBooleanVisibility(it)
+        })
+    }
+
+    private fun handleShowError(){
+        viewModel.errorMessage.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                Toast.makeText(this.context,it,Toast.LENGTH_LONG).show()
+                viewModel.hideErrorMessage()
+            }
         })
     }
 

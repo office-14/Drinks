@@ -1,22 +1,20 @@
 package com.office14.coffeedose.viewmodels
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.*
 import com.office14.coffeedose.database.CoffeeDatabase
 import com.office14.coffeedose.domain.OrderDetail
 import com.office14.coffeedose.domain.OrderDetailFull
 import com.office14.coffeedose.extensions.mutableLiveData
+import com.office14.coffeedose.network.HttpExceptionEx
 import com.office14.coffeedose.repository.OrderDetailsRepository
 import com.office14.coffeedose.repository.OrdersRepository
 import kotlinx.coroutines.*
 
 class OrderDetailsViewModel(application : Application) : AndroidViewModel(application) {
 
-    val viewModelJob = Job()
-    val viewModelScope = CoroutineScope(viewModelJob + Dispatchers.Main)
+    private val viewModelJob = Job()
+    private val viewModelScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
     val orderId = mutableLiveData(-1)
 
@@ -25,6 +23,10 @@ class OrderDetailsViewModel(application : Application) : AndroidViewModel(applic
     private val ordersRepository = OrdersRepository(CoffeeDatabase.getInstance(application).ordersDatabaseDao,CoffeeDatabase.getInstance(application).orderDetailsDatabaseDao)
 
     val unAttachedOrders = orderDetailsRepository.unAttachedOrderDetails
+
+    private val _errorMessage = MutableLiveData<String>()
+    val errorMessage : LiveData<String>
+        get() = _errorMessage
 
     val isEmpty = Transformations.map(unAttachedOrders){
         return@map it.isEmpty()
@@ -38,24 +40,36 @@ class OrderDetailsViewModel(application : Application) : AndroidViewModel(applic
 
     fun confirmOrder(){
         viewModelScope.launch {
-           val newOrderId = ordersRepository.createOrder(unAttachedOrders.value ?: listOf())
-            orderId.value = newOrderId
 
+            try {
+                val newOrderId = ordersRepository.createOrder(unAttachedOrders.value ?: listOf())
 
-            val orderDetails = mutableListOf<OrderDetail>()
-            unAttachedOrders.value?.forEach {
-                val orderDetail = OrderDetail(
-                    it.orderDetailInner.id,
-                    it.orderDetailInner.drinkId,
-                    it.orderDetailInner.sizeId,
-                    orderId.value,
-                    it.orderDetailInner.count,
-                    listOf()
-                )
-                orderDetails.add(orderDetail)
+                orderId.value = newOrderId
+
+                val orderDetails = mutableListOf<OrderDetail>()
+                unAttachedOrders.value?.forEach {
+                    val orderDetail = OrderDetail(
+                        it.orderDetailInner.id,
+                        it.orderDetailInner.drinkId,
+                        it.orderDetailInner.sizeId,
+                        orderId.value,
+                        it.orderDetailInner.count,
+                        listOf()
+                    )
+                    orderDetails.add(orderDetail)
+                }
+                orderDetailsRepository.insertAll(orderDetails)
             }
-            orderDetailsRepository.insertAll(orderDetails)
+            catch (responseEx: HttpExceptionEx) {
+                _errorMessage.value = responseEx.error.title
+            } catch (ex: Exception) {
+                _errorMessage.value = "Ошибка получения данных"
+            }
         }
+    }
+
+    fun hideErrorMessage(){
+        _errorMessage.value = null
     }
 
 
