@@ -56,6 +56,8 @@ class OrderDetailsFragment : Fragment() {
 
         handleShowError()
 
+        handleLoginRequired()
+
         return binding.root
 
     }
@@ -144,6 +146,17 @@ class OrderDetailsFragment : Fragment() {
             }
             else -> false
         }
+    }
+
+    private fun handleLoginRequired(){
+        viewModel.needLogIn.observe(requireActivity(), Observer {
+            if (it){
+                (activity as CoffeeDoseActivity).signIn{
+                    viewModel.confirmOrder()
+                }
+                viewModel.doneLogin()
+            }
+        })
     }
 
 

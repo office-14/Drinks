@@ -17,6 +17,8 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.coffeedose.R
 import com.coffeedose.databinding.FragmentDrinksBinding
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.office14.coffeedose.extensions.setBooleanVisibility
 import com.office14.coffeedose.repository.PreferencesRepository
@@ -167,12 +169,20 @@ class DrinksFragment : Fragment() {
                 showEditBaseUrlDialog()
                 return true
             }
+            R.id.login -> {
+                prepareAuth()
+                return true
+            }
             /*R.id.goToOrderDetails -> {
                 findNavController().navigate(DrinksFragmentDirections.actionDrinksFragmentToOrderFragment())
                 return true
             }*/
             else -> return false
         }
+    }
+
+    private fun prepareAuth(){
+
     }
 
 

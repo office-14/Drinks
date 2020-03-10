@@ -4,6 +4,12 @@
     <item
         android:id="@+id/showEnvDialog"
         android:title="@string/BaseURL" />
+    <item
+        android:id="@+id/login"
+        android:title="@string/Login" />
+    <item
+        android:id="@+id/logout"
+        android:title="@string/Logout" />
     <!--<item
         android:id="@+id/goToOrderDetails"
         android:title="@string/OrderDetails" />-->
