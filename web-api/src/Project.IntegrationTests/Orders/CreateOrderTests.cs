@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Testing;
 using Project.API.WebApi;
 using Project.API.WebApi.Endpoints.Ordering.CreateOrder;
+using Project.IntegrationTests.TestUser;
 using Xunit;
 
 namespace Project.IntegrationTests.Orders
@@ -23,7 +24,7 @@ namespace Project.IntegrationTests.Orders
         [Fact]
         public async Task When_create_with_non_existing_drink_Then_return_bad_request()
         {
-            var client = factory.CreateClient();
+            var client = factory.CreateClientWithTestAuth();
 
             var response = await client.PostContentAsync(
                 "api/orders",
@@ -48,7 +49,7 @@ namespace Project.IntegrationTests.Orders
         [Fact]
         public async Task When_create_with_non_existing_size_Then_return_bad_request()
         {
-            var client = factory.CreateClient();
+            var client = factory.CreateClientWithTestAuth();
 
             var response = await client.PostContentAsync(
                 "api/orders",
@@ -73,7 +74,7 @@ namespace Project.IntegrationTests.Orders
         [Fact]
         public async Task When_create_with_non_existing_addin_Then_return_bad_request()
         {
-            var client = factory.CreateClient();
+            var client = factory.CreateClientWithTestAuth();
 
             var response = await client.PostContentAsync(
                 "api/orders",

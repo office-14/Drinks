@@ -8,6 +8,7 @@ using Project.API.WebApi;
 using Project.API.WebApi.Endpoints.Ordering.CreateOrder;
 using Project.API.WebApi.Endpoints.Ordering.Shared;
 using Project.API.WebApi.Endpoints.Shared;
+using Project.IntegrationTests.TestUser;
 using Xunit;
 
 namespace Project.IntegrationTests.Orders
@@ -25,7 +26,7 @@ namespace Project.IntegrationTests.Orders
         [Fact]
         public async Task When_there_is_no_order_with_provided_id_Then_return_404_with_error_response()
         {
-            var client = factory.CreateClient();
+            var client = factory.CreateClientWithTestAuth();
 
             var response = await client.PostAsync("api/orders/123/finish", null);
 
@@ -40,7 +41,7 @@ namespace Project.IntegrationTests.Orders
         [Fact]
         public async Task When_finish_order_twice_Then_return_bad_request()
         {
-            var client = factory.CreateClient();
+            var client = factory.CreateClientWithTestAuth();
             var createdOrderResponse = await client.PostContentAsync(
                 "api/orders",
                 new CreateOrderDetails
