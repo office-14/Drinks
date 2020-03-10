@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Mime;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Project.API.Servicing.Application.BookedOrders;
@@ -11,6 +12,7 @@ using Project.API.WebApi.Swagger;
 namespace Project.API.WebApi.Endpoints.Servicing.BookedOrders
 {
     [ApiExplorerSettings(GroupName = AvailableDocuments.Servicing)]
+    [Authorize]
     public class BookedOrdersController : ControllerBase
     {
         private readonly IBookedOrdersRepository bookedOrdersRepository;

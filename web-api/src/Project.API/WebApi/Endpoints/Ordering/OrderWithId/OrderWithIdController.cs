@@ -1,5 +1,6 @@
 using System.Net.Mime;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -12,6 +13,7 @@ using Project.API.WebApi.Swagger;
 namespace Project.API.WebApi.Endpoints.Ordering.OrderWithId
 {
     [ApiExplorerSettings(GroupName = AvailableDocuments.Ordering)]
+    [Authorize]
     public class OrderWithIdController : ControllerBase
     {
         private readonly IOrderDetailsRepository orderDetailsRepository;

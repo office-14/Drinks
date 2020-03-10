@@ -15,6 +15,20 @@ namespace Project.API.WebApi.Swagger
                     new OpenApiInfo { Title = "Drinks Ordering API", Version = "v1" });
                 c.SwaggerDoc(AvailableDocuments.Servicing,
                     new OpenApiInfo { Title = "Drinks Servicing API", Version = "v1" });
+
+                c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Type = SecuritySchemeType.ApiKey,
+                    In = ParameterLocation.Header,
+                    Scheme = "Bearer",
+                    BearerFormat = "JWT",
+                    Name = "Authorization",
+                    Description = @"JWT Authorization header using the Bearer scheme.
+                      Enter 'Bearer' [space] and then your token in the text input below.
+                      Example: 'Bearer 12345abcdef'",
+                });
+
+                c.OperationFilter<SecurityRequirementsOperationFilter>();
             });
 
             return services;

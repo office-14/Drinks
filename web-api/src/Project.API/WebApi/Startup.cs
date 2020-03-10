@@ -18,6 +18,8 @@ using Project.API.Ordering.Domain.Orders;
 using Project.API.Infrastructure.Repositories;
 using Project.API.WebApi.Swagger;
 using Project.API.Servicing.Application.BookedOrders;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Configuration;
 
 [assembly: ApiController]
 namespace Project.API.WebApi
@@ -25,6 +27,10 @@ namespace Project.API.WebApi
     public class Startup
     {
         private static readonly string CorsAllowAllPolicy = "AllowAll";
+
+        public Startup(IConfiguration config) => Configuration = config;
+
+        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
@@ -43,6 +49,22 @@ namespace Project.API.WebApi
                         .AllowAnyMethod();
                 });
             });
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.Authority = Configuration["Oidc:Authority"];
+                    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidIssuer = Configuration["Oidc:Issuer"],
+                        ValidateAudience = true,
+                        ValidAudience = Configuration["Oidc:Audience"],
+                        ValidateLifetime = true
+                    };
+                });
+
+            services.AddAuthorization();
 
             services.AddCustomSwagger();
 
@@ -72,6 +94,9 @@ namespace Project.API.WebApi
             }
 
             app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
 
             if (env.IsDevelopment())
             {
