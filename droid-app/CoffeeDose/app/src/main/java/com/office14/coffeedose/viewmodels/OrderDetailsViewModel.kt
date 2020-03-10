@@ -9,6 +9,7 @@ import com.office14.coffeedose.extensions.mutableLiveData
 import com.office14.coffeedose.network.HttpExceptionEx
 import com.office14.coffeedose.repository.OrderDetailsRepository
 import com.office14.coffeedose.repository.OrdersRepository
+import com.office14.coffeedose.repository.PreferencesRepository
 import kotlinx.coroutines.*
 
 class OrderDetailsViewModel(application : Application) : AndroidViewModel(application) {
@@ -28,6 +29,10 @@ class OrderDetailsViewModel(application : Application) : AndroidViewModel(applic
     val errorMessage : LiveData<String>
         get() = _errorMessage
 
+    private val _needLogin = MutableLiveData<Boolean>()
+    val needLogIn : LiveData<Boolean>
+        get() = _needLogin
+
     val isEmpty = Transformations.map(unAttachedOrders){
         return@map it.isEmpty()
     }
@@ -42,7 +47,7 @@ class OrderDetailsViewModel(application : Application) : AndroidViewModel(applic
         viewModelScope.launch {
 
             try {
-                val newOrderId = ordersRepository.createOrder(unAttachedOrders.value ?: listOf())
+                val newOrderId = ordersRepository.createOrder(unAttachedOrders.value ?: listOf(),PreferencesRepository.getIdToken())
 
                 orderId.value = newOrderId
 
@@ -63,9 +68,18 @@ class OrderDetailsViewModel(application : Application) : AndroidViewModel(applic
             catch (responseEx: HttpExceptionEx) {
                 _errorMessage.value = responseEx.error.title
             } catch (ex: Exception) {
-                _errorMessage.value = "Ошибка получения данных"
+                if (ex.message?.contains("401") == true){
+                    _needLogin.value = true
+                    _errorMessage.value = "Необходима авторизация"
+                }
+                else
+                    _errorMessage.value = "Ошибка получения данных"
             }
         }
+    }
+
+    fun doneLogin(){
+        _needLogin.value = false
     }
 
     fun hideErrorMessage(){

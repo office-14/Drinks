@@ -10,8 +10,10 @@ object PreferencesRepository {
     private const val APP_THEME_KEY = "APP_THEME_KEY"
     private const val ORDER_ID_KEY = "ORDER_ID_KEY"
     private const val BASE_URL_KEY = "BASE_URL_KEY"
+    private const val ID_TOKEN_KEY = "ID_TOKEN_KEY"
 
     private const val BASE_URL = "http://10.0.2.2:5000/api/"
+    private const val BASE_ID_TOKEN = "not initialized"
 
     private val prefs : SharedPreferences by lazy {
         val ctx = CoffeeDoseApplication.applicationContext()
@@ -23,6 +25,12 @@ object PreferencesRepository {
     }
 
     fun getBaseUrl() = prefs.getString(BASE_URL_KEY,BASE_URL)
+
+    fun saveIdToken(token:String){
+        putValue(ID_TOKEN_KEY to token)
+    }
+
+    fun getIdToken() = prefs.getString(ID_TOKEN_KEY,BASE_ID_TOKEN)
 
     fun getLastOrderId() = prefs.getInt(ORDER_ID_KEY,-1)
 

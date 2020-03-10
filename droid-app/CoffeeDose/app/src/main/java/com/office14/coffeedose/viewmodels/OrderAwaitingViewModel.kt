@@ -34,7 +34,7 @@ class OrderAwaitingViewModel(application : Application, private val orderId:Int)
 
         val job = viewModelScope.launch {
             while (isActive) { //keepRefresh.value != false
-                ordersRepository.refreshOrder(orderId)
+                ordersRepository.refreshOrder(orderId, PreferencesRepository.getIdToken())
             }
         }
 
