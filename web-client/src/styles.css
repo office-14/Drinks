@@ -9,3 +9,7 @@
 	background-color: #F44336;
 	color: #fff;
 }
+
+a.active {
+	font-weight: 700;
+}

@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { CartService } from './cart.service';
 import { OrderService } from './order.service';
+import { AuthService } from './auth/auth.service';
+import { StateService } from "@uirouter/core";
 
 @Component({
   selector: 'app-root',
@@ -12,7 +14,9 @@ export class AppComponent {
 
   constructor(
   	private cart_service: CartService,
-  	private order_service: OrderService
+  	private order_service: OrderService,
+    private auth_service: AuthService,
+    private state_service: StateService
   ) {
 
   }
@@ -22,6 +26,18 @@ export class AppComponent {
   }
 
   public if_order_exist() {
-  	return this.order_service.if_order_exist()
+  	return this.order_service.if_order_exist();
+  }
+
+  public is_user_logged_in() {
+    return this.auth_service.check_auth();
+  }
+
+  public sign_out() {
+    return this.auth_service.sign_out();
+  }
+  
+  public sign_in() {
+    this.state_service.go('signin');
   }
 }

@@ -13,10 +13,10 @@
   <div class="grid-x">
     <div>
       <h1>Заказ</h1>
-      <div *ngIf="!if_order_exist()">Нет заказов</div>
-      <div *ngIf="if_order_exist()">
-        <h3>Заказ № {{order.order_number}}</h3>
-        <div class="media-object stack-for-small" *ngFor="let product of order.products">
+      <div *ngIf="!is_order_exist()">Нет заказов</div>
+      <div *ngIf="is_order_exist()">
+        <h3>Заказ № {{get_order().order_number}}</h3>
+        <div class="media-object stack-for-small" *ngFor="let product of get_order().products">
           <div class="media-object-section">
             <img class="thumbnail" src="{{product.drink_image}}" width="200">
           </div>
@@ -28,8 +28,8 @@
             <p>Цена: {{product.price * product.qty}} ₽</p>
           </div>
         </div>
-        <h4>Сумма заказа: {{order.total_price}} ₽</h4>
-        <p>Статус: {{order.status_name}}</p>
+        <h4>Сумма заказа: {{get_order().total_price}} ₽</h4>
+        <p>Статус: {{get_order().status_name}}</p>
         <button class="button" (click)="finish_order()">Завершить заказ</button>
       </div>
     </div>

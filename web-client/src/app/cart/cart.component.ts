@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { CartService } from '../cart.service';
 import { OrderService } from '../order.service';
 import { MessageService } from '../message.service';
+import { AuthService } from '../auth/auth.service';
+import { StateService } from "@uirouter/core";
 
 @Component({
   selector: 'app-cart',
@@ -9,16 +11,16 @@ import { MessageService } from '../message.service';
   styleUrls: ['./cart.component.css']
 })
 export class CartComponent implements OnInit {
-  products = [];
-
   constructor(
   	private cart_service: CartService,
   	private order_service: OrderService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private auth_service: AuthService,
+    private state_service: StateService
   ) { }
 
   ngOnInit(): void {
-  	this.products = this.cart_service.get_products();
+  	this.get_products();
   }
 
   change_product_qty(product) {
@@ -40,18 +42,22 @@ export class CartComponent implements OnInit {
   }
 
   create_order() {
-  	if (!this.if_order_exist()) {
-  		this.order_service.create_order(this.products).subscribe(data => {
-        if (data.payload) {
-          let order = data.payload;
-          order['products'] = this.products;
-          this.order_service.set_order(order);
-          this.cart_service.clear_cart();
-          this.products = this.cart_service.get_products();
-          this.messageService.show_success('Заказ оформлен!');
-        }
-		});
-  	}
+    if (!this.if_order_exist()) {
+      if (this.auth_service.check_auth()) {
+        this.cart_service.create_order();
+      } else {
+        this.cart_service.start_order_creating();
+        this.state_service.go('signin');
+      }
+    }
+  }
+
+  get_products() {
+    return this.cart_service.get_products();
+  }
+
+  get_products_qty(): number {
+    return this.cart_service.get_products_qty();
   }
 
 }

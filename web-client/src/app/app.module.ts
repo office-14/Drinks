@@ -17,6 +17,9 @@ import {
   MatSnackBarModule
 } from '@angular/material/snack-bar';
 
+import { AngularFireModule } from '@angular/fire';
+import { AngularFireAuthModule } from '@angular/fire/auth';
+import { environment } from '../environments/environment';
 
 @NgModule({
   declarations: [
@@ -29,7 +32,9 @@ import {
     HttpClientModule,
     DrinksModule,
     FormsModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    AngularFireModule.initializeApp(environment.firebase),
+    AngularFireAuthModule, // imports firebase/auth, only needed for auth features
   ],
   providers: [
   	HttpErrorHandler,
@@ -38,10 +43,5 @@ import {
   bootstrap: [AppComponent]
 })
 export class AppModule {
-	constructor(router: UIRouterModule) {
-    // Use a custom replacer to display function names in the route configs
-    // const replacer = (key, value) => (typeof value === 'function') ? value.name : value;
-
-    // console.log('Routes: ', JSON.stringify(router.config, replacer, 2));
-  }
+	constructor(router: UIRouterModule) {}
 }

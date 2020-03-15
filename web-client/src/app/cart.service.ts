@@ -1,5 +1,10 @@
 import { Injectable } from '@angular/core';
 import { MessageService } from './message.service';
+import { OrderService } from './order.service';
+import { AngularFireAuth } from  "@angular/fire/auth";
+import { StateService } from "@uirouter/core";
+import { Observable } from 'rxjs';
+import { map, catchError } from 'rxjs/operators';
 
 @Injectable({
   providedIn: 'root'
@@ -7,9 +12,23 @@ import { MessageService } from './message.service';
 export class CartService {
 
   cart_products = [];
+  private order_creating_in_process: boolean = false;
 
-  constructor(private messageService: MessageService) {
+  constructor(
+    private messageService: MessageService,
+    private order_service: OrderService,
+    private  afAuth:  AngularFireAuth,
+    private state_service: StateService
+  ) {
   	this.cart_products = [];
+
+    this.afAuth.authState.subscribe(user => {
+        if (user) {
+          if (this.order_creating_started()) {
+            this.create_order();
+          }
+        }
+      })
   }
 
   private comparing_addins(addins1, addins2) {
@@ -63,5 +82,29 @@ export class CartService {
     {
         return prev + cur.qty * cur.price;
     }, 0);
+  }
+
+  start_order_creating() {
+    this.order_creating_in_process = true;
+  }
+
+  order_creating_started() {
+    return this.order_creating_in_process;
+  }
+
+  create_order() {
+    this.order_service.create_order(this.cart_products).subscribe(
+     (data: any) => {
+        let order = data;
+        order['products'] = this.cart_products;
+        this.order_service.set_order(order);
+        this.clear_cart();
+        this.cart_products = this.get_products();
+        if (this.order_creating_started()) {
+          this.state_service.go('order');
+          this.order_creating_in_process = false;
+        }
+        this.messageService.show_success('Заказ оформлен!');
+      });    
   }
 }

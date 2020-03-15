@@ -13,9 +13,9 @@
   <div class="grid-x">
     <div>
       <h1>Корзина</h1>
-      <div *ngIf="products.length == 0">Нет товаров</div>
-      <div *ngIf="products.length > 0">
-        <div class="media-object stack-for-small" *ngFor="let product of products; index as i">
+      <div *ngIf="get_products_qty() == 0">Нет товаров</div>
+      <div *ngIf="get_products_qty() > 0">
+        <div class="media-object stack-for-small" *ngFor="let product of get_products(); index as i">
           <div class="media-object-section">
             <img class="thumbnail" src="{{product.drink_image}}" width="200">
           </div>
