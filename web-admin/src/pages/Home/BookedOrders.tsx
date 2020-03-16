@@ -4,6 +4,8 @@ import DoneOutline from '@material-ui/icons/DoneOutline'
 import Refresh from '@material-ui/icons/Refresh'
 import { useSnackbar } from 'notistack'
 
+import { useAuth } from 'auth'
+
 function renderOrderDetails(items: any[]) {
   return <>{items.map(renderOrderItem)}</>
 }
@@ -19,23 +21,32 @@ function renderOrderItem(
   return <p key={idx}>{formattedItem}</p>
 }
 
-async function handleDataUpdate(): Promise<any> {
-  const ordersResponse = await fetch('http://localhost:5000/api/orders/booked')
-  const orders = await ordersResponse.json()
-  return {
-    data: orders.payload.map((o: any, idx: number) => ({
-      index: idx + 1,
-      ...o
-    }))
-  }
-}
-
 function onRowClick() {}
 
 function BookedOrders() {
   const { enqueueSnackbar: notify } = useSnackbar()
+  const { user } = useAuth()
 
   const tableRef: any = React.useRef()
+
+  async function handleDataUpdate(): Promise<any> {
+    const idToken = await user?.getIdToken()
+    const ordersResponse = await fetch(
+      'http://localhost:5000/api/orders/booked',
+      {
+        headers: {
+          Authorization: `Bearer ${idToken}`
+        }
+      }
+    )
+    const orders = await ordersResponse.json()
+    return {
+      data: orders.payload.map((o: any, idx: number) => ({
+        index: idx + 1,
+        ...o
+      }))
+    }
+  }
 
   const handleRefresh = React.useCallback(() => {
     tableRef.current && tableRef.current.onQueryChange()
@@ -43,12 +54,17 @@ function BookedOrders() {
 
   const handleFinishOrder = React.useCallback(
     async (event, rowData) => {
+      const idToken = await user?.getIdToken()
+
       let response
       try {
         response = await fetch(
           `http://localhost:5000/api/orders/${rowData.id}/finish`,
           {
-            method: 'POST'
+            method: 'POST',
+            headers: {
+              Authorization: `Bearer ${idToken}`
+            }
           }
         )
       } catch (e) {
@@ -68,7 +84,7 @@ function BookedOrders() {
 
       handleRefresh()
     },
-    [handleRefresh, notify]
+    [handleRefresh, notify, user]
   )
 
   React.useEffect(() => {

@@ -5,6 +5,8 @@ import { SnackbarProvider } from 'notistack'
 
 import Home from 'pages/Home'
 import NotFound from 'pages/NotFound'
+import Login from 'pages/Login'
+import Logout from 'pages/Logout'
 
 function App() {
   return (
@@ -12,6 +14,8 @@ function App() {
       <CssBaseline />
       <Switch>
         <Route exact path="/" component={Home} />
+        <Route path="/login" component={Login} />
+        <Route path="/logout" component={Logout} />
         <Route path="/" component={NotFound} />
       </Switch>
     </SnackbarProvider>

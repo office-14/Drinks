@@ -1,14 +1,17 @@
 import React, { StrictMode } from 'react'
 import { BrowserRouter as Router } from 'react-router-dom'
 
+import { ProvideAuth } from 'auth'
 import App from 'containers/App'
 
 function Main() {
   return (
     <StrictMode>
-      <Router>
-        <App />
-      </Router>
+      <ProvideAuth>
+        <Router>
+          <App />
+        </Router>
+      </ProvideAuth>
     </StrictMode>
   )
 }
