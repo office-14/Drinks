@@ -63,6 +63,7 @@ export class DrinksService {
   getDrink(id: number | string): Observable<Drink> {
     return this.getDrinks()
     .pipe(
+      catchError(this.handleError('getDrink')),
       map((drinks: Drink[]) => drinks.find(drink => drink.id === +id))
     );
   }

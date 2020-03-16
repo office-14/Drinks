@@ -29,9 +29,16 @@ export class HttpErrorHandler {
       // TODO: send the error to remote logging infrastructure
       console.error(error); // log to console instead
 
+      let error_title = '';
+      if (error.status == 0) {
+        error_title = 'Не установлено соединение с сервером';
+      }  else {
+        error_title = error.error.title;
+      }
+
       const message = (error.error instanceof ErrorEvent) ?
         error.error.message :
-       `Сервер вернул код ${error.status} с описанием ошибки "${error.error.title}"`;
+       `Сервер вернул код ${error.status} с описанием ошибки "${error_title}"`;
 
       // TODO: better job of transforming error for user consumption
       this.messageService.show_error(`${serviceName}: ${operation} ошибка: ${message}`);
