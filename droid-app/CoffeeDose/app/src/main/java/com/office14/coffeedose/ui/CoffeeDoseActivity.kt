@@ -100,6 +100,7 @@ class CoffeeDoseActivity : AppCompatActivity() {
     fun signIn(successCallback:() -> Unit) {
         successAuthCallback = successCallback
         val signInIntent = googleSignInClient.signInIntent
+        signInIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
         startActivityForResult(signInIntent, RC_SIGN_IN)
     }
 
