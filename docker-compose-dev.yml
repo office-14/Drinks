@@ -6,9 +6,12 @@ services:
       - '5000:80'
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
+      - GOOGLE_APPLICATION_CREDENTIALS=/firebase/firebase-sdk-sa.json
       - Oidc__Audience=coffeedose-eaef2
       - Oidc__Authority=https://securetoken.google.com/coffeedose-eaef2
       - Oidc__Issuer=https://securetoken.google.com/coffeedose-eaef2
+    volumes:
+      - ./web-api/firebase:/firebase
 
   webclient:
     ports:

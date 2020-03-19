@@ -1,15 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Project.API.Ordering.Application;
 using Project.API.Ordering.Application.DrinkDetails;
 using Project.API.Ordering.Application.OrderDetails;
 using Project.API.Ordering.Application.OrderService;
@@ -20,6 +14,10 @@ using Project.API.WebApi.Swagger;
 using Project.API.Servicing.Application.BookedOrders;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
+using Project.API.Infrastructure.Notifications;
+using Project.API.WebApi.MediatR;
+using Project.API.Infrastructure.Firebase;
+using Project.API.Servicing.Application.FinishOrder;
 
 [assembly: ApiController]
 namespace Project.API.WebApi
@@ -67,6 +65,7 @@ namespace Project.API.WebApi
             services.AddAuthorization();
 
             services.AddCustomSwagger();
+            services.AddCustomMediatR();
 
             services.AddSingleton<InMemoryDrinksRepository>();
             services.AddSingleton<IDrinksRepository>(provider => provider.GetRequiredService<InMemoryDrinksRepository>());
@@ -77,8 +76,13 @@ namespace Project.API.WebApi
             services.AddSingleton<IOrderDetailsRepository>(provider => provider.GetRequiredService<InMemoryOrdersRepository>());
             services.AddSingleton<IOrdersRepository>(provider => provider.GetRequiredService<InMemoryOrdersRepository>());
             services.AddSingleton<IBookedOrdersRepository>(provider => provider.GetRequiredService<InMemoryOrdersRepository>());
-            services.AddSingleton<OrderService>();
+            services.AddSingleton<CreateOrderService>();
             services.AddSingleton<OrderNumberProvider>();
+            services.AddSingleton<OrderDraftFactory>();
+            services.AddSingleton<OrderFactory>();
+            services.AddSingleton<FinishOrderService>();
+            services.AddSingleton<NotifiableOrders>();
+            services.AddFirebaseNotifications();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

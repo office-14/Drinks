@@ -1,8 +1,7 @@
 using System.Threading;
-using Project.API.Ordering.Domain.Orders;
 using Project.API.SharedKernel.Domain.Orders;
 
-namespace Project.API.Ordering.Application
+namespace Project.API.Ordering.Application.OrderService
 {
     public sealed class OrderNumberProvider
     {

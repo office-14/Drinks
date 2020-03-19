@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Project.API.Ordering.Domain.Orders;
+using Project.API.Servicing.Application.FinishOrder;
 using Project.API.SharedKernel.Domain.Orders;
 using Project.API.WebApi.Swagger;
 
@@ -13,12 +13,10 @@ namespace Project.API.WebApi.Endpoints.Servicing.FinishOrder
     [Authorize]
     public class FinishOrderController : ControllerBase
     {
-        private readonly IOrdersRepository ordersRepository;
+        private readonly FinishOrderService finishOrderService;
 
-        public FinishOrderController(IOrdersRepository ordersRepository)
-        {
-            this.ordersRepository = ordersRepository;
-        }
+        public FinishOrderController(FinishOrderService finishOrderService)
+            => this.finishOrderService = finishOrderService;
 
         [HttpPost("/api/orders/{id}/finish")]
         [Produces(MediaTypeNames.Application.Json)]
@@ -28,13 +26,10 @@ namespace Project.API.WebApi.Endpoints.Servicing.FinishOrder
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> FinishOrderWithId([FromRoute] int id)
         {
-            var order = await ordersRepository.OrderWithId(OrderId.From(id));
-
-            if (order == null) return NotFound();
-
-            order.Finish();
-
-            await ordersRepository.Save(order);
+            if (!(await finishOrderService.FinishOrderWithId(OrderId.From(id))))
+            {
+                return NotFound();
+            }
 
             return NoContent();
         }
