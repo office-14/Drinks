@@ -6,7 +6,7 @@ export class MessageService {
   messages: string[] = [];
   action: boolean = true;
   autoHide_success: number = 1500;
-  autoHide_error: number = 15000;
+  autoHide_error: number = 5000;
   horizontalPosition: MatSnackBarHorizontalPosition = 'center';
   verticalPosition: MatSnackBarVerticalPosition = 'top';
   success_extra_class = 'success-message';

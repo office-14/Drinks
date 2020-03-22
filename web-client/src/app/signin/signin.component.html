@@ -13,7 +13,7 @@
   <div class="grid-x" class="text-center">
     <div>
     	<h1>Авторизация</h1>
-    	<p *ngIf="is_order_creating_in_process()">Для офориления заказа авторизуйтесь на нашем сервисе</p>
+    	<p *ngIf="order_creating_started">Для офориления заказа авторизуйтесь на нашем сервисе</p>
     	<button class="button" type="button" (click)="google_auth()">
 		    Войти с помощью Google
 		</button>

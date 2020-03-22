@@ -14,7 +14,7 @@ export class CartComponent implements OnInit {
   constructor(
   	private cart_service: CartService,
   	private order_service: OrderService,
-    private messageService: MessageService,
+    private message_service: MessageService,
     private auth_service: AuthService,
     private state_service: StateService
   ) { }
@@ -42,14 +42,15 @@ export class CartComponent implements OnInit {
   }
 
   create_order() {
-    if (!this.if_order_exist()) {
       if (this.auth_service.check_auth()) {
-        this.cart_service.create_order();
+        if (!this.if_order_exist()) {
+          this.cart_service.create_order();
+        } else {
+          this.message_service.show_error('Нельзя создать новый заказ, пока есть текущий!');
+        }
       } else {
-        this.cart_service.start_order_creating();
-        this.state_service.go('signin');
+        this.state_service.go('signin', {order_creating_started: true});
       }
-    }
   }
 
   get_products() {

@@ -13,27 +13,36 @@ import { LocalStorageService } from 'angular-2-local-storage';
 export class CartService {
 
   cart_products = [];
-  private order_creating_in_process: boolean = false;
+  order_creating_started = false;
 
   constructor(
-    private messageService: MessageService,
+    private message_serivce: MessageService,
     private order_service: OrderService,
-    private afAuth:  AngularFireAuth,
+    private afAuth: AngularFireAuth,
     private state_service: StateService,
     private local_storage_service: LocalStorageService
   ) {
   	this.cart_products = [];
 
-    this.afAuth.authState.subscribe(user => {
-        if (user) {
-          if (this.order_creating_started()) {
-            this.create_order();
-          }
-        }
-    });
     if (this.local_storage_service.get('cart_products')) {
       this.cart_products = this.local_storage_service.get('cart_products');
     }
+
+    this.afAuth.authState.subscribe(user => {
+      if (user) {
+        if (this.local_storage_service.get('order')) {
+          this.order_service.set_order(this.local_storage_service.get('order'));
+          if (this.order_creating_started) {
+            this.message_serivce.show_error('Не аозможно создать заказ, так как есть текущий!');
+          }
+        } else {
+          if (this.order_creating_started) {
+            this.create_order();
+          }
+        }
+        this.order_creating_started = false;
+      }
+    });
   }
 
   private comparing_addins(addins1, addins2) {
@@ -64,7 +73,7 @@ export class CartService {
   		this.cart_products.push(cart_product);
   	}
     this.local_storage_service.set('cart_products', this.cart_products);
-    this.messageService.show_success('Товар успешно добавлен в корзину!');
+    this.message_serivce.show_success('Товар успешно добавлен в корзину!');
   }
 
   get_products() {
@@ -80,9 +89,9 @@ export class CartService {
 
   remove_product(index) {
   	if (index > -1) {
-    this.cart_products.splice(index, 1);
-    this.local_storage_service.set('cart_products', this.cart_products);
-    this.messageService.show_success('Товар удалён из корзины!');
+      this.cart_products.splice(index, 1);
+      this.local_storage_service.set('cart_products', this.cart_products);
+      this.message_serivce.show_success('Товар удалён из корзины!');
 	  }
   }
 
@@ -93,28 +102,12 @@ export class CartService {
     }, 0);
   }
 
-  start_order_creating() {
-    this.order_creating_in_process = true;
-  }
-
-  order_creating_started() {
-    return this.order_creating_in_process;
-  }
-
   create_order() {
     this.order_service.create_order(this.cart_products).subscribe(
      (data: any) => {
-        let order = data;
-        order['products'] = this.cart_products;
-        this.order_service.set_order(order);
-        this.order_service.start_longpolling_order_finishing();
         this.clear_cart();
-        this.cart_products = this.get_products();
-        if (this.order_creating_started()) {
-          this.state_service.go('order');
-          this.order_creating_in_process = false;
-        }
-        this.messageService.show_success('Заказ оформлен!');
+        this.state_service.go('order');
+        this.message_serivce.show_success('Заказ оформлен!');
       });    
   }
 }

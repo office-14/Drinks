@@ -2,11 +2,13 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { AjaxResponse } from "./ajax-response";
 import { Observable, of } from 'rxjs';
-import { map, catchError, startWith, switchMap, takeUntil, filter, delay } from 'rxjs/operators';
+import { map, catchError, delay, tap } from 'rxjs/operators';
 import { Order } from './order/order';
 import { HttpErrorHandler, HandleError } from './http-error-handler.service';
 import { AuthService } from './auth/auth.service';
-import {interval} from "rxjs/internal/observable/interval";
+import { LocalStorageService } from 'angular-2-local-storage';
+import { AngularFireAuth } from  "@angular/fire/auth";
+import { StateService } from "@uirouter/core";
 
 
 @Injectable({
@@ -22,10 +24,18 @@ export class OrderService {
   constructor(
     private http: HttpClient,
     httpErrorHandler: HttpErrorHandler,
-    private auth_service: AuthService
+    private auth_service: AuthService,
+    private local_storage_service: LocalStorageService,
+    private afAuth: AngularFireAuth,
+    private state_service: StateService
   ) {
     this.handleError = httpErrorHandler.createHandleError('DrinksService');
-
+    this.afAuth.authState.subscribe(user => {
+      if (user == null) {
+        this.clear_order();
+        this.state_service.go('drinks');
+      }
+    });  
   }
 
   if_order_exist() {
@@ -70,13 +80,18 @@ export class OrderService {
 
   	return this.http.post<AjaxResponse<any>>('http://localhost:5000/api/orders', { drinks: order_products }, http_options).pipe(
         catchError(this.handleError('create_order')),
-        map((ajax_response: AjaxResponse<any>) => ajax_response.payload)
+        map((ajax_response: AjaxResponse<any>) => ajax_response.payload),
+        tap(resp => {
+          resp['products'] = cart_products;
+          this.set_order(resp);
+        }) 
       );
   }
 
   refresh_order_status(order) {
     this.order.status_code = order.status_code;
     this.order.status_name = order.status_name;
+    this.local_storage_service.set('order', this.order);
   }
 
   start_longpolling_order_finishing() {
@@ -85,12 +100,18 @@ export class OrderService {
 
   check_order_finishing() {
     if (this.if_order_exist() && this.is_order_status_cooking()) {
+
+      if (this.auth_service.get_access_token() == false) {
+        return false;
+      }
       const http_options = {
         headers: new HttpHeaders({
           'Content-Type':  'application/json',
           'Authorization': 'Bearer ' + this.auth_service.get_access_token()
         })
       };
+
+
       return this.http.get<AjaxResponse<any>>(`http://localhost:5000/api/orders/${this.order.id}`, http_options)
         .pipe(
           catchError(this.handleError('check_order_finishing')),
@@ -109,10 +130,15 @@ export class OrderService {
 
   set_order(order) {
   	this.order = order;
+    this.local_storage_service.set('order', this.order);
+    this.start_longpolling_order_finishing();
   }
 
   clear_order() {
   	this.order = null;
+    if (this.auth_service.get_access_token()) {
+      this.local_storage_service.remove('order');
+    }
   }
 
   get_order() {

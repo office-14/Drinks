@@ -20,7 +20,7 @@ export class DrinkDetailComponent implements OnInit {
   drink: Drink;
   addins: Addin[];
   draft_cart_product: DraftCartProduct = {
-  	size: null,
+  size: null,
 	addins: [],
 	qty: 1,
 	drink_id: 0
