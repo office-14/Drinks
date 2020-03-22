@@ -30,7 +30,7 @@
         </div>
         <h4>Сумма заказа: {{get_order().total_price}} ₽</h4>
         <p>Статус: {{get_order().status_name}}</p>
-        <button class="button" (click)="finish_order()">Завершить заказ</button>
+        <button *ngIf="is_order_status_ready()" class="button" (click)="clear_ready_order()">Очистить</button>
       </div>
     </div>
   </div>

@@ -98,6 +98,7 @@ export class CartService {
         let order = data;
         order['products'] = this.cart_products;
         this.order_service.set_order(order);
+        this.order_service.start_longpolling_order_finishing();
         this.clear_cart();
         this.cart_products = this.get_products();
         if (this.order_creating_started()) {
