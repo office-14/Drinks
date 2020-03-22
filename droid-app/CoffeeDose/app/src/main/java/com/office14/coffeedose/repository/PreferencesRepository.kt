@@ -10,10 +10,11 @@ object PreferencesRepository {
     private const val APP_THEME_KEY = "APP_THEME_KEY"
     private const val ORDER_ID_KEY = "ORDER_ID_KEY"
     private const val BASE_URL_KEY = "BASE_URL_KEY"
-    private const val ID_TOKEN_KEY = "ID_TOKEN_KEY"
+    private const val FIREBASE_AUTH_ID_TOKEN_KEY = "FIREBASE_AUTH_ID_TOKEN_KEY"
+    private const val FIREBASE_MESSAGE_REG_TOKEN_KEY = "FIREBASE_MESSAGE_REG_TOKEN_KEY"
+    const val EMPTY_STRING = "not initialized"
 
     private const val BASE_URL = "http://10.0.2.2:5000/api/"
-    private const val BASE_ID_TOKEN = "not initialized"
 
     private val prefs : SharedPreferences by lazy {
         val ctx = CoffeeDoseApplication.applicationContext()
@@ -27,10 +28,16 @@ object PreferencesRepository {
     fun getBaseUrl() = prefs.getString(BASE_URL_KEY,BASE_URL)
 
     fun saveIdToken(token:String){
-        putValue(ID_TOKEN_KEY to token)
+        putValue(FIREBASE_AUTH_ID_TOKEN_KEY to token)
     }
 
-    fun getIdToken() = prefs.getString(ID_TOKEN_KEY,BASE_ID_TOKEN)
+    fun getIdToken() = prefs.getString(FIREBASE_AUTH_ID_TOKEN_KEY,EMPTY_STRING)
+
+    fun saveFcmRegToken(token:String){
+        putValue(FIREBASE_MESSAGE_REG_TOKEN_KEY to token)
+    }
+
+    fun getFcmRegToken() = prefs.getString(FIREBASE_MESSAGE_REG_TOKEN_KEY,EMPTY_STRING)
 
     fun getLastOrderId() = prefs.getInt(ORDER_ID_KEY,-1)
 
