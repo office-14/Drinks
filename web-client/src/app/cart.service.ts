@@ -5,6 +5,7 @@ import { AngularFireAuth } from  "@angular/fire/auth";
 import { StateService } from "@uirouter/core";
 import { Observable } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
+import { LocalStorageService } from 'angular-2-local-storage';
 
 @Injectable({
   providedIn: 'root'
@@ -17,8 +18,9 @@ export class CartService {
   constructor(
     private messageService: MessageService,
     private order_service: OrderService,
-    private  afAuth:  AngularFireAuth,
-    private state_service: StateService
+    private afAuth:  AngularFireAuth,
+    private state_service: StateService,
+    private local_storage_service: LocalStorageService
   ) {
   	this.cart_products = [];
 
@@ -28,7 +30,10 @@ export class CartService {
             this.create_order();
           }
         }
-      })
+    });
+    if (this.local_storage_service.get('cart_products')) {
+      this.cart_products = this.local_storage_service.get('cart_products');
+    }
   }
 
   private comparing_addins(addins1, addins2) {
@@ -43,6 +48,8 @@ export class CartService {
 
   public clear_cart() {
   	this.cart_products = [];
+
+    this.local_storage_service.set('cart_products', this.cart_products);
   }
 
   public add_product(cart_product) {
@@ -56,6 +63,7 @@ export class CartService {
   	if (add_new) {
   		this.cart_products.push(cart_product);
   	}
+    this.local_storage_service.set('cart_products', this.cart_products);
     this.messageService.show_success('Товар успешно добавлен в корзину!');
   }
 
@@ -72,8 +80,9 @@ export class CartService {
 
   remove_product(index) {
   	if (index > -1) {
-	   this.cart_products.splice(index, 1);
-     this.messageService.show_success('Товар удалён из корзины!');
+    this.cart_products.splice(index, 1);
+    this.local_storage_service.set('cart_products', this.cart_products);
+    this.messageService.show_success('Товар удалён из корзины!');
 	  }
   }
 

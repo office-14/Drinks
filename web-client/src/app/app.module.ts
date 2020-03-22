@@ -21,6 +21,8 @@ import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { environment } from '../environments/environment';
 
+import { LocalStorageModule } from 'angular-2-local-storage';
+
 @NgModule({
   declarations: [
     AppComponent
@@ -35,6 +37,10 @@ import { environment } from '../environments/environment';
     MatSnackBarModule,
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireAuthModule, // imports firebase/auth, only needed for auth features
+    LocalStorageModule.forRoot({
+        prefix: 'drinks-office-24',
+        storageType: 'localStorage'
+    })
   ],
   providers: [
   	HttpErrorHandler,
