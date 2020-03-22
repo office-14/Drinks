@@ -4,6 +4,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.navigation.findNavController
 import com.coffeedose.R
 import com.google.android.gms.auth.api.signin.GoogleSignIn
@@ -11,9 +12,11 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
+import com.google.firebase.iid.FirebaseInstanceId
 import com.office14.coffeedose.repository.PreferencesRepository
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -29,6 +32,9 @@ class CoffeeDoseActivity : AppCompatActivity() {
 
         prepareSignIn()
         initToolbar()
+        checkFcmRegToken()
+
+        val ex = intent.extras
     }
 
     private var successAuthCallback : () -> Unit = {}
@@ -111,6 +117,26 @@ class CoffeeDoseActivity : AppCompatActivity() {
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true
+    }
+
+    private fun checkFcmRegToken(){
+        val fcmRegToken = PreferencesRepository.getFcmRegToken()
+        if (fcmRegToken == PreferencesRepository.EMPTY_STRING){
+            getAndUpdateActualFcmToken()
+        }
+    }
+
+    private fun getAndUpdateActualFcmToken(){
+        FirebaseInstanceId.getInstance().instanceId
+            .addOnCompleteListener(OnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    Log.w(TAG, "getInstanceId failed", task.exception)
+                    return@OnCompleteListener
+                }
+
+                if (task.result?.token?.isNotEmpty() == true)
+                    PreferencesRepository.saveFcmRegToken(task.result!!.token!!)
+            })
     }
 
     companion object {

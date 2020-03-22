@@ -33,7 +33,7 @@ buildscript {
 
         version_preferences_manager = "1.1.0"
 
-        versiob_firebase_analytics = '17.2.3'
+        version_firebase_analytics = '17.2.3'
 }
 
     repositories {
