@@ -116,10 +116,19 @@ class FirebaseMessagingService : FirebaseMessagingService() {
      * @param messageBody FCM message body received.
      */
     private fun sendNotification(messageTitle: String? ,messageBody: String?) {
+        //PreferencesRepository.saveNavigateToOrderAwaitFrag(true)
+
         val intent = Intent(this, CoffeeDoseActivity::class.java)
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        val pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
-            PendingIntent.FLAG_ONE_SHOT)
+        intent.putExtra(CoffeeDoseActivity.FromNotificationKey, true)
+        intent.putExtra(CoffeeDoseActivity.DestinationFragmentIDKey,CoffeeDoseActivity.OrderAwatingFragmentID)
+
+
+        intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+        //intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        //intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        //intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+        val pendingIntent = PendingIntent.getActivity(this, NOTIFICATION_ID, intent,
+            PendingIntent.FLAG_UPDATE_CURRENT)
 
         val channelId = getString(R.string.default_notification_channel_id)
         val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
@@ -141,11 +150,11 @@ class FirebaseMessagingService : FirebaseMessagingService() {
             notificationManager.createNotificationChannel(channel)
         }
 
-        notificationManager.notify(0 /* ID of notification */, notificationBuilder.build())
+        notificationManager.notify(NOTIFICATION_ID /* ID of notification */, notificationBuilder.build())
     }
 
     companion object {
-
-        private const val TAG = "MyFirebaseMsgService"
+        private const val TAG = "FirebaseMessagingService"
+        const val NOTIFICATION_ID = 101
     }
 }

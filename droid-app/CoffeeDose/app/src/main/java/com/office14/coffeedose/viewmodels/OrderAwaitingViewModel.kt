@@ -49,7 +49,8 @@ class OrderAwaitingViewModel(application : Application, private val orderId:Int)
     }
 
     fun approve(){
-        //PreferencesRepository.saveLastOrderId(-1)
+        PreferencesRepository.saveLastOrderId(-1)
+        //PreferencesRepository.saveNavigateToOrderAwaitFrag(false)
         _naviagateToCoffeeList.value = true
     }
 

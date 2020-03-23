@@ -1,24 +1,22 @@
 package com.office14.coffeedose.ui
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
-import androidx.navigation.findNavController
+import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Lifecycle
 import com.coffeedose.R
 import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.iid.FirebaseInstanceId
 import com.office14.coffeedose.repository.PreferencesRepository
 import kotlinx.android.synthetic.main.activity_main.*
+
 
 class CoffeeDoseActivity : AppCompatActivity() {
 
@@ -39,7 +37,18 @@ class CoffeeDoseActivity : AppCompatActivity() {
 
     private var successAuthCallback : () -> Unit = {}
 
-
+    private fun handleNavigationOnNotification(){
+        //Toast.makeText(this,"Intent ex = ${intent?.extras ?: "empty"}", Toast.LENGTH_LONG)
+        val ex = intent.extras
+        ex?.let {
+            if (it.containsKey(FromNotificationKey) && it.getBoolean(FromNotificationKey)){
+                val navigateId = it.getInt(DestinationFragmentIDKey)
+                if (navigateId == OrderAwatingFragmentID){
+                    PreferencesRepository.saveNavigateToOrderAwaitFrag(true)
+                }
+            }
+        }
+    }
 
     private fun prepareSignIn()
     {
@@ -53,23 +62,21 @@ class CoffeeDoseActivity : AppCompatActivity() {
         auth = FirebaseAuth.getInstance()
     }
 
-    override fun onStart() {
-        super.onStart()
-        val currentUser = auth.currentUser
-        //if (currentUser == null)
-            //signIn()
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        handleNavigationOnNotification()
     }
 
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-
+        //Toast.makeText(this,"Intent ex = ${intent?.extras ?: "empty"}", Toast.LENGTH_LONG)
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             try {
                 // Google Sign In was successful, authenticate with Firebase
                 val account = task.getResult(ApiException::class.java)
-                firebaseAuthWithGoogle(account!!)
+                firebaseAuthWithGoogle(account?.idToken)
             } catch (e: ApiException) {
                 // Google Sign In failed, update UI appropriately
                 Log.w(TAG, "Google sign in failed", e)
@@ -80,14 +87,19 @@ class CoffeeDoseActivity : AppCompatActivity() {
         }
     }
 
-    private fun firebaseAuthWithGoogle(acct: GoogleSignInAccount) {
-        val credential = GoogleAuthProvider.getCredential(acct.idToken, null)
+    private fun firebaseAuthWithGoogle(idToken : String?) : Boolean {
+        val credential = GoogleAuthProvider.getCredential(idToken, null)
+        var result = false
         auth.signInWithCredential(credential)
             .addOnCompleteListener(this) { task ->
+                result = task.isSuccessful
                 if (task.isSuccessful) {
+                    idToken?.let { PreferencesRepository.saveGoogleToken(it) }
                     getUserAndUpdateToken()
                 }
             }
+
+        return result
     }
 
     private fun getUserAndUpdateToken(){
@@ -105,9 +117,13 @@ class CoffeeDoseActivity : AppCompatActivity() {
 
     fun signIn(successCallback:() -> Unit) {
         successAuthCallback = successCallback
-        val signInIntent = googleSignInClient.signInIntent
-        signInIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
-        startActivityForResult(signInIntent, RC_SIGN_IN)
+        //try sighnIn with current google token
+        //if (!firebaseAuthWithGoogle(PreferencesRepository.getGoogleToken())){
+            //if not succeeded try regular way
+            val signInIntent = googleSignInClient.signInIntent
+            signInIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+            startActivityForResult(signInIntent, RC_SIGN_IN)
+        //}
     }
 
     private fun initToolbar() {
@@ -139,8 +155,15 @@ class CoffeeDoseActivity : AppCompatActivity() {
             })
     }
 
+    fun isStarted() : Boolean = lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)
+
     companion object {
        private const val RC_SIGN_IN = 9001
        private const val TAG = "CoffeeDoseActivity"
+
+        const val FromNotificationKey = "FromNotificationKey"
+        const val DestinationFragmentIDKey = "DestinationFragmentIDKey"
+        const val OrderAwatingFragmentID = 12
+
     }
 }

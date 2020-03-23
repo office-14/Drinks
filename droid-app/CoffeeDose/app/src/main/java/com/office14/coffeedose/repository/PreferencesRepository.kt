@@ -10,6 +10,8 @@ object PreferencesRepository {
     private const val APP_THEME_KEY = "APP_THEME_KEY"
     private const val ORDER_ID_KEY = "ORDER_ID_KEY"
     private const val BASE_URL_KEY = "BASE_URL_KEY"
+    private const val NAVIGATE_TO_ORDER_AWAITING_FRAGMENT_KEY = "NAVIGATE_TO_ORDER_AWAITING_FRAGMENT_KEY"
+    private const val GOOGLE_AUTH_TOKEN_KEY = "GOOGLE_AUTH_TOKEN_KEY"
     private const val FIREBASE_AUTH_ID_TOKEN_KEY = "FIREBASE_AUTH_ID_TOKEN_KEY"
     private const val FIREBASE_MESSAGE_REG_TOKEN_KEY = "FIREBASE_MESSAGE_REG_TOKEN_KEY"
     const val EMPTY_STRING = "not initialized"
@@ -33,9 +35,7 @@ object PreferencesRepository {
 
     fun getIdToken() = prefs.getString(FIREBASE_AUTH_ID_TOKEN_KEY,EMPTY_STRING)
 
-    fun saveFcmRegToken(token:String){
-        putValue(FIREBASE_MESSAGE_REG_TOKEN_KEY to token)
-    }
+    fun saveFcmRegToken(token:String) = putValue(FIREBASE_MESSAGE_REG_TOKEN_KEY to token)
 
     fun getFcmRegToken() = prefs.getString(FIREBASE_MESSAGE_REG_TOKEN_KEY,EMPTY_STRING)
 
@@ -43,11 +43,17 @@ object PreferencesRepository {
 
     fun saveLastOrderId(orderId:Int) = putValue(ORDER_ID_KEY to orderId)
 
-    fun saveAppTheme(theme: Int) {
-        putValue(APP_THEME_KEY to theme)
-    }
+    fun getNavigateToOrderAwaitFrag() = prefs.getBoolean(NAVIGATE_TO_ORDER_AWAITING_FRAGMENT_KEY,false)
+
+    fun saveNavigateToOrderAwaitFrag(nav:Boolean) = putValue(NAVIGATE_TO_ORDER_AWAITING_FRAGMENT_KEY to nav)
+
+    fun saveAppTheme(theme: Int) = putValue(APP_THEME_KEY to theme)
 
     fun getAppTheme(): Int = prefs.getInt(APP_THEME_KEY, AppCompatDelegate.MODE_NIGHT_NO)
+
+    fun saveGoogleToken(token:String) = putValue(GOOGLE_AUTH_TOKEN_KEY to token)
+
+    fun getGoogleToken() = prefs.getString(GOOGLE_AUTH_TOKEN_KEY,EMPTY_STRING)
 
 
     private fun putValue(pair : Pair<String, Any>) = with(prefs.edit()){

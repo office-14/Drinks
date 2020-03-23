@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.*
 import android.widget.Button
 import android.widget.EditText
+import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
@@ -70,6 +71,16 @@ class DrinksFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        //Toast.makeText(requireContext(),"DrinksFragment is started", Toast.LENGTH_LONG).show()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val orderId = PreferencesRepository.getLastOrderId()
+        val redirToAwait = PreferencesRepository.getNavigateToOrderAwaitFrag()
+        //Toast.makeText(requireContext(),"DrinksFragment is resumed ($orderId $redirToAwait)", Toast.LENGTH_LONG).show()
+
+
         if (PreferencesRepository.getLastOrderId() != -1)
             findNavController().navigate(DrinksFragmentDirections.actionDrinksFragmentToOrderAwaitingFragment(PreferencesRepository.getLastOrderId()))
     }
