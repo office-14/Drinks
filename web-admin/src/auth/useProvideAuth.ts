@@ -1,26 +1,24 @@
 import React from 'react'
 
-import { auth, googleProvider } from 'infrastructure/firebase'
+import { auth } from 'infrastructure/firebase'
 
 import { AuthDetails } from './AuthContext'
 
+function signOut() {
+  return auth.signOut()
+}
+
 function useProvideAuth(): AuthDetails {
   const [user, setUser] = React.useState<firebase.User | null>(null)
+  const [isAuthenticating, setIsAuthenticating] = React.useState(true)
 
-  const signOut = async () => {
-    await auth.signOut()
-    setUser(null)
-  }
-
-  const signIn = async () => {
-    const userCredential = await auth.signInWithPopup(googleProvider)
-    setUser(userCredential.user)
-  }
-
-  const isLoggedIn = () => user !== null
+  const isLoggedIn = !isAuthenticating && user !== null
 
   React.useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(setUser)
+    const unsubscribe = auth.onAuthStateChanged(firebaseUser => {
+      setUser(firebaseUser)
+      setIsAuthenticating(false)
+    })
 
     return unsubscribe
   }, [])
@@ -28,8 +26,8 @@ function useProvideAuth(): AuthDetails {
   return {
     user,
     isLoggedIn,
-    signIn,
-    signOut
+    signOut,
+    isAuthenticating
   }
 }
 

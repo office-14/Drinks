@@ -2,19 +2,18 @@ import React from 'react'
 import { Redirect } from 'react-router-dom'
 
 import { useAuth } from 'auth'
+import { routes } from 'routing'
+
+import SignIn from './SignIn'
 
 function Login() {
-  const { isLoggedIn, signIn } = useAuth()
+  const { isLoggedIn } = useAuth()
 
-  React.useEffect(() => {
-    if (!isLoggedIn()) signIn()
-  }, [isLoggedIn, signIn])
-
-  if (isLoggedIn()) {
-    return <Redirect to="/" />
+  if (isLoggedIn) {
+    return <Redirect to={routes.HOME} />
   }
 
-  return null
+  return <SignIn />
 }
 
 export default Login

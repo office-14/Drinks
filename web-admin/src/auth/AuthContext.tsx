@@ -2,18 +2,14 @@ import React from 'react'
 
 export type AuthDetails = {
   user: firebase.User | null
-  isLoggedIn: () => boolean
-  signIn: () => Promise<void>
+  isLoggedIn: boolean
   signOut: () => Promise<void>
+
+  // TODO: there is only one consumer of this value (ProvideAuth.tsx)
+  // How about hiding it from other clients?
+  isAuthenticating: boolean
 }
 
-const initialState: AuthDetails = {
-  user: null,
-  isLoggedIn: () => false,
-  signIn: () => Promise.resolve(),
-  signOut: () => Promise.resolve()
-}
-
-const AuthContext = React.createContext<AuthDetails>(initialState)
+const AuthContext = React.createContext<AuthDetails>({} as any)
 
 export default AuthContext

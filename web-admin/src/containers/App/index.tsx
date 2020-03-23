@@ -3,20 +3,19 @@ import { Switch, Route } from 'react-router-dom'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import { SnackbarProvider } from 'notistack'
 
-import Home from 'pages/Home'
-import NotFound from 'pages/NotFound'
+import { SecureRoute, routes } from 'routing'
 import Login from 'pages/Login'
 import Logout from 'pages/Logout'
+import Admin from 'containers/Admin'
 
 function App() {
   return (
     <SnackbarProvider maxSnack={1}>
       <CssBaseline />
       <Switch>
-        <Route exact path="/" component={Home} />
-        <Route path="/login" component={Login} />
-        <Route path="/logout" component={Logout} />
-        <Route path="/" component={NotFound} />
+        <Route path={routes.LOGIN} component={Login} />
+        <Route path={routes.LOGOUT} component={Logout} />
+        <SecureRoute component={Admin} />
       </Switch>
     </SnackbarProvider>
   )
