@@ -1,12 +1,15 @@
 import React from 'react'
 import Drawer from '@material-ui/core/Drawer'
 import List from '@material-ui/core/List'
+import Divider from '@material-ui/core/Divider'
 import InboxIcon from '@material-ui/icons/MoveToInbox'
+import SettingsIcon from '@material-ui/icons/Settings'
 import { makeStyles } from '@material-ui/core'
 import clsx from 'clsx'
 
 import ListItemLink from 'components/ListItemLink'
 import { routes } from 'routing'
+import { useTranslation } from 'localization'
 
 const drawerWidth = 240
 
@@ -43,6 +46,7 @@ interface SideBarProps {
 
 function SideBar({ isOpen }: SideBarProps) {
   const classes = useStyles()
+  const t = useTranslation()
 
   return (
     <Drawer
@@ -62,8 +66,14 @@ function SideBar({ isOpen }: SideBarProps) {
       <List>
         <ListItemLink
           to={routes.BOOKED_ORDERS}
-          primary="Booked orders"
+          primary={t('sidebar.bookedOrders')}
           icon={<InboxIcon />}
+        />
+        <Divider />
+        <ListItemLink
+          to={routes.SETTINGS}
+          primary={t('sidebar.settings')}
+          icon={<SettingsIcon />}
         />
       </List>
     </Drawer>

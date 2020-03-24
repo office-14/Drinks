@@ -9,6 +9,7 @@ import Avatar from '@material-ui/core/Avatar'
 
 import { routes } from 'routing'
 import { useAuth } from 'auth'
+import { useTranslation } from 'localization'
 
 const useStyles = makeStyles(theme => ({
   smallAvatar: {
@@ -21,6 +22,7 @@ function UserMenu() {
   const history = useHistory()
   const { user } = useAuth()
   const classes = useStyles()
+  const t = useTranslation()
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
 
@@ -65,7 +67,7 @@ function UserMenu() {
         open={!!anchorEl}
         onClose={handleClose}
       >
-        <MenuItem onClick={handleLogout}>Log out</MenuItem>
+        <MenuItem onClick={handleLogout}>{t('userMenu.logout')}</MenuItem>
       </Menu>
     </div>
   )

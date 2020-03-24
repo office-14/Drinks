@@ -1,0 +1,27 @@
+{
+  "topbar": {
+    "adminTitle": "Admin panel"
+  },
+  "sidebar": {
+    "bookedOrders": "Booked orders",
+    "settings": "Settings"
+  },
+  "userMenu": {
+    "logout": "Log out"
+  },
+  "bookedOrdersTable": {
+    "title": "Booked orders",
+    "orderNumber": "Order number",
+    "totalPrice": "Total price",
+    "details": "Details",
+    "actions": "Actions",
+    "noRecordsToDisplay": "No records to display",
+    "refreshData": "Refresh",
+    "finishOrder": "Finish order"
+  },
+  "settings": {
+    "localizationTitle": "Localization settings",
+    "localizationDescription": "Select the language you want to use in this app",
+    "languageTitle": "Languages"
+  }
+}

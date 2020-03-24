@@ -6,6 +6,8 @@ import IconButton from '@material-ui/core/IconButton'
 import MenuIcon from '@material-ui/icons/Menu'
 import { makeStyles } from '@material-ui/core'
 
+import { useTranslation } from 'localization'
+
 import UserMenu from './UserMenu'
 
 const useStyles = makeStyles(theme => ({
@@ -26,6 +28,7 @@ interface TopBarProps {
 
 function TopBar({ onMenuButtonClick }: TopBarProps) {
   const classes = useStyles()
+  const t = useTranslation()
 
   return (
     <AppBar position="fixed" className={classes.appBar}>
@@ -46,7 +49,7 @@ function TopBar({ onMenuButtonClick }: TopBarProps) {
           color="inherit"
           noWrap
         >
-          Drinks admin
+          {t('topbar.adminTitle')}
         </Typography>
         <UserMenu />
       </Toolbar>

@@ -1,6 +1,6 @@
 import React from 'react'
 
-export type AuthDetails = {
+export interface AuthDetails {
   user: firebase.User | null
   isLoggedIn: boolean
   signOut: () => Promise<void>

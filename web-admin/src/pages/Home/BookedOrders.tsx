@@ -5,6 +5,7 @@ import Refresh from '@material-ui/icons/Refresh'
 import { useSnackbar } from 'notistack'
 
 import { useAuth } from 'auth'
+import { useTranslation } from 'localization'
 
 function renderOrderDetails(items: any[]) {
   return <>{items.map(renderOrderItem)}</>
@@ -26,6 +27,7 @@ function onRowClick() {}
 function BookedOrders() {
   const { enqueueSnackbar: notify } = useSnackbar()
   const { user } = useAuth()
+  const t = useTranslation()
 
   const tableRef: any = React.useRef()
 
@@ -95,20 +97,24 @@ function BookedOrders() {
   return (
     //@ts-ignore
     <MaterialTable
-      title="Booked orders"
+      title={t('bookedOrdersTable.title')}
       tableRef={tableRef}
       onRowClick={onRowClick} // Used to enable row highlight
       columns={[
         { title: '#', field: 'index', width: 60 },
-        { title: 'Order number', field: 'order_number', width: 150 },
         {
-          title: 'Total price',
+          title: t('bookedOrdersTable.orderNumber'),
+          field: 'order_number',
+          width: 150
+        },
+        {
+          title: t('bookedOrdersTable.totalPrice'),
           field: 'total_price',
           render: row => `${row.total_price} ₽`,
           width: 150
         },
         {
-          title: 'Details',
+          title: t('bookedOrdersTable.details'),
           field: 'items',
           render: row => renderOrderDetails(row.items)
         }
@@ -117,12 +123,12 @@ function BookedOrders() {
       actions={[
         {
           icon: () => <DoneOutline />,
-          tooltip: 'Finish order',
+          tooltip: t('bookedOrdersTable.finishOrder'),
           onClick: handleFinishOrder
         },
         {
           icon: () => <Refresh />,
-          tooltip: 'Refresh Data',
+          tooltip: t('bookedOrdersTable.refreshData'),
           isFreeAction: true,
           onClick: handleRefresh
         }
@@ -133,6 +139,14 @@ function BookedOrders() {
         draggable: false,
         sorting: false,
         actionsColumnIndex: -1
+      }}
+      localization={{
+        body: {
+          emptyDataSourceMessage: t('bookedOrdersTable.noRecordsToDisplay')
+        },
+        header: {
+          actions: t('bookedOrdersTable.actions')
+        }
       }}
     />
   )

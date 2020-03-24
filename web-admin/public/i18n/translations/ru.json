@@ -1,0 +1,27 @@
+{
+  "topbar": {
+    "adminTitle": "Административная панель"
+  },
+  "sidebar": {
+    "bookedOrders": "Активные заказы",
+    "settings": "Настройки"
+  },
+  "userMenu": {
+    "logout": "Выйти"
+  },
+  "bookedOrdersTable": {
+    "title": "Активные заказы",
+    "orderNumber": "Номер заказа",
+    "totalPrice": "Цена",
+    "details": "Детали заказа",
+    "actions": "Действия",
+    "noRecordsToDisplay": "Нет активных заказов",
+    "refreshData": "Обновить",
+    "finishOrder": "Завершить заказ"
+  },
+  "settings": {
+    "localizationTitle": "Настройки локализации",
+    "localizationDescription": "Выберите основной язык для данного приложения",
+    "languageTitle": "Языки"
+  }
+}
