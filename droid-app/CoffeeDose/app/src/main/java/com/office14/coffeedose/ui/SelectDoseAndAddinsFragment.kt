@@ -1,25 +1,21 @@
 package com.office14.coffeedose.ui
 
 
-import android.content.DialogInterface
+import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
-import android.widget.Button
-import android.widget.ListView
-import android.widget.Spinner
-import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
+import android.widget.*
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.fragment.findNavController
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.coffeedose.R
 import com.coffeedose.databinding.FragmentSelectDoseAndAddinsBinding
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.office14.coffeedose.extensions.setBooleanVisibility
 import com.office14.coffeedose.ui.Adapters.AddinCheckListener
 import com.office14.coffeedose.ui.Adapters.AddinsListAdapter
@@ -31,14 +27,11 @@ import com.shawnlin.numberpicker.NumberPicker
 /**
  * A simple [Fragment] subclass.
  */
-class SelectDoseAndAddinsFragment : Fragment() {
-
+class SelectDoseAndAddinsFragment (private val onDrinkAddListener:OnDrinkAddListener, private val drinkId:Int, private val drinkName:String) : BottomSheetDialogFragment() {
 
     private lateinit var viewModel : SelectDoseAndAddinsViewModel
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View? {
-        val drinkId = SelectDoseAndAddinsFragmentArgs.fromBundle(requireArguments()).drinkId
-        val drinkName = SelectDoseAndAddinsFragmentArgs.fromBundle(requireArguments()).drinkName
 
         viewModel = ViewModelProvider(this, SelectDoseAndAddinsViewModel
             .Factory(requireNotNull(this.activity).application,drinkId)).get(SelectDoseAndAddinsViewModel::class.java)
@@ -52,12 +45,25 @@ class SelectDoseAndAddinsFragment : Fragment() {
         initCountPicker(binding.numberPicker)
         initProceedButton(binding.addButton)
 
-        initToolbar(drinkName)
         initErrorHandling(binding)
         initSwipeToRefresh(binding.swipeRefresh)
         handleNavigating()
+        setTitle(binding.tvDrinkName)
 
+        setPeekHeight(binding.root)
         return binding.root
+    }
+
+
+    private fun setPeekHeight(view:View){
+        view.viewTreeObserver.addOnGlobalLayoutListener {
+            val dialog = dialog as BottomSheetDialog?
+            dialog?.behavior?.peekHeight = resources.getDimensionPixelSize(R.dimen.add_ins_dialog_height)
+        }
+    }
+
+    private fun setTitle(textView:TextView){
+        textView.text = drinkName
     }
 
     private fun initSwipeToRefresh(swipeRefresh: SwipeRefreshLayout) {
@@ -76,7 +82,6 @@ class SelectDoseAndAddinsFragment : Fragment() {
                 binding.viewAddinsRoot.setBooleanVisibility(false)
                 binding.viewAddinsError.setBooleanVisibility(true)
                 binding.tvErrorText.text = it
-                //viewModel.errorMessage.value ?: "Ошибка получения данных"
             }
             else {
                 binding.viewAddinsRoot.setBooleanVisibility(true)
@@ -107,15 +112,6 @@ class SelectDoseAndAddinsFragment : Fragment() {
         }
     }
 
-    private fun initToolbar(title:String){
-        val toolbar = (activity as AppCompatActivity).supportActionBar
-        toolbar?.let {
-            it.setDisplayHomeAsUpEnabled(true)
-            it.setDisplayShowHomeEnabled(true)
-            it.title = title
-        }
-    }
-
     private fun initAddinsAdapter(view : ListView){
         val addinsListAdapter = AddinsListAdapter(requireContext(), AddinCheckListener { addin, isChecked  -> viewModel.updateTotalOnAddinCheck(addin, isChecked)})
         view.adapter = addinsListAdapter
@@ -134,20 +130,28 @@ class SelectDoseAndAddinsFragment : Fragment() {
 
     private fun initProceedButton(button:Button){
         button.setOnClickListener {
-            viewModel.saveOrderDetails()
+            viewModel.addIntoOrderDetails()
             //showAddOrProceedDialog()
         }
     }
 
     private fun handleNavigating(){
-        viewModel.navigateOrderDetails.observe(viewLifecycleOwner, Observer {
+        viewModel.navigateDrinks.observe(viewLifecycleOwner, Observer {
             it?.let {
                 if (it){
-                    findNavController().navigate(SelectDoseAndAddinsFragmentDirections.actionSelectDoseAndAddinsFragmentToOrderFragment())
+                    onDrinkAddListener.onDrinkAdd()
                     viewModel.doneNavigating()
+                    dismiss()
                 }
             }
         })
+    }
+
+    interface OnDrinkAddListener {
+        fun onDrinkAdd()
+    }
+    companion object{
+        const val TAG = "SelectDoseAndAddinsFragment"
     }
 
     /*private fun showAddOrProceedDialog(){

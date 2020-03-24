@@ -2,7 +2,6 @@ package com.office14.coffeedose.viewmodels
 
 import android.app.Application
 import android.util.Log
-import android.widget.Toast
 import androidx.lifecycle.*
 import com.office14.coffeedose.database.CoffeeDatabase
 import com.office14.coffeedose.domain.Addin
@@ -36,10 +35,10 @@ class SelectDoseAndAddinsViewModel(application: Application,var drinkId : Int) :
 
     var errorMessage : MutableLiveData<String?> = mutableLiveData(null)
 
-    private val _navigateOrderDetails = MutableLiveData<Boolean>()
+    private val _navigateDrinks = MutableLiveData<Boolean>()
 
-    val navigateOrderDetails : LiveData<Boolean>
-        get() = _navigateOrderDetails
+    val navigateDrinks : LiveData<Boolean>
+        get() = _navigateDrinks
 
     fun getSummary() : LiveData<String>{
         var result = MediatorLiveData<String>()
@@ -48,7 +47,7 @@ class SelectDoseAndAddinsViewModel(application: Application,var drinkId : Int) :
             val portionPrice = (addinsTotal.value?:0) + if (selectedSize.value == null) 0 else selectedSize.value!!.price
             val countP = count.value!!
 
-            result.value = "Итого: $portionPrice * $countP = ${portionPrice*countP} Р."
+            result.value = "${portionPrice*countP} Р."
         }
 
         result.addSource(selectedSize) { update.invoke()}
@@ -130,7 +129,7 @@ class SelectDoseAndAddinsViewModel(application: Application,var drinkId : Int) :
         else return addins.value!!.filter { it.isSelected }.map { it.price }.joinToString()
     }
 
-    fun saveOrderDetails(){
+    fun addIntoOrderDetails(){
         viewModelScope.launch {
             try {
                 orderDetailsRepository.insertNew( OrderDetail(
@@ -141,7 +140,7 @@ class SelectDoseAndAddinsViewModel(application: Application,var drinkId : Int) :
                     count = count.value!!,
                     orderId = null
                 ))
-                _navigateOrderDetails.value = true
+                _navigateDrinks.value = true
             }
             catch (ex:Exception){
                 Log.d("SelectDoseAndAddinsViewModel.saveOrderDetails",ex.message)
@@ -150,9 +149,8 @@ class SelectDoseAndAddinsViewModel(application: Application,var drinkId : Int) :
     }
 
     fun doneNavigating(){
-        _navigateOrderDetails.value = false
+        _navigateDrinks.value = false
     }
-
 
     class Factory(val app: Application, private var drinkId: Int) : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {

@@ -270,3 +270,5 @@ src/**/app.yaml
 src/**/inf.yaml
 
 .DS_Store
+
+firebase/firebase-sdk-sa.json

@@ -17,4 +17,5 @@
     <dimen name="default_button_height">52dp</dimen>
 
     <dimen name="icon_size">24dp</dimen>
+    <dimen name="add_ins_dialog_height">500dp</dimen>
 </resources>

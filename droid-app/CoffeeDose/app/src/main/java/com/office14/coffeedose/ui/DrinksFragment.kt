@@ -2,24 +2,19 @@ package com.office14.coffeedose.ui
 
 import android.os.Bundle
 import android.view.*
-import android.widget.Button
 import android.widget.EditText
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.coffeedose.R
 import com.coffeedose.databinding.FragmentDrinksBinding
-import com.google.android.gms.auth.api.signin.GoogleSignIn
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.office14.coffeedose.extensions.setBooleanVisibility
 import com.office14.coffeedose.repository.PreferencesRepository
@@ -30,7 +25,7 @@ import com.office14.coffeedose.viewmodels.DrinksViewModel
 /**
 
  */
-class DrinksFragment : Fragment() {
+class DrinksFragment : Fragment(), SelectDoseAndAddinsFragment.OnDrinkAddListener {
 
     private val viewModel: DrinksViewModel by lazy {
         ViewModelProvider(this,DrinksViewModel.Factory(requireNotNull(this.activity).application)).get(DrinksViewModel::class.java)
@@ -241,7 +236,8 @@ class DrinksFragment : Fragment() {
         viewModel.selectedId.observe(viewLifecycleOwner, Observer {
             it?.let {
                 if (it != -1){
-                    findNavController().navigate(DrinksFragmentDirections.actionDrinksFragmentToSelectDoseAndAddinsFragment(it,viewModel.getDrinkName()))
+                    val selectDoseAndAddInsFragment = SelectDoseAndAddinsFragment(this,it,viewModel.getDrinkName())
+                    selectDoseAndAddInsFragment.show(childFragmentManager,SelectDoseAndAddinsFragment.TAG)
                     viewModel.doneNavigatingDose()
                 }
             }
@@ -268,6 +264,10 @@ class DrinksFragment : Fragment() {
         }
 
         builder.show()
+    }
+
+    override fun onDrinkAdd() {
+        //TODO update button visibility
     }
 }
 
