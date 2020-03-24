@@ -16,7 +16,7 @@ export class AuthService {
 	      if (user) {
 	        this.user = user;
 	      } else {
-	        
+	        this.user = null;
 	      }
 	    })
 	}

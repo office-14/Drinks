@@ -5,9 +5,12 @@ import { OrderComponent }   from './order/order.component';
 import { SigninComponent }   from './signin/signin.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { uiRouterConfigFn } from "./router.config.js";
 
 const cart_state = { name: "cart", url: "/cart", component: CartComponent };
-const order_state = { name: "order", url: "/order", component: OrderComponent };
+const order_state = { name: "order", url: "/order", component: OrderComponent, data: {
+      requiresAuth: true
+    }, };
 const signin_state = { name: "signin", url: "/signin", params: {order_creating_started: false}, component: SigninComponent };
 
 @NgModule({
@@ -17,7 +20,7 @@ const signin_state = { name: "signin", url: "/signin", params: {order_creating_s
     SigninComponent
   ],
   imports: [
-    UIRouterModule.forRoot({ states: [cart_state, order_state, signin_state], useHash: true, otherwise: '/drinks' }),
+    UIRouterModule.forRoot({ states: [cart_state, order_state, signin_state], useHash: true, otherwise: '/drinks', config: uiRouterConfigFn }),
     CommonModule,
     FormsModule
   ],

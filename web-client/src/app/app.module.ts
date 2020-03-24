@@ -23,6 +23,7 @@ import { environment } from '../environments/environment';
 
 import { LocalStorageModule } from 'angular-2-local-storage';
 
+
 @NgModule({
   declarations: [
     AppComponent
