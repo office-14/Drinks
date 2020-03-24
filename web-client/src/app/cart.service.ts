@@ -27,22 +27,20 @@ export class CartService {
     if (this.local_storage_service.get('cart_products')) {
       this.cart_products = this.local_storage_service.get('cart_products');
     }
-
-    this.afAuth.authState.subscribe(user => {
-      if (user) {
-        if (this.local_storage_service.get('order')) {
-          this.order_service.set_order(this.local_storage_service.get('order'));
-          if (this.order_creating_started) {
-            this.message_serivce.show_error('Не аозможно создать заказ, так как есть текущий!');
-          }
-        } else {
-          if (this.order_creating_started) {
-            this.create_order();
-          }
+    
+    this.order_service.get_stored_order().subscribe((is_order_exist) => {
+      if (is_order_exist) {
+        if (this.order_creating_started) {
+          this.message_serivce.show_error('Не аозможно создать заказ, так как есть текущий!');
         }
-        this.order_creating_started = false;
+      } else {
+        if (this.order_creating_started) {
+          this.create_order();
+        }
       }
+      this.order_creating_started = false;
     });
+      
   }
 
   private comparing_addins(addins1, addins2) {

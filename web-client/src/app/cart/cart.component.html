@@ -31,7 +31,7 @@
         </div>
         <h4>Сумма заказа: {{get_total_price()}} ₽</h4>
         <button class="button" (click)="create_order()" *ngIf="!if_order_exist()">Оформить заказ</button>
-        <p *ngIf="if_order_exist()">Вы не можете оформить новый заказ, так как есть текщий заказ</p>
+        <p *ngIf="if_order_exist()">У вас уже есть оформленный заказ. Дождитесь его завершения, прежде, чем оформлять новый.</p>
       </div>
     </div>
   </div>

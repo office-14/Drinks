@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { AjaxResponse } from "./ajax-response";
-import { Observable, of } from 'rxjs';
+import { Observable, of, Subject } from 'rxjs';
 import { map, catchError, delay, tap } from 'rxjs/operators';
 import { Order } from './order/order';
 import { HttpErrorHandler, HandleError } from './http-error-handler.service';
@@ -20,6 +20,7 @@ export class OrderService {
   order: Order;
 
   private handleError: HandleError;
+  private stored_order: Subject<any>;
 
   constructor(
     private http: HttpClient,
@@ -29,9 +30,15 @@ export class OrderService {
     private afAuth: AngularFireAuth,
     private state_service: StateService
   ) {
+    this.stored_order = new Subject;
     this.handleError = httpErrorHandler.createHandleError('DrinksService');
     this.afAuth.authState.subscribe(user => {
-      if (user == null) {
+      if (user) {
+        if (this.local_storage_service.get('order')) {
+          this.set_order(this.local_storage_service.get('order'));
+        }
+        this.stored_order.next(this.if_order_exist());
+      } else {
         this.clear_order();
         this.state_service.go('drinks');
       }
@@ -143,5 +150,9 @@ export class OrderService {
 
   get_order() {
   	return this.order;
+  }
+
+  get_stored_order(): Subject<any> {
+    return this.stored_order;
   }
 }
