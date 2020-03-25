@@ -7,9 +7,9 @@
                 <shape>
                     <stroke
                         android:width="1dip"
-                        android:color="@color/color_primary" />
+                        android:color="@color/color_primary_dark" />
                     <corners android:radius="3dp" />
-                    <solid android:color="@android:color/transparent"></solid>
+                    <solid android:color="@color/color_primary"></solid>
                     <padding
                         android:bottom="5.0dip"
                         android:left="5.0dip"

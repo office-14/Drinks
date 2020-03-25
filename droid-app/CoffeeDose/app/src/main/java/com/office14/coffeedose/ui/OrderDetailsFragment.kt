@@ -50,8 +50,6 @@ class OrderDetailsFragment : Fragment() {
 
         handleVisibility()
 
-        initConfirmOrderClick(binding.confirmButton)
-
         initNavigateOutUnSuccess()
 
         handleShowError()
@@ -65,14 +63,8 @@ class OrderDetailsFragment : Fragment() {
     private fun initNavigateOutUnSuccess() {
         viewModel.orderId.observe(viewLifecycleOwner, Observer {
             if (it != -1)
-                findNavController().navigate(OrderDetailsFragmentDirections.actionOrderFragmentToOrderAwaitingFragment(it))
+                findNavController().navigate(OrderDetailsFragmentDirections.actionOrderFragmentToOrderAwaitingFragment())
         })
-    }
-
-    private fun initConfirmOrderClick(confirmButton: Button) {
-        confirmButton.setOnClickListener {
-            viewModel.confirmOrder()
-        }
     }
 
     private fun initOnbackPressedCallBack(){
@@ -123,8 +115,8 @@ class OrderDetailsFragment : Fragment() {
     private fun initToolbar(){
         val toolbar = (activity as AppCompatActivity).supportActionBar
         toolbar?.let {
-            it.setDisplayHomeAsUpEnabled(true)
-            it.setDisplayShowHomeEnabled(true)
+            it.setDisplayHomeAsUpEnabled(false)
+            it.setDisplayShowHomeEnabled(false)
             it.setTitle(R.string.OrderDetails)
         }
     }

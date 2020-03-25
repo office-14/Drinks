@@ -9,6 +9,8 @@
     <string name="BaseURL">Base URL</string>
     <string name="ConfirmOrder">Подтвердить заказ</string>
     <string name="OrderDetails">Корзина</string>
+    <string name="Catalog">Каталог</string>
+    <string name="CurrentOrder">Заказ</string>
     <string name="DropInassignedOrderDetails">Очистить корзину</string>
     <string name="ContinueChoice">Продолжить выбор</string>
     <string name="ApproveOrder">Получил</string>

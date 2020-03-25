@@ -11,6 +11,7 @@
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefresh"
+        android:background="@color/color_primary_light"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <FrameLayout
@@ -31,8 +32,9 @@
                     android:layout_height="wrap_content"/>
 
 
-                <com.google.android.material.floatingactionbutton.FloatingActionButton
+                <!--<com.google.android.material.floatingactionbutton.FloatingActionButton
                     android:id="@+id/orders_fab"
+                    android:backgroundTint="@color/fab_background_color"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="right|bottom"
@@ -41,7 +43,7 @@
                     android:elevation="@dimen/spacing_tiny_4"
                     android:onClick="@{() -> viewModel.navigateOrders()}"
                     android:src="@drawable/ic_assignment"
-                    app:fabSize="normal" />
+                    app:fabSize="normal" />-->
 
 
                 <!--//app:rippleColor="@color/color_primary"

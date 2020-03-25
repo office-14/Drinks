@@ -16,6 +16,7 @@ import androidx.navigation.fragment.findNavController
 import com.coffeedose.R
 import com.coffeedose.databinding.FragmentOrderAwaitingBinding
 import com.office14.coffeedose.extensions.setBooleanVisibility
+import com.office14.coffeedose.repository.PreferencesRepository
 import com.office14.coffeedose.viewmodels.OrderAwaitingViewModel
 import kotlinx.android.synthetic.main.fragment_order_awaiting.*
 
@@ -28,7 +29,7 @@ class OrderAwaitingFragment : Fragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View? {
 
-        val orderId = OrderAwaitingFragmentArgs.fromBundle(requireArguments()).orderId
+        val orderId = PreferencesRepository.getLastOrderId()
 
         viewModel = ViewModelProvider(this,OrderAwaitingViewModel.Factory(requireNotNull(this.activity).application,orderId)).get(OrderAwaitingViewModel::class.java)
         val binding : FragmentOrderAwaitingBinding = DataBindingUtil.inflate(inflater,R.layout.fragment_order_awaiting,container,false)

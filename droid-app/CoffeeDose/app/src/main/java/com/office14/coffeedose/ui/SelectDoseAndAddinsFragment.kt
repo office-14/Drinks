@@ -43,8 +43,6 @@ class SelectDoseAndAddinsFragment (private val onDrinkAddListener:OnDrinkAddList
         initSpinner(binding.spinnerSelectSize)
         initAddinsAdapter(binding.addinsListView)
         initCountPicker(binding.numberPicker)
-        initProceedButton(binding.addButton)
-
         initErrorHandling(binding)
         initSwipeToRefresh(binding.swipeRefresh)
         handleNavigating()
@@ -126,13 +124,6 @@ class SelectDoseAndAddinsFragment (private val onDrinkAddListener:OnDrinkAddList
         viewModel.count.observe(viewLifecycleOwner, Observer { numberPicker.value = viewModel.count.value!! })
 
         numberPicker.setOnValueChangedListener { picker, oldVal, newVal -> viewModel.updateCount(newVal) }
-    }
-
-    private fun initProceedButton(button:Button){
-        button.setOnClickListener {
-            viewModel.addIntoOrderDetails()
-            //showAddOrProceedDialog()
-        }
     }
 
     private fun handleNavigating(){

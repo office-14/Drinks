@@ -11,6 +11,7 @@
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefresh"
+        android:background="@color/color_primary_light"
         android:layout_width="match_parent"
         android:layout_height="@dimen/add_ins_dialog_height">
 
@@ -55,6 +56,7 @@
                     android:layout_marginRight="@dimen/spacing_normal_16"
                     android:layout_marginBottom="@dimen/spacing_normal_16"
                     android:background="@drawable/bg_spinner_dropdown"
+                    android:popupBackground="@drawable/bg_spinner_dropdown"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:spinnerMode="dropdown" />
@@ -71,7 +73,7 @@
                         android:layout_marginRight="@dimen/font_normal_16"
                         android:layout_marginBottom="@dimen/font_normal_16"
                         android:padding="@dimen/spacing_small_8"
-                        android:background="@drawable/bg_round_border"
+                        android:background="@drawable/bg_round_border_with_solid"
                         android:divider="@drawable/divider_vertical"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"/>
@@ -97,23 +99,30 @@
                             android:layout_weight="1"
                             android:layout_height="@dimen/default_button_height"
                             app:np_height="44dp"
-                            app:np_dividerColor="@color/color_primary"
+                            app:np_dividerColor="@color/color_accent"
                             app:np_orientation="horizontal"
-                            app:np_max="10"
+                            app:np_max="30"
                             app:np_min="1"
-                            app:np_selectedTextColor="@color/color_primary"
+                            app:np_selectedTextColor="@color/color_accent_night"
                             app:np_selectedTextSize="@dimen/font_large_20"
-                            app:np_textColor="@color/color_primary"
+                            app:np_textColor="@color/color_accent"
                             app:np_textSize="@dimen/font_normal_16"
                             android:layout_marginRight="@dimen/spacing_normal_16"
                             app:np_value="1" />
 
-                        <com.google.android.material.button.MaterialButton
+                        <com.google.android.material.floatingactionbutton.FloatingActionButton
                             android:id="@+id/addButton"
-                            android:layout_weight="1"
-                            android:layout_width="0dp"
-                            android:text="@string/DoAdd"
-                            android:layout_height="@dimen/default_button_height"/>
+                            android:backgroundTint="@color/fab_background_color"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="right|bottom"
+                            android:layout_margin="@dimen/spacing_small_8"
+                            android:elevation="@dimen/spacing_tiny_4"
+                            android:onClick="@{() -> viewModel.addIntoOrderDetails()}"
+                            android:src="@drawable/ic_add_circle_outline"
+                            app:tint="@null"
+                            app:borderWidth="0dp"
+                            app:fabSize="normal" />
                     </LinearLayout>
                 </LinearLayout>
             </RelativeLayout>

@@ -13,13 +13,13 @@
     <style name="Base"></style>
 
     <style name="Base.EditText" parent="Base">
-        <item name="android:textColor">?attr/colorPrimary</item>
+        <item name="android:textColor">@color/color_white</item>
         <item name="android:textSize">@dimen/font_normal_16</item>
         <item name="android:paddingTop">4dp</item>
     </style>
 
     <style name="Base.TextView" parent="Base">
-        <item name="android:textColor">?attr/colorPrimary</item>
+        <item name="android:textColor">@color/color_white</item>
         <item name="android:textSize">@dimen/font_normal_16</item>
         <item name="android:fontFamily">sans-serif-medium</item>
     </style>
@@ -36,11 +36,11 @@
     </style>
 
     <style name="Base.CheckBox" parent="Base">
-        <item name="android:buttonTint">@color/color_primary</item>
+        <item name="android:buttonTint">@color/color_accent</item>
     </style>
 
     <style name="PrimaryActionButton" parent="Widget.MaterialComponents.FloatingActionButton">
-        <item name="android:backgroundTint">@color/color_primary</item>
+        <item name="android:backgroundTint">@color/color_primary_dark</item>
     </style>
 
     <style name="BottomSheetDialog" parent="Theme.Design.Light.BottomSheetDialog">
@@ -50,5 +50,12 @@
     <style name="bottomSheetStyleWrapper" parent="Widget.Design.BottomSheet.Modal">
         <item name="behavior_peekHeight">300dp</item>
     </style>
+
+    <style name="BottomNavigation">
+        <item name="android:background">@color/color_primary</item>
+        <item name="itemBackground">@color/menu_item_text_color</item>
+        <item name="itemTextColor">@color/menu_item_text_color</item>
+    </style>
+    <!--<item name="itemIconTint">@color/navigation_bar_txt_color</item>-->
 
 </resources>

@@ -7,3 +7,19 @@ data class Order (
     val orderNumber : String,
     val totalPrice : Int
 )
+
+enum class OrderStatus {
+    NONE, COOKING, READY, FAILED;
+
+    companion object{
+        fun getStatusByString(status: String) : OrderStatus{
+            return when(status.toLowerCase()){
+                "cooking" -> OrderStatus.COOKING
+                "ready" -> OrderStatus.READY
+                else -> OrderStatus.NONE
+            }
+        }
+    }
+
+
+}

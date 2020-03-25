@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:id="@+id/drinksFragment"
+        android:title="@string/Catalog"
+        android:icon="@drawable/ic_catalog"/>
+
+    <item android:id="@+id/orderFragment"
+        android:title="@string/OrderDetails"
+        android:icon="@drawable/ic_shop_basket"/>
+
+    <item android:id="@+id/orderAwaitingFragment"
+        android:title="@string/CurrentOrder"
+        android:icon="@drawable/ic_access_time"/>
+</menu>

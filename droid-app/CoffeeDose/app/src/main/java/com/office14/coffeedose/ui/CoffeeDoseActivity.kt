@@ -4,17 +4,25 @@ import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.NavigationUI
 import com.coffeedose.R
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.iid.FirebaseInstanceId
+import com.office14.coffeedose.domain.OrderStatus
 import com.office14.coffeedose.repository.PreferencesRepository
+import com.office14.coffeedose.viewmodels.MenuInfoViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 
 
@@ -22,6 +30,12 @@ class CoffeeDoseActivity : AppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
     private lateinit var googleSignInClient: GoogleSignInClient
+
+    private val viewModel: MenuInfoViewModel by lazy {
+        ViewModelProvider(this,MenuInfoViewModel.Factory(requireNotNull(this).application,PreferencesRepository.getLastOrderId())).get(MenuInfoViewModel::class.java)
+    }
+
+    private lateinit var bottomNavigationView: BottomNavigationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme)
@@ -31,8 +45,41 @@ class CoffeeDoseActivity : AppCompatActivity() {
         prepareSignIn()
         initToolbar()
         checkFcmRegToken()
+        setUpNavigation()
 
-        val ex = intent.extras
+        handleMenuUpdate()
+    }
+
+    private fun setUpNavigation() {
+        bottomNavigationView = findViewById<BottomNavigationView>(R.id.bttm_nav)
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment?
+        NavigationUI.setupWithNavController(bottomNavigationView,navHostFragment!!.navController)
+
+        val badgeDrawable = bottomNavigationView.getOrCreateBadge(R.id.orderFragment)
+        badgeDrawable.number = 2
+
+        val badgeDrawable2 = bottomNavigationView.getOrCreateBadge(R.id.orderAwaitingFragment)
+        badgeDrawable2.backgroundColor = resources.getColor(R.color.color_green)
+    }
+
+    private fun handleMenuUpdate(){
+        viewModel.orderDetailsCount.observe(this, Observer {
+             if (it == 0)
+                 bottomNavigationView.removeBadge(R.id.orderFragment)
+            else
+                 bottomNavigationView.getOrCreateBadge(R.id.orderFragment).number = it
+        })
+
+
+        viewModel.orderStatus.observe(this, Observer {
+            val orderStatusBadge = bottomNavigationView.getOrCreateBadge(R.id.orderAwaitingFragment)
+            orderStatusBadge.backgroundColor = when(it){
+                OrderStatus.READY -> ContextCompat.getColor(this, R.color.color_green)
+                OrderStatus.COOKING -> ContextCompat.getColor(this, R.color.color_yellow)
+                OrderStatus.FAILED -> ContextCompat.getColor(this, R.color.color_red)
+                else -> ContextCompat.getColor(this, R.color.color_black)
+            }
+        })
     }
 
     private var successAuthCallback : () -> Unit = {}

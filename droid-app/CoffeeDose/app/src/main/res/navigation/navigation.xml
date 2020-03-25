@@ -42,9 +42,6 @@
         android:name="com.office14.coffeedose.ui.OrderAwaitingFragment"
         android:label="fragment_order_awaiting"
         tools:layout="@layout/fragment_order_awaiting" >
-        <argument
-            android:name="orderId"
-            app:argType="integer" />
         <action
             android:id="@+id/action_orderAwaitingFragment_to_drinksFragment"
             app:destination="@id/drinksFragment" />

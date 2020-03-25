@@ -17,12 +17,29 @@
             android:layout_height="?attr/actionBarSize"/>
     </com.google.android.material.appbar.AppBarLayout>
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
     <fragment
         android:id="@+id/nav_host_fragment"
+        android:layout_above="@id/bttm_nav"
         android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:defaultNavHost="true"
         app:navGraph="@navigation/navigation" />
 
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bttm_nav"
+        android:background="@color/color_primary"
+        app:itemTextColor="@color/menu_item_text_color"
+        app:itemIconTint="@color/menu_item_text_color"
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        app:menu="@menu/menu_bottom_navigation"/>
+
+    </RelativeLayout>
 </LinearLayout>

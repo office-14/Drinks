@@ -57,7 +57,7 @@ class DrinksFragment : Fragment(), SelectDoseAndAddinsFragment.OnDrinkAddListene
 
         handleOrdersNavigation()
 
-        initOrdersButtonVisibility(binding.ordersFab)
+        //initOrdersButtonVisibility(binding.ordersFab)
 
             //initObserveListeners()
 
@@ -76,8 +76,8 @@ class DrinksFragment : Fragment(), SelectDoseAndAddinsFragment.OnDrinkAddListene
         //Toast.makeText(requireContext(),"DrinksFragment is resumed ($orderId $redirToAwait)", Toast.LENGTH_LONG).show()
 
 
-        if (PreferencesRepository.getLastOrderId() != -1)
-            findNavController().navigate(DrinksFragmentDirections.actionDrinksFragmentToOrderAwaitingFragment(PreferencesRepository.getLastOrderId()))
+        //if (PreferencesRepository.getLastOrderId() != -1)
+        //    findNavController().navigate(DrinksFragmentDirections.actionDrinksFragmentToOrderAwaitingFragment())
     }
 
     private fun handleOrdersNavigation() {
@@ -147,11 +147,11 @@ class DrinksFragment : Fragment(), SelectDoseAndAddinsFragment.OnDrinkAddListene
         }
     }*/
 
-    private fun initOrdersButtonVisibility(button: FloatingActionButton){
+    /*private fun initOrdersButtonVisibility(button: FloatingActionButton){
         viewModel.ordersButtonVisible.observe(viewLifecycleOwner, Observer {
             it?.let { button.setBooleanVisibility(it) }
         })
-    }
+    }*/
 
 
     private fun initToolbar(){
