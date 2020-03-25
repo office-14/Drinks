@@ -17,6 +17,7 @@
 
         <RelativeLayout
             android:id="@+id/rl_content"
+            android:layout_margin="@dimen/spacing_normal_16"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             tools:context="com.office14.coffeedose.ui.OrderDetailsFragment">
@@ -26,7 +27,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_above="@id/confirmButton"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"/>
+                android:layout_height="wrap_content"/>
 
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/confirmButton"
@@ -36,7 +37,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right|bottom"
-                android:layout_margin="@dimen/spacing_small_8"
+                android:layout_margin="@dimen/spacing_normal_16"
                 android:elevation="@dimen/spacing_tiny_4"
                 android:onClick="@{() -> viewModel.confirmOrder()}"
                 android:src="@drawable/ic_done"

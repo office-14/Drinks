@@ -63,7 +63,7 @@
 
                 <LinearLayout
                     android:layout_below="@id/spinnerSelectSize"
-                    android:layout_above="@id/ll_bottom"
+                    android:layout_above="@id/addButton"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical">
@@ -80,51 +80,43 @@
                 </LinearLayout>
 
 
-                <LinearLayout
-                    android:id="@+id/ll_bottom"
-                    android:layout_alignParentBottom="true"
-                    android:layout_margin="@dimen/spacing_normal_16"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
 
-                    <LinearLayout
-                        android:layout_marginTop="@dimen/spacing_normal_16"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
+
                         <com.shawnlin.numberpicker.NumberPicker
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentBottom="true"
+                            android:layout_toLeftOf="@id/addButton"
                             android:id="@+id/number_picker"
-                            android:layout_width="0dp"
-                            android:layout_weight="1"
+                            android:layout_width="wrap_content"
                             android:layout_height="@dimen/default_button_height"
                             app:np_height="44dp"
-                            app:np_dividerColor="@color/color_accent"
+                            app:np_dividerColor="@color/color_white"
                             app:np_orientation="horizontal"
                             app:np_max="30"
                             app:np_min="1"
-                            app:np_selectedTextColor="@color/color_accent_night"
+                            app:np_selectedTextColor="@color/color_white"
                             app:np_selectedTextSize="@dimen/font_large_20"
                             app:np_textColor="@color/color_accent"
                             app:np_textSize="@dimen/font_normal_16"
-                            android:layout_marginRight="@dimen/spacing_normal_16"
+                            android:layout_margin="@dimen/spacing_normal_16"
                             app:np_value="1" />
 
                         <com.google.android.material.floatingactionbutton.FloatingActionButton
                             android:id="@+id/addButton"
+                            android:layout_margin="@dimen/spacing_normal_16"
+                            android:layout_alignParentRight="true"
+                            android:layout_alignParentBottom="true"
                             android:backgroundTint="@color/fab_background_color"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="right|bottom"
-                            android:layout_margin="@dimen/spacing_small_8"
                             android:elevation="@dimen/spacing_tiny_4"
                             android:onClick="@{() -> viewModel.addIntoOrderDetails()}"
-                            android:src="@drawable/ic_add_circle_outline"
+                            android:src="@drawable/ic_add"
                             app:tint="@null"
                             app:borderWidth="0dp"
                             app:fabSize="normal" />
-                    </LinearLayout>
-                </LinearLayout>
+
             </RelativeLayout>
 
             <LinearLayout

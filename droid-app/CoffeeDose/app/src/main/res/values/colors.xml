@@ -11,6 +11,7 @@
     <color name="color_gray_dark">#675F7F</color>
     <color name="color_gray_light">#ECECEC</color>
     <color name="color_white">#ffffff</color>
+    <color name="color_blue_light">#4e85e3</color>
 
     <color name="color_divider_dark">#1F000000</color>
     <color name="color_divider_light">#1FFFFFFF</color>
@@ -19,8 +20,6 @@
     <color name="color_yellow">#ffeb3b</color>
     <color name="color_red">#ff1744</color>
     <color name="color_black">#000000</color>
-
-
 
     <color name="color_background_light">#2c354c</color>
     <color name="color_background_dark">#2c354c</color>

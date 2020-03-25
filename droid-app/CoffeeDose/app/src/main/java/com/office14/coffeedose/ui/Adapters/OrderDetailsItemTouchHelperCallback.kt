@@ -3,6 +3,7 @@ package com.office14.coffeedose.ui.Adapters
 import android.content.Context
 import android.graphics.*
 import android.graphics.drawable.ColorDrawable
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.coffeedose.R
@@ -10,11 +11,12 @@ import com.coffeedose.R
 
 class OrderDetailsItemTouchHelperCallback(context: Context, private val adapter : OrderDetailsAdapter, private val swipeListener: SwipeListener) : ItemTouchHelper.Callback() {
 
-    //private val deleteIcon = ContextCompat.getDrawable(context, R.drawable.ic_delete_black_24dp)
+    //private val deleteIcon = ContextCompat.getDrawable(context, R.drawable.ic_delete_white)
     //private val intrinsicWidth = deleteIcon.intrinsicWidth
     //private val intrinsicHeight = deleteIcon.intrinsicHeight
-    private val background = ColorDrawable()
-    private val backgroundColor = Color.parseColor("#f44336")
+    //private val background = ColorDrawable()
+    private val background = context.resources.getDrawable(R.drawable.bg_swipe_to_delete)
+    //private val backgroundColor = ContextCompat.getColor(context, R.color.color_blue_light)
     private val clearPaint = Paint().apply { xfermode = PorterDuffXfermode(PorterDuff.Mode.CLEAR) }
 
 
@@ -65,17 +67,10 @@ class OrderDetailsItemTouchHelperCallback(context: Context, private val adapter 
         actionState: Int,
         isCurrentlyActive: Boolean
     ) {
-        /*if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE){
-            val itemView = viewHolder.itemView
-            drawBackground(canvas, itemView, dX)
-            drawIcon(canvas, itemView, dX)
-        }*/
-
-
 
         val itemView = viewHolder.itemView
 
-        val deleteIcon = itemView.resources.getDrawable(R.drawable.ic_delete_black_24dp, itemView.context.theme)
+        val deleteIcon = itemView.resources.getDrawable(R.drawable.ic_delete_white, itemView.context.theme)
 
         val intrinsicWidth = deleteIcon.intrinsicWidth
         val intrinsicHeight = deleteIcon.intrinsicHeight
@@ -89,8 +84,7 @@ class OrderDetailsItemTouchHelperCallback(context: Context, private val adapter 
             return
         }
 
-        // Draw the red delete background
-        background.color = backgroundColor
+        //background.color = backgroundColor
         background.setBounds(itemView.right + dX.toInt(), itemView.top, itemView.right, itemView.bottom)
         background.draw(c)
 
@@ -109,39 +103,12 @@ class OrderDetailsItemTouchHelperCallback(context: Context, private val adapter 
 
     }
 
-   /* private fun drawIcon(canvas: Canvas, itemView: View, dX: Float) {
-        val icon = itemView.resources.getDrawable(R.drawable.ic_delete_black_24dp, itemView.context.theme)
-        val iconSize = itemView.resources.getDimensionPixelSize(R.dimen.icon_size)
-        val space = itemView.resources.getDimensionPixelSize(R.dimen.spacing_normal_16)
-        val margin = (itemView.bottom - itemView.top - iconSize)/2
-
-        with(iconBounds){
-            left = itemView.right + dX.toInt() + space
-            top = itemView.top + margin
-            right = itemView.right + dX.toInt() + iconSize + space
-            bottom = itemView.bottom  - margin
-        }
-        icon.bounds = iconBounds
-        icon.draw(canvas)
-    }
-
-    private fun drawBackground(canvas: Canvas, itemView: View, dX: Float) {
-        with (bgRect){
-            left = itemView.left.toFloat() + dX
-            top = itemView.top.toFloat()
-            right = itemView.right.toFloat()
-            bottom = itemView.bottom.toFloat()
-        }
-
-        with(bgPaint){
-            color = itemView.resources.getColor(R.color.design_default_color_background,itemView.context.theme)
-        }
-
-        canvas.drawRect(bgRect,bgPaint)
-    }*/
-
     private fun clearCanvas(c: Canvas?, left: Float, top: Float, right: Float, bottom: Float) {
         c?.drawRect(left, top, right, bottom, clearPaint)
+    }
+
+    override fun getSwipeThreshold(viewHolder: RecyclerView.ViewHolder): Float {
+        return 0.7f
     }
 }
 

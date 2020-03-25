@@ -51,15 +51,19 @@ class OrdersRepository(private  val ordersDao : OrderDao, private val orderDetai
 
     suspend fun refreshOrder(orderId:Int, token:String?) {
         try {
-
             withContext(Dispatchers.IO) {
+
+                //val savedOrder = ordersDao.getById(orderId).value?[0] ?: null
+
                 var result = CoffeeApi.retrofitService.getOrderByIdAsync(orderId,composeAuthHeader(token)).await()
                 if (result.hasError())
                     throw HttpExceptionEx(result.getError())
-                else
-                    ordersDao.insertAllOrders(result.payload!!.toDataBaseModel())
+                else {
+                    //val newOrder = result.payload!!.toDataBaseModel()
+                    //if (savedOrder != newOrder)
+                        ordersDao.insertAllOrders(result.payload!!.toDataBaseModel())
+                }
             }
-
             delay(5000)
         }
         catch (ex:Exception){

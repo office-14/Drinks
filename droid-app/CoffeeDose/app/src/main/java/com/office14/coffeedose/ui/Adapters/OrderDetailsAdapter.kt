@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.coffeedose.R
@@ -43,11 +44,11 @@ class OrderDetailsAdapter() : RecyclerView.Adapter<OrderDetailsAdapter.OrderDeta
 
     class OrderDetailViewHolder (convertView : View) : RecyclerView.ViewHolder(convertView) ,ItemTouchViewHolder {
         override fun onItemSelected() {
-            itemView.setBackgroundColor(Color.LTGRAY)
+            itemView.background = ContextCompat.getDrawable(itemView.context,R.drawable.bg_swipe_to_delete_selected)
         }
 
         override fun onItemCleared() {
-            itemView.setBackgroundColor(Color.WHITE)
+            //itemView.setBackgroundColor(ContextCompat.getColor(itemView.context,R.color.color_accent))
         }
 
         val headerTv = convertView.findViewById<TextView>(R.id.tv_drink_title)

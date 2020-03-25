@@ -12,7 +12,7 @@ class OrderAwaitingViewModel(application : Application, private val orderId:Int)
     private val ordersRepository = OrdersRepository(CoffeeDatabase.getInstance(application).ordersDatabaseDao,CoffeeDatabase.getInstance(application).orderDetailsDatabaseDao)
 
     val order =  Transformations.map(ordersRepository.getOrderById(orderId)){
-        it.first()
+        it?.first() ?: null
     }
 
     private val _naviagateToCoffeeList = MutableLiveData<Boolean>()

@@ -17,6 +17,7 @@ import com.coffeedose.R
 import com.coffeedose.databinding.FragmentOrderAwaitingBinding
 import com.office14.coffeedose.extensions.setBooleanVisibility
 import com.office14.coffeedose.repository.PreferencesRepository
+import com.office14.coffeedose.viewmodels.MenuInfoViewModel
 import com.office14.coffeedose.viewmodels.OrderAwaitingViewModel
 import kotlinx.android.synthetic.main.fragment_order_awaiting.*
 
@@ -26,6 +27,11 @@ import kotlinx.android.synthetic.main.fragment_order_awaiting.*
 class OrderAwaitingFragment : Fragment() {
 
     private lateinit var viewModel : OrderAwaitingViewModel
+
+    private val menuInfoViewModel: MenuInfoViewModel by lazy {
+        ViewModelProvider(this, MenuInfoViewModel.Factory(requireNotNull(this.activity).application,PreferencesRepository.getLastOrderId())).get(
+            MenuInfoViewModel::class.java)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View? {
 
@@ -75,6 +81,7 @@ class OrderAwaitingFragment : Fragment() {
             it?.let {
                 if (it) {
                     findNavController().navigate(OrderAwaitingFragmentDirections.actionOrderAwaitingFragmentToDrinksFragment())
+                    menuInfoViewModel.updateOrderId(PreferencesRepository.getLastOrderId())
                     viewModel.doneNavigation()
                 }
             }
