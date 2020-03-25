@@ -1,37 +1,38 @@
 package com.office14.coffeedose.viewmodels
 
 import android.app.Application
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.*
+import com.coffeedose.R
 import com.office14.coffeedose.database.CoffeeDatabase
 import com.office14.coffeedose.domain.OrderStatus
-import com.office14.coffeedose.extensions.mutableLiveData
+import com.office14.coffeedose.repository.OrderDetailsRepository
+import com.office14.coffeedose.repository.OrdersRepository
 
-class MenuInfoViewModel(application: Application, initialOrderId : Int) : AndroidViewModel(application) {
+class MenuInfoViewModel(application: Application) : AndroidViewModel(application) {
 
     private val database = CoffeeDatabase.getInstance(application)
 
-    private val _orderId = mutableLiveData(initialOrderId)
+    private val orderDetailsRepository = OrderDetailsRepository(CoffeeDatabase.getInstance(application).orderDetailsDatabaseDao)
 
-    val orderStatus : LiveData<OrderStatus> = Transformations.map(database.ordersDatabaseDao.getById(_orderId.value!!)){
-        if (it?.size == 1){
-            return@map OrderStatus.getStatusByString(it[0].statusCode)
+    private val ordersRepository = OrdersRepository(database.ordersDatabaseDao,database.ordersQueueDatabaseDao)
+
+    val currentOrderBadgeColor : LiveData<Int> = Transformations.map(ordersRepository.queueOrderStatus){
+        return@map when(it){
+            OrderStatus.READY -> ContextCompat.getColor(application, R.color.color_green)
+            OrderStatus.COOKING -> ContextCompat.getColor(application, R.color.color_yellow)
+            OrderStatus.FAILED -> ContextCompat.getColor(application, R.color.color_red)
+            else -> ContextCompat.getColor(application, R.color.color_black)
         }
-        return@map OrderStatus.NONE
     }
 
-    val orderDetailsCount = Transformations.map(database.orderDetailsDatabaseDao.getUnAttachedDetails()){
-        return@map it.size
-    }
+    val orderDetailsCount =  orderDetailsRepository.unAttachedOrderDetailsCount
 
-    fun updateOrderId(orderId : Int){
-        _orderId.value  = orderId
-    }
-
-    class Factory(val app: Application,val orderId:Int) : ViewModelProvider.Factory {
+    class Factory(val app: Application) : ViewModelProvider.Factory {
         override fun <T : ViewModel?> create(modelClass: Class<T>): T {
             if (modelClass.isAssignableFrom(MenuInfoViewModel::class.java)) {
                 @Suppress("UNCHECKED_CAST")
-                return MenuInfoViewModel(app, orderId) as T
+                return MenuInfoViewModel(app) as T
             }
             throw IllegalArgumentException("Unable to construct viewmodel")
         }

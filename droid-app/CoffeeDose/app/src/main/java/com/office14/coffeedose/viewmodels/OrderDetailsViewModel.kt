@@ -5,23 +5,27 @@ import androidx.lifecycle.*
 import com.office14.coffeedose.database.CoffeeDatabase
 import com.office14.coffeedose.domain.OrderDetail
 import com.office14.coffeedose.domain.OrderDetailFull
-import com.office14.coffeedose.extensions.mutableLiveData
 import com.office14.coffeedose.network.HttpExceptionEx
 import com.office14.coffeedose.repository.OrderDetailsRepository
 import com.office14.coffeedose.repository.OrdersRepository
 import com.office14.coffeedose.repository.PreferencesRepository
 import kotlinx.coroutines.*
+import javax.inject.Inject
 
-class OrderDetailsViewModel(application : Application) : AndroidViewModel(application) {
+class OrderDetailsViewModel @Inject constructor(application : Application) : AndroidViewModel(application) {
 
     private val viewModelJob = Job()
     private val viewModelScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
-    val orderId = mutableLiveData(-1)
+    //val orderId = mutableLiveData(-1)
 
-    private val orderDetailsRepository = OrderDetailsRepository(CoffeeDatabase.getInstance(application).orderDetailsDatabaseDao)
+    private var orderDetailsRepository:OrderDetailsRepository  = OrderDetailsRepository(CoffeeDatabase.getInstance(application).orderDetailsDatabaseDao)
 
-    private val ordersRepository = OrdersRepository(CoffeeDatabase.getInstance(application).ordersDatabaseDao,CoffeeDatabase.getInstance(application).orderDetailsDatabaseDao)
+    private val ordersRepository = OrdersRepository(CoffeeDatabase.getInstance(application).ordersDatabaseDao,CoffeeDatabase.getInstance(application).ordersQueueDatabaseDao)
+
+    private val _navigateOrderAwaiting = MutableLiveData<Boolean>()
+    val navigateOrderAwaiting : LiveData<Boolean>
+        get() = _navigateOrderAwaiting
 
     val unAttachedOrders = orderDetailsRepository.unAttachedOrderDetails
 
@@ -37,6 +41,10 @@ class OrderDetailsViewModel(application : Application) : AndroidViewModel(applic
         return@map it.isEmpty()
     }
 
+    val hasOrderInQueue = Transformations.map(ordersRepository.getCurrentQueueOrder()){
+        return@map it != null
+    }
+
     fun deleteOrderDetailsItem(item : OrderDetailFull){
         viewModelScope.launch {
             orderDetailsRepository.delete(item.orderDetailInner)
@@ -45,11 +53,11 @@ class OrderDetailsViewModel(application : Application) : AndroidViewModel(applic
 
     fun confirmOrder(){
         viewModelScope.launch {
-
             try {
+
                 val newOrderId = ordersRepository.createOrder(unAttachedOrders.value ?: listOf(),PreferencesRepository.getIdToken())
 
-                orderId.value = newOrderId
+                //orderId.value = newOrderId
 
                 val orderDetails = mutableListOf<OrderDetail>()
                 unAttachedOrders.value?.forEach {
@@ -57,13 +65,15 @@ class OrderDetailsViewModel(application : Application) : AndroidViewModel(applic
                         it.orderDetailInner.id,
                         it.orderDetailInner.drinkId,
                         it.orderDetailInner.sizeId,
-                        orderId.value,
+                        newOrderId,
                         it.orderDetailInner.count,
                         listOf()
                     )
                     orderDetails.add(orderDetail)
                 }
                 orderDetailsRepository.insertAll(orderDetails)
+
+                _navigateOrderAwaiting.value = true
             }
             catch (responseEx: HttpExceptionEx) {
                 _errorMessage.value = responseEx.error.title
@@ -86,17 +96,20 @@ class OrderDetailsViewModel(application : Application) : AndroidViewModel(applic
         _errorMessage.value = null
     }
 
-
     override fun onCleared() {
         super.onCleared()
         viewModelJob.cancel()
     }
 
-     fun clearOrderDetails(){
-         viewModelScope.launch {
-             orderDetailsRepository.deleteUnAttached()
-         }
-     }
+    fun clearOrderDetails(){
+        viewModelScope.launch {
+            orderDetailsRepository.deleteUnAttached()
+        }
+    }
+
+    fun doneNavigating(){
+        _navigateOrderAwaiting.value = false
+    }
 
 
     class Factory(val app: Application) : ViewModelProvider.Factory {

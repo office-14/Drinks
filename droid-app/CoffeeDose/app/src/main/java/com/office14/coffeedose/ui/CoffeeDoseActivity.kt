@@ -32,7 +32,7 @@ class CoffeeDoseActivity : AppCompatActivity() {
     private lateinit var googleSignInClient: GoogleSignInClient
 
     private val viewModel: MenuInfoViewModel by lazy {
-        ViewModelProvider(this,MenuInfoViewModel.Factory(requireNotNull(this).application,PreferencesRepository.getLastOrderId())).get(MenuInfoViewModel::class.java)
+        ViewModelProvider(this,MenuInfoViewModel.Factory(requireNotNull(this).application)).get(MenuInfoViewModel::class.java)
     }
 
     private lateinit var bottomNavigationView: BottomNavigationView
@@ -71,14 +71,9 @@ class CoffeeDoseActivity : AppCompatActivity() {
         })
 
 
-        viewModel.orderStatus.observe(this, Observer {
+        viewModel.currentOrderBadgeColor.observe(this, Observer {
             val orderStatusBadge = bottomNavigationView.getOrCreateBadge(R.id.orderAwaitingFragment)
-            orderStatusBadge.backgroundColor = when(it){
-                OrderStatus.READY -> ContextCompat.getColor(this, R.color.color_green)
-                OrderStatus.COOKING -> ContextCompat.getColor(this, R.color.color_yellow)
-                OrderStatus.FAILED -> ContextCompat.getColor(this, R.color.color_red)
-                else -> ContextCompat.getColor(this, R.color.color_black)
-            }
+            orderStatusBadge.backgroundColor = it
         })
     }
 

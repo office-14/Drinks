@@ -19,6 +19,10 @@ class OrderDetailsRepository(private val orderDetailsDao : OrderDetailDao) {
         itDbo.map { it.toDomainModel() }
     }
 
+    val unAttachedOrderDetailsCount = Transformations.map(orderDetailsDao.getUnAttachedDetails()){
+        return@map it?.size ?: 0
+    }
+
     suspend fun delete(oderDetails : OrderDetail){
         try {
             withContext(Dispatchers.IO) {

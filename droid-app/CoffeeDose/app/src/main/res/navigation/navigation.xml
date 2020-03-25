@@ -45,5 +45,8 @@
         <action
             android:id="@+id/action_orderAwaitingFragment_to_drinksFragment"
             app:destination="@id/drinksFragment" />
+        <action
+            android:id="@+id/action_orderAwaitingFragment_to_orderFragment"
+            app:destination="@id/orderFragment" />
     </fragment>
 </navigation>

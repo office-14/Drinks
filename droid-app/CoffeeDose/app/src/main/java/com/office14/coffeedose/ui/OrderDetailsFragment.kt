@@ -50,7 +50,7 @@ class OrderDetailsFragment : Fragment() {
 
         handleVisibility()
 
-        initNavigateOutUnSuccess()
+        initNavigation()
 
         handleShowError()
 
@@ -58,13 +58,6 @@ class OrderDetailsFragment : Fragment() {
 
         return binding.root
 
-    }
-
-    private fun initNavigateOutUnSuccess() {
-        viewModel.orderId.observe(viewLifecycleOwner, Observer {
-            if (it != -1)
-                findNavController().navigate(OrderDetailsFragmentDirections.actionOrderFragmentToOrderAwaitingFragment())
-        })
     }
 
     private fun initOnbackPressedCallBack(){
@@ -79,6 +72,20 @@ class OrderDetailsFragment : Fragment() {
         viewModel.isEmpty.observe(viewLifecycleOwner, Observer {
             rl_content.setBooleanVisibility(!it)
             tv_empty_order_details.setBooleanVisibility(it)
+        })
+
+        viewModel.hasOrderInQueue.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                confirmButton.setBooleanVisibility(!it)
+            }
+
+        })
+    }
+
+    private fun initNavigation(){
+        viewModel.navigateOrderAwaiting.observe(viewLifecycleOwner, Observer {
+            findNavController().navigate(OrderDetailsFragmentDirections.actionOrderFragmentToOrderAwaitingFragment())
+            viewModel.doneNavigating()
         })
     }
 

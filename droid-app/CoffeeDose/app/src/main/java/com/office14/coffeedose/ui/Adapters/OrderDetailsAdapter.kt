@@ -48,7 +48,7 @@ class OrderDetailsAdapter() : RecyclerView.Adapter<OrderDetailsAdapter.OrderDeta
         }
 
         override fun onItemCleared() {
-            //itemView.setBackgroundColor(ContextCompat.getColor(itemView.context,R.color.color_accent))
+            itemView.background = ContextCompat.getDrawable(itemView.context,R.drawable.bg_round_border_with_solid)
         }
 
         val headerTv = convertView.findViewById<TextView>(R.id.tv_drink_title)

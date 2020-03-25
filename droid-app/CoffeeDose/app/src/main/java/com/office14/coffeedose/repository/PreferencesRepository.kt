@@ -8,7 +8,7 @@ import com.office14.coffeedose.CoffeeDoseApplication
 object PreferencesRepository {
 
     private const val APP_THEME_KEY = "APP_THEME_KEY"
-    private const val ORDER_ID_KEY = "ORDER_ID_KEY"
+    //private const val ORDER_ID_KEY = "ORDER_ID_KEY"
     private const val BASE_URL_KEY = "BASE_URL_KEY"
     private const val NAVIGATE_TO_ORDER_AWAITING_FRAGMENT_KEY = "NAVIGATE_TO_ORDER_AWAITING_FRAGMENT_KEY"
     private const val GOOGLE_AUTH_TOKEN_KEY = "GOOGLE_AUTH_TOKEN_KEY"
@@ -39,9 +39,9 @@ object PreferencesRepository {
 
     fun getFcmRegToken() = prefs.getString(FIREBASE_MESSAGE_REG_TOKEN_KEY,EMPTY_STRING)
 
-    fun getLastOrderId() = prefs.getInt(ORDER_ID_KEY,-1)
+    /*fun getLastOrderId() = prefs.getInt(ORDER_ID_KEY,-1)
 
-    fun saveLastOrderId(orderId:Int) = putValue(ORDER_ID_KEY to orderId)
+    fun saveLastOrderId(orderId:Int) = putValue(ORDER_ID_KEY to orderId)*/
 
     fun getNavigateToOrderAwaitFrag() = prefs.getBoolean(NAVIGATE_TO_ORDER_AWAITING_FRAGMENT_KEY,false)
 

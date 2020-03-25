@@ -71,8 +71,8 @@ class DrinksFragment : Fragment(), SelectDoseAndAddinsFragment.OnDrinkAddListene
 
     override fun onResume() {
         super.onResume()
-        val orderId = PreferencesRepository.getLastOrderId()
-        val redirToAwait = PreferencesRepository.getNavigateToOrderAwaitFrag()
+        //val orderId = PreferencesRepository.getLastOrderId()
+        //val redirToAwait = PreferencesRepository.getNavigateToOrderAwaitFrag()
         //Toast.makeText(requireContext(),"DrinksFragment is resumed ($orderId $redirToAwait)", Toast.LENGTH_LONG).show()
 
 

@@ -1,6 +1,8 @@
 package com.office14.coffeedose.network
 
 import com.office14.coffeedose.database.OrderDbo
+import com.office14.coffeedose.database.OrderQueueDbo
+import com.office14.coffeedose.database.OrdersQueueDao
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
@@ -22,6 +24,10 @@ data class OrderJso (
     val totalPrice : Int
 ){
     fun toDataBaseModel() = OrderDbo(
+        id, statusCode,statusName,orderNumber,totalPrice
+    )
+
+    fun toOrderQueueDataBaseModel() = OrderQueueDbo(
         id, statusCode,statusName,orderNumber,totalPrice
     )
 }
