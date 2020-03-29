@@ -1,15 +1,12 @@
-import React from 'react'
+import { createContext } from 'helpers'
 
 export interface AuthDetails {
   user: firebase.User | null
   isLoggedIn: boolean
   signOut: () => Promise<void>
-
-  // TODO: there is only one consumer of this value (ProvideAuth.tsx)
-  // How about hiding it from other clients?
-  isAuthenticating: boolean
 }
 
-const AuthContext = React.createContext<AuthDetails>({} as any)
+const [useContext, context] = createContext<AuthDetails>()
 
-export default AuthContext
+export const AuthContext = context
+export const useAuth = useContext

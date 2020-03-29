@@ -3,13 +3,12 @@ import { useTranslation } from 'react-i18next'
 
 import FullPageSpinner from 'components/FullPageSpinner'
 
-import {
-  default as LocalizationContext,
-  Localization
-} from './LocalizationContext'
+import { LocalizationContext, Localization } from './LocalizationContext'
 import useLocalizationProvider from './useLocalizationProvider'
 
-const LocalizationProvider: React.FunctionComponent = ({ children }) => {
+type LocalizationProviderProps = React.PropsWithChildren<{}>
+
+function LocalizationProvider({ children }: LocalizationProviderProps) {
   const value: Localization = useLocalizationProvider()
 
   // TODO: since I disabled i18n-next Suspense mode in i18n.defaultOptions

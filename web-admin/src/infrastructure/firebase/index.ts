@@ -1,4 +1,4 @@
-import { auth } from './app'
+import { auth, signOut, onUserChanged } from './app'
 import googleProvider from './google'
 
-export { auth, googleProvider }
+export { auth, signOut, onUserChanged, googleProvider }

@@ -5,7 +5,9 @@ import { useAuth } from 'auth'
 
 import { LOGIN } from './routes'
 
-function SecureRoute(props: RouteProps) {
+type SecureRouteProps = RouteProps
+
+function SecureRoute(props: SecureRouteProps) {
   const { isLoggedIn } = useAuth()
 
   if (!isLoggedIn) {

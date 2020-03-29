@@ -1,4 +1,4 @@
-import ProvideAuth from './ProvideAuth'
-import useAuth from './useAuth'
+import AuthProvider from './AuthProvider'
+import { useAuth } from './AuthContext'
 
-export { ProvideAuth, useAuth }
+export { AuthProvider, useAuth }

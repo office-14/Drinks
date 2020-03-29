@@ -2,18 +2,18 @@ import React, { StrictMode } from 'react'
 import { BrowserRouter as Router } from 'react-router-dom'
 
 import { LocalizationProvider } from 'localization'
-import { ProvideAuth } from 'auth'
+import { AuthProvider } from 'auth'
 import App from 'containers/App'
 
 function Main() {
   return (
     <StrictMode>
       <LocalizationProvider>
-        <ProvideAuth>
+        <AuthProvider>
           <Router>
             <App />
           </Router>
-        </ProvideAuth>
+        </AuthProvider>
       </LocalizationProvider>
     </StrictMode>
   )

@@ -6,8 +6,9 @@ import config from './config'
 
 const app = firebase.initializeApp(config)
 // const analytics = app.analytics()
-const auth = app.auth()
+export const auth = app.auth()
 
 // auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
 
-export { app, auth }
+export const signOut = auth.signOut.bind(auth)
+export const onUserChanged = auth.onAuthStateChanged.bind(auth)

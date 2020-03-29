@@ -1,8 +1,8 @@
 import React from 'react'
-import LocalizationContext, { Languages } from './LocalizationContext'
+import { useLocalization, Languages } from './LocalizationContext'
 
 function useLanguages(): Languages {
-  const { current, available, change } = React.useContext(LocalizationContext)
+  const { current, available, change } = useLocalization()
 
   const languages = React.useMemo<Languages>(
     () => ({

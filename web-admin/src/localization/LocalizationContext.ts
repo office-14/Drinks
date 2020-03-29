@@ -1,4 +1,5 @@
-import React from 'react'
+import { createContext } from 'helpers'
+
 import { Language, LanguageCode } from './languages'
 
 export interface Languages {
@@ -13,6 +14,7 @@ export interface Translation {
 
 export interface Localization extends Languages, Translation {}
 
-const LocalizationContext = React.createContext<Localization>({} as any)
+const [useContext, context] = createContext<Localization>()
 
-export default LocalizationContext
+export const useLocalization = useContext
+export const LocalizationContext = context

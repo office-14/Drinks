@@ -1,9 +1,7 @@
-import React from 'react'
-
-import LocalizationContext from './LocalizationContext'
+import { useLocalization } from './LocalizationContext'
 
 function useTranslation() {
-  return React.useContext(LocalizationContext).t
+  return useLocalization().t
 }
 
 export default useTranslation
