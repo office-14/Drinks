@@ -13,6 +13,10 @@ export const environment = {
     messagingSenderId: "752368906705",
     appId: "1:752368906705:web:03f9ff5a1d568c67e4b0f0",
     measurementId: "G-WMQ31M7P5K"
+  },
+  local_storage:  {
+    prefix: 'drinks-office-14',
+    storage_type: 'localStorage'
   }
 };
 

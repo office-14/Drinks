@@ -7,8 +7,6 @@ import { Addin } from "../addin";
 import { Observable } from 'rxjs';
 import { DraftCartProduct } from "../draft-cart-product";
 
-import { FormsModule } from '@angular/forms';
-import { ReactiveFormsModule } from '@angular/forms';
 import { CartService } from '../../cart.service';
 
 @Component({

@@ -1,6 +1,16 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SigninComponent } from './signin.component';
+import { AppModule } from '../app.module';
+import { Transition } from "@uirouter/core";
+
+export class MockTransition {
+  params() {
+    return {
+      order_creating_started: false
+    };
+  }
+}
 
 describe('SigninComponent', () => {
   let component: SigninComponent;
@@ -8,6 +18,12 @@ describe('SigninComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
+      imports: [
+        AppModule
+      ],
+      providers: [
+        { provide: Transition, useClass: MockTransition }
+      ],
       declarations: [ SigninComponent ]
     })
     .compileComponents();

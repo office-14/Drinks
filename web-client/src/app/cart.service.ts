@@ -7,9 +7,7 @@ import { Observable } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
 import { LocalStorageService } from 'angular-2-local-storage';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class CartService {
 
   cart_products = [];

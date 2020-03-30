@@ -19,9 +19,7 @@ export class CartComponent implements OnInit {
     private state_service: StateService
   ) { }
 
-  ngOnInit(): void {
-  	this.get_products();
-  }
+  ngOnInit(): void {}
 
   change_product_qty(product) {
   	if (product.qty < 1) {

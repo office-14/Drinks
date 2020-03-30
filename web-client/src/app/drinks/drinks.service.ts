@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 
 import { Observable, of } from 'rxjs';
 import { map, catchError } from 'rxjs/operators';
@@ -8,11 +8,9 @@ import { Drink } from "./drink";
 import { Addin } from "./addin";
 import { Size } from "./size";
 import { AjaxResponse } from "../ajax-response";
-import { HttpErrorHandler, HandleError } from '../http-error-handler.service';
+import { HttpErrorHandlerService, HandleError } from '../http-error-handler.service';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class DrinksService {
   drinksUrl = 'http://localhost:5000/api/drinks';
   addinsUrl = 'http://localhost:5000/api/add-ins';
@@ -22,8 +20,9 @@ export class DrinksService {
   private addins: Observable<Addin[]>;
 
   constructor(
-    private http: HttpClient,
-    httpErrorHandler: HttpErrorHandler) {
+    protected http: HttpClient,
+    httpErrorHandler: HttpErrorHandlerService
+  ) {
     this.handleError = httpErrorHandler.createHandleError('DrinksService');
     this.drinks = this.loadDrinks();
     this.addins = this.loadAddins();

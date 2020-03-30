@@ -6,16 +6,17 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { DrinksModule }            from './drinks/drinks.module';
 
-import { HttpErrorHandler }     from './http-error-handler.service';
+import { HttpErrorHandlerService }     from './http-error-handler.service';
 import { MessageService }       from './message.service';
+import { CartService }       from './cart.service';
+import { OrderService }       from './order.service';
+import { AuthService }       from './auth/auth.service';
 
 import { HttpClientModule } from '@angular/common/http';
 import { UIRouterModule } from "@uirouter/angular";
 
 import { FormsModule } from '@angular/forms';
-import {
-  MatSnackBarModule
-} from '@angular/material/snack-bar';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 import { AngularFireModule } from '@angular/fire';
 import { AngularFireAuthModule } from '@angular/fire/auth';
@@ -39,16 +40,19 @@ import { LocalStorageModule } from 'angular-2-local-storage';
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireAuthModule, // imports firebase/auth, only needed for auth features
     LocalStorageModule.forRoot({
-        prefix: 'drinks-office-24',
+        prefix: environment.local_storage.prefix,
         storageType: 'localStorage'
     })
   ],
   providers: [
-  	HttpErrorHandler,
-    MessageService
+  	HttpErrorHandlerService,
+    CartService,
+    OrderService,
+    MessageService,
+    AuthService,
   ],
   bootstrap: [AppComponent]
 })
 export class AppModule {
-	constructor(router: UIRouterModule) {}
+	constructor() {}
 }

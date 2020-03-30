@@ -4,16 +4,14 @@ import { AjaxResponse } from "./ajax-response";
 import { Observable, of, Subject } from 'rxjs';
 import { map, catchError, delay, tap } from 'rxjs/operators';
 import { Order } from './order/order';
-import { HttpErrorHandler, HandleError } from './http-error-handler.service';
+import { HttpErrorHandlerService, HandleError } from './http-error-handler.service';
 import { AuthService } from './auth/auth.service';
 import { LocalStorageService } from 'angular-2-local-storage';
 import { AngularFireAuth } from  "@angular/fire/auth";
 import { StateService } from "@uirouter/core";
 
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable()
 export class OrderService {
   _READY_STATUS_ = 'READY';
   _COOKING_STATUS_ = 'COOKING';
@@ -23,12 +21,12 @@ export class OrderService {
   private stored_order: Subject<any>;
 
   constructor(
-    private http: HttpClient,
-    httpErrorHandler: HttpErrorHandler,
-    private auth_service: AuthService,
-    private local_storage_service: LocalStorageService,
-    private afAuth: AngularFireAuth,
-    private state_service: StateService
+    protected http: HttpClient,
+    httpErrorHandler: HttpErrorHandlerService,
+    protected auth_service: AuthService,
+    protected local_storage_service: LocalStorageService,
+    protected afAuth: AngularFireAuth,
+    protected state_service: StateService
   ) {
     this.stored_order = new Subject;
     this.handleError = httpErrorHandler.createHandleError('DrinksService');
@@ -42,7 +40,7 @@ export class OrderService {
         this.clear_order();
         this.state_service.go('drinks');
       }
-    });  
+    });
   }
 
   if_order_exist() {

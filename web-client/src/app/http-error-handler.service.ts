@@ -10,7 +10,7 @@ export type HandleError =
 
 /** Handles HttpClient errors */
 @Injectable()
-export class HttpErrorHandler {
+export class HttpErrorHandlerService {
   constructor(private messageService: MessageService) { }
 
   createHandleError = (serviceName = '') => <T>
