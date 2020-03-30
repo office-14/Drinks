@@ -5,9 +5,26 @@ import {
   NavLinkProps as RouterLinkProps
 } from 'react-router-dom'
 import { Omit } from '@material-ui/types'
-import ListItem from '@material-ui/core/ListItem'
-import ListItemIcon from '@material-ui/core/ListItemIcon'
-import ListItemText from '@material-ui/core/ListItemText'
+import {
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  makeStyles
+} from '@material-ui/core'
+
+const useStyles = makeStyles(theme => ({
+  link: {
+    '&.active': {
+      color: '#1976d2',
+      backgroundColor: 'rgba(0, 0, 0, 0.04)'
+    }
+  },
+  icon: {
+    '.active &': {
+      color: '#1976d2'
+    }
+  }
+}))
 
 interface ListItemLinkProps {
   icon?: React.ReactElement
@@ -16,6 +33,8 @@ interface ListItemLinkProps {
 }
 
 function ListItemLink({ icon, primary, to }: ListItemLinkProps) {
+  const classes = useStyles()
+
   const renderLink = React.useMemo(
     () =>
       React.forwardRef<any, Omit<RouterLinkProps, 'to'>>((itemProps, ref) => (
@@ -26,8 +45,10 @@ function ListItemLink({ icon, primary, to }: ListItemLinkProps) {
 
   return (
     <li>
-      <ListItem button component={renderLink}>
-        {icon ? <ListItemIcon>{icon}</ListItemIcon> : null}
+      <ListItem className={classes.link} button component={renderLink}>
+        {icon ? (
+          <ListItemIcon className={classes.icon}>{icon}</ListItemIcon>
+        ) : null}
         <ListItemText primary={primary} />
       </ListItem>
     </li>
