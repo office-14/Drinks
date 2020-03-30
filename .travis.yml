@@ -21,12 +21,6 @@ jobs:
 
     - language: node_js
       node_js: 13
-      addons:
-        apt:
-          sources:
-            - google-chrome
-          packages:
-            - google-chrome-stable
       before_script:
         - cd web-client
       install:
