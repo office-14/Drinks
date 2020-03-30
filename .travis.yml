@@ -22,11 +22,10 @@ jobs:
     - language: node_js
       node_js: 13
       before_script:
-        - cd web-client
-      install:
-        - npm install --silent
+        - cd web-client        
       script:
-        - npm test -- --no-watch --no-progress --browsers=ChromeHeadlessCI
+        - npm install --silent
+        - npm run test -- --no-watch --no-progress --browsers=ChromeHeadlessCI
 
     - services:
         - docker
