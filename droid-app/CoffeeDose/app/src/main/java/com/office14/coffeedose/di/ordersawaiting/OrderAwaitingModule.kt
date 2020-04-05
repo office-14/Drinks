@@ -1,6 +1,7 @@
-package com.office14.coffeedose.di
+package com.office14.coffeedose.di.ordersawaiting
 
 import androidx.lifecycle.ViewModel
+import com.office14.coffeedose.di.ViewModelKey
 import com.office14.coffeedose.viewmodels.OrderAwaitingViewModel
 import dagger.Binds
 import dagger.Module

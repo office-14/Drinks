@@ -8,7 +8,7 @@ import dagger.Module
 import dagger.multibindings.IntoMap
 
 @Module
-abstract class OrdersModule {
+abstract class OrdersVMModule {
     @Binds
     @IntoMap
     @ViewModelKey(OrderDetailsViewModel::class)
