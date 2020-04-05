@@ -11,6 +11,10 @@ apply plugin: "androidx.navigation.safeargs.kotlin"
 android {
     compileSdkVersion 29
     buildToolsVersion "29.0.3"
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
     defaultConfig {
         applicationId "com.office14.coffeedose"
         minSdkVersion 26
@@ -44,11 +48,11 @@ android {
     dataBinding {
         enabled = true
     }
-    android {
-        compileOptions {
-            sourceCompatibility JavaVersion.VERSION_1_8
-            targetCompatibility JavaVersion.VERSION_1_8
-        }
+}
+
+tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
+    kotlinOptions {
+        jvmTarget = "1.8"
     }
 }
 
@@ -113,11 +117,22 @@ dependencies {
 
     // Add the Firebase SDK for Google Analytics
     implementation "com.google.firebase:firebase-analytics:$version_firebase_analytics"
-    implementation 'com.google.firebase:firebase-crashlytics:17.0.0-beta01'
+    implementation 'com.google.firebase:firebase-crashlytics:17.0.0-beta03'
 
     implementation 'com.google.firebase:firebase-perf:19.0.5'
 
-    implementation 'com.google.firebase:firebase-auth:19.2.0'
-    implementation 'com.google.android.gms:play-services-auth:17.0.0'
-    implementation 'com.google.firebase:firebase-messaging:20.1.2'
+    implementation 'com.google.firebase:firebase-auth:19.3.0'
+    implementation 'com.google.android.gms:play-services-auth:18.0.0'
+    implementation 'com.google.firebase:firebase-messaging:20.1.5'
+
+    //Dagger
+    implementation "com.google.dagger:dagger-android:$version_dagger"
+    implementation "com.google.dagger:dagger-android-support:$version_dagger" // if you use the support libraries
+    kapt "com.google.dagger:dagger-android-processor:$version_dagger"
+    kapt "com.google.dagger:dagger-compiler:$version_dagger"
+
+    //AssistedInject and SavedState
+    compileOnly 'com.squareup.inject:assisted-inject-annotations-dagger2:0.5.2'
+    kapt 'com.squareup.inject:assisted-inject-processor-dagger2:0.5.2'
+    implementation 'androidx.lifecycle:lifecycle-viewmodel-savedstate:2.3.0-alpha01'
 }

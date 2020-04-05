@@ -9,16 +9,6 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.*
 
-private val moshi = Moshi.Builder()
-    .add(KotlinJsonAdapterFactory())
-    .build()
-
-private val retrofit = Retrofit.Builder()
-    .addConverterFactory(MoshiConverterFactory.create(moshi))
-    .addCallAdapterFactory(CoroutineCallAdapterFactory())
-    .baseUrl(PreferencesRepository.getBaseUrl())
-    .build()
-
 interface CoffeeApiService {
     @GET("drinks")
     fun getDrinksAsync():Deferred<ResponseContainer<List<CoffeeJso>>>
@@ -34,8 +24,4 @@ interface CoffeeApiService {
 
     @POST("/api/orders")
     fun createOrderAsync(@Body body : CreateOrderBody, @Header("Authorization") authHeader:String) :Deferred<ResponseContainer<OrderJso>>
-}
-
-object CoffeeApi {
-    val retrofitService : CoffeeApiService by lazy { retrofit.create(CoffeeApiService::class.java) }
 }

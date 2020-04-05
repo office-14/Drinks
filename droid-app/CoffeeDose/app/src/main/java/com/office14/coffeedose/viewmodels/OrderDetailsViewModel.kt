@@ -12,16 +12,11 @@ import com.office14.coffeedose.repository.PreferencesRepository
 import kotlinx.coroutines.*
 import javax.inject.Inject
 
-class OrderDetailsViewModel @Inject constructor(application : Application) : AndroidViewModel(application) {
+class OrderDetailsViewModel @Inject constructor(application : Application, private val ordersRepository : OrdersRepository,
+                                                private var orderDetailsRepository:OrderDetailsRepository) : AndroidViewModel(application) {
 
     private val viewModelJob = Job()
     private val viewModelScope = CoroutineScope(viewModelJob + Dispatchers.Main)
-
-    //val orderId = mutableLiveData(-1)
-
-    private var orderDetailsRepository:OrderDetailsRepository  = OrderDetailsRepository(CoffeeDatabase.getInstance(application).orderDetailsDatabaseDao)
-
-    private val ordersRepository = OrdersRepository(CoffeeDatabase.getInstance(application).ordersDatabaseDao,CoffeeDatabase.getInstance(application).ordersQueueDatabaseDao)
 
     private val _navigateOrderAwaiting = MutableLiveData<Boolean>()
     val navigateOrderAwaiting : LiveData<Boolean>
@@ -111,14 +106,4 @@ class OrderDetailsViewModel @Inject constructor(application : Application) : And
         _navigateOrderAwaiting.value = false
     }
 
-
-    class Factory(val app: Application) : ViewModelProvider.Factory {
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            if (modelClass.isAssignableFrom(OrderDetailsViewModel::class.java)) {
-                @Suppress("UNCHECKED_CAST")
-                return OrderDetailsViewModel(app) as T
-            }
-            throw IllegalArgumentException("Unable to construct viewmodel")
-        }
-    }
 }

@@ -4,6 +4,7 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.*
 import com.office14.coffeedose.database.CoffeeDatabase
+import com.office14.coffeedose.di.AssistedSavedStateViewModelFactory
 import com.office14.coffeedose.domain.Addin
 import com.office14.coffeedose.domain.CoffeeSize
 import com.office14.coffeedose.domain.OrderDetail
@@ -12,20 +13,30 @@ import com.office14.coffeedose.network.HttpExceptionEx
 import com.office14.coffeedose.repository.AddinsRepository
 import com.office14.coffeedose.repository.OrderDetailsRepository
 import com.office14.coffeedose.repository.SizesRepository
+import com.squareup.inject.assisted.Assisted
+import com.squareup.inject.assisted.AssistedInject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class SelectDoseAndAddinsViewModel(application: Application,var drinkId : Int) : AndroidViewModel(application) {
+class SelectDoseAndAddinsViewModel @AssistedInject constructor(application: Application,
+                                                               @Assisted private val savedStateHandle: SavedStateHandle, private val sizesRepository : SizesRepository,
+                                                               private val addinsRepository : AddinsRepository,
+                                                               private val orderDetailsRepository : OrderDetailsRepository) : AndroidViewModel(application) {
+
+
+
+    var sizes = sizesRepository.getSizes(savedStateHandle.get<Int>("drinkId") ?: -1)
+
+    val addins = addinsRepository.addins
+
+    private val drinkId : Int = savedStateHandle.get<Int>("drinkId") ?: -1
 
     private val viewModelJob = Job()
 
     private val viewModelScope = CoroutineScope(viewModelJob + Dispatchers.Main)
-
-    private val sizesRepository = SizesRepository(CoffeeDatabase.getInstance(application).sizeDatabaseDao)
-    private val addinsRepository = AddinsRepository(CoffeeDatabase.getInstance(application).addinsDatabaseDao)
-    private val orderDetailsRepository= OrderDetailsRepository(CoffeeDatabase.getInstance(application).orderDetailsDatabaseDao)
 
     private val addinsTotal = mutableLiveData(0)
 
@@ -39,6 +50,10 @@ class SelectDoseAndAddinsViewModel(application: Application,var drinkId : Int) :
 
     val navigateDrinks : LiveData<Boolean>
         get() = _navigateDrinks
+
+    init {
+        refreshData()
+    }
 
     fun getSummary() : LiveData<String>{
         var result = MediatorLiveData<String>()
@@ -60,25 +75,15 @@ class SelectDoseAndAddinsViewModel(application: Application,var drinkId : Int) :
 
     private var selectedItemIndex = mutableLiveData(-1)
 
-    val sizes = sizesRepository.getSizes(drinkId)
-    val addins = addinsRepository.addins
-
     val selectedSize : LiveData<CoffeeSize?>
         get() = _selectedSize
 
     private var _selectedSize  = Transformations.map(selectedItemIndex){
-        if (sizes.value?.isEmpty() != false)
+        if (sizes.value == null)
             return@map null
         else return@map sizes.value!![selectedItemIndex.value!!]
     }
 
-
-    init {
-        viewModelScope.launch {
-            sizesRepository.refreshSizes(drinkId)
-            addinsRepository.refreshAddins()
-        }
-    }
 
     fun refreshData(showRefresh:Boolean = false){
         viewModelScope.launch {
@@ -152,13 +157,6 @@ class SelectDoseAndAddinsViewModel(application: Application,var drinkId : Int) :
         _navigateDrinks.value = false
     }
 
-    class Factory(val app: Application, private var drinkId: Int) : ViewModelProvider.Factory {
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            if (modelClass.isAssignableFrom(SelectDoseAndAddinsViewModel::class.java)) {
-                @Suppress("UNCHECKED_CAST")
-                return SelectDoseAndAddinsViewModel(app,drinkId) as T
-            }
-            throw IllegalArgumentException("Unable to construct viewmodel")
-        }
-    }
+    @AssistedInject.Factory
+    interface Factory : AssistedSavedStateViewModelFactory<SelectDoseAndAddinsViewModel>
 }

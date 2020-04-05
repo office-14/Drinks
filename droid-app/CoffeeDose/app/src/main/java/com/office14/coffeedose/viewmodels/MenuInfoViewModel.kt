@@ -4,18 +4,13 @@ import android.app.Application
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.*
 import com.coffeedose.R
-import com.office14.coffeedose.database.CoffeeDatabase
 import com.office14.coffeedose.domain.OrderStatus
 import com.office14.coffeedose.repository.OrderDetailsRepository
 import com.office14.coffeedose.repository.OrdersRepository
+import javax.inject.Inject
 
-class MenuInfoViewModel(application: Application) : AndroidViewModel(application) {
-
-    private val database = CoffeeDatabase.getInstance(application)
-
-    private val orderDetailsRepository = OrderDetailsRepository(CoffeeDatabase.getInstance(application).orderDetailsDatabaseDao)
-
-    private val ordersRepository = OrdersRepository(database.ordersDatabaseDao,database.ordersQueueDatabaseDao)
+class MenuInfoViewModel @Inject constructor(application: Application,private val orderDetailsRepository : OrderDetailsRepository,
+                                            private val ordersRepository : OrdersRepository) : AndroidViewModel(application) {
 
     val currentOrderBadgeColor : LiveData<Int> = Transformations.map(ordersRepository.queueOrderStatus){
         return@map when(it){
@@ -27,14 +22,4 @@ class MenuInfoViewModel(application: Application) : AndroidViewModel(application
     }
 
     val orderDetailsCount =  orderDetailsRepository.unAttachedOrderDetailsCount
-
-    class Factory(val app: Application) : ViewModelProvider.Factory {
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            if (modelClass.isAssignableFrom(MenuInfoViewModel::class.java)) {
-                @Suppress("UNCHECKED_CAST")
-                return MenuInfoViewModel(app) as T
-            }
-            throw IllegalArgumentException("Unable to construct viewmodel")
-        }
-    }
 }

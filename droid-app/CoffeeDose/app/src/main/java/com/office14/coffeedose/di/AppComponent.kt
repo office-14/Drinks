@@ -16,9 +16,6 @@ import javax.inject.Singleton
         AndroidSupportInjectionModule::class,
         ActivityBuildersModule::class,
         ViewModelBuilder::class,
-        ActivityModule::class,
-        //AppSubcomponents::class,
-        //CatalogModule::class,
         AppModule::class
     ]
 )
@@ -29,17 +26,4 @@ interface AppComponent : AndroidInjector<CoffeeDoseApplication> {
         // With @BindsInstance, the Context passed in will be available in the graph
         fun create(@BindsInstance app: Application): AppComponent
     }
-
-    //fun catalogComponent() : CatalogComponent.Factory
-
-    //fun inject(application : CoffeeDoseApplication)
-
-
-/*    fun activityComponent() : ActivityComponent.Factory
-
-
-
-    fun ordersComponent() : OrdersComponent.Factory
-
-    fun orderAwaitingComponent() : OrderAwaitingComponent.Factory*/
 }

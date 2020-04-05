@@ -1,14 +1,16 @@
 package com.office14.coffeedose.ui
 
 
+import android.content.Context
 import android.os.Bundle
 import android.view.*
-import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.HasDefaultViewModelProviderFactory
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -17,25 +19,33 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 
+
 import com.coffeedose.R
 import com.coffeedose.databinding.FragmentOrderBinding
-import com.office14.coffeedose.extensions.setBooleanVisibility
+import com.office14.coffeedose.di.InjectingSavedStateViewModelFactory
 import com.office14.coffeedose.ui.Adapters.OrderDetailsAdapter
 import com.office14.coffeedose.ui.Adapters.OrderDetailsItemTouchHelperCallback
 import com.office14.coffeedose.ui.Adapters.SwipeListener
 import com.office14.coffeedose.viewmodels.OrderDetailsViewModel
+import com.office14.coffeedose.extensions.setBooleanVisibility
+import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.fragment_order.*
+import javax.inject.Inject
 
 /**
  * A simple [Fragment] subclass.
  */
-class OrderDetailsFragment : Fragment() {
+class OrderDetailsFragment : DaggerFragment(), HasDefaultViewModelProviderFactory {
 
-    private lateinit var viewModel : OrderDetailsViewModel
+    @Inject
+    lateinit var defaultViewModelFactory: InjectingSavedStateViewModelFactory
+
+    //private lateinit var viewModel : OrderDetailsViewModel
+    private val viewModel: OrderDetailsViewModel by viewModels()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View? {
 
-        viewModel  = ViewModelProvider(this, OrderDetailsViewModel.Factory(requireNotNull(this.activity).application)).get(OrderDetailsViewModel::class.java)
+        //viewModel  = ViewModelProvider(this, OrderDetailsViewModel.Factory(requireNotNull(this.activity).application)).get(OrderDetailsViewModel::class.java)
 
         val binding : FragmentOrderBinding = DataBindingUtil.inflate(inflater,R.layout.fragment_order,container,false)
         binding.viewModel = viewModel
@@ -58,6 +68,12 @@ class OrderDetailsFragment : Fragment() {
 
         return binding.root
 
+    }
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        //val viewModelFactory = defaultViewModelFactory.create(this)
+        //viewModel = ViewModelProvider(this,viewModelFactory).get(OrderDetailsViewModel::class.java)
     }
 
     private fun initOnbackPressedCallBack(){
@@ -158,5 +174,7 @@ class OrderDetailsFragment : Fragment() {
         })
     }
 
+    override fun getDefaultViewModelProviderFactory(): ViewModelProvider.Factory =
+        defaultViewModelFactory.create(this)
 
 }

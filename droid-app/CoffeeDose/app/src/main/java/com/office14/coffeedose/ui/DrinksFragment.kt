@@ -1,12 +1,14 @@
 package com.office14.coffeedose.ui
 
+import android.content.Context
 import android.os.Bundle
 import android.view.*
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.HasDefaultViewModelProviderFactory
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -15,22 +17,30 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.coffeedose.R
 import com.coffeedose.databinding.FragmentDrinksBinding
-import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.office14.coffeedose.di.InjectingSavedStateViewModelFactory
 import com.office14.coffeedose.extensions.setBooleanVisibility
 import com.office14.coffeedose.repository.PreferencesRepository
 import com.office14.coffeedose.ui.Adapters.DrinksListAdapter
 import com.office14.coffeedose.viewmodels.DrinksViewModel
+import dagger.android.support.AndroidSupportInjection
+import dagger.android.support.DaggerFragment
+import javax.inject.Inject
 
 
 /**
 
  */
-class DrinksFragment : Fragment(), SelectDoseAndAddinsFragment.OnDrinkAddListener {
+class DrinksFragment : DaggerFragment(),HasDefaultViewModelProviderFactory, SelectDoseAndAddinsFragment.OnDrinkAddListener {
 
-    private val viewModel: DrinksViewModel by lazy {
+    @Inject
+    lateinit var defaultViewModelFactory: InjectingSavedStateViewModelFactory
+
+    //private lateinit var viewModel: DrinksViewModel
+    private val viewModel: DrinksViewModel by viewModels()
+
+    /*private val viewModel: DrinksViewModel by lazy {
         ViewModelProvider(this,DrinksViewModel.Factory(requireNotNull(this.activity).application)).get(DrinksViewModel::class.java)
-    }
-
+    }*/
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View? {
 
@@ -59,26 +69,11 @@ class DrinksFragment : Fragment(), SelectDoseAndAddinsFragment.OnDrinkAddListene
 
         //initOrdersButtonVisibility(binding.ordersFab)
 
-            //initObserveListeners()
+        //initObserveListeners()
 
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        //Toast.makeText(requireContext(),"DrinksFragment is started", Toast.LENGTH_LONG).show()
-    }
-
-    override fun onResume() {
-        super.onResume()
-        //val orderId = PreferencesRepository.getLastOrderId()
-        //val redirToAwait = PreferencesRepository.getNavigateToOrderAwaitFrag()
-        //Toast.makeText(requireContext(),"DrinksFragment is resumed ($orderId $redirToAwait)", Toast.LENGTH_LONG).show()
-
-
-        //if (PreferencesRepository.getLastOrderId() != -1)
-        //    findNavController().navigate(DrinksFragmentDirections.actionDrinksFragmentToOrderAwaitingFragment())
-    }
 
     private fun handleOrdersNavigation() {
         viewModel.navigatingOrders.observe(viewLifecycleOwner, Observer {
@@ -269,6 +264,9 @@ class DrinksFragment : Fragment(), SelectDoseAndAddinsFragment.OnDrinkAddListene
     override fun onDrinkAdd() {
         //TODO update button visibility
     }
+
+    override fun getDefaultViewModelProviderFactory(): ViewModelProvider.Factory =
+        defaultViewModelFactory.create(this)
 }
 
 class CoffeeItemClickListener(val clickListener: (Int) -> Unit) {

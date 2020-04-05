@@ -1,14 +1,20 @@
 package com.office14.coffeedose.ui
 
 
-import android.app.Dialog
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.AdapterView
+import android.widget.ListView
+import android.widget.Spinner
+import android.widget.TextView
+import androidx.core.os.bundleOf
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.HasDefaultViewModelProviderFactory
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -16,26 +22,36 @@ import com.coffeedose.R
 import com.coffeedose.databinding.FragmentSelectDoseAndAddinsBinding
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.office14.coffeedose.di.InjectingSavedStateViewModelFactory
 import com.office14.coffeedose.extensions.setBooleanVisibility
 import com.office14.coffeedose.ui.Adapters.AddinCheckListener
 import com.office14.coffeedose.ui.Adapters.AddinsListAdapter
 import com.office14.coffeedose.ui.Adapters.SizeSpinnerAdapter
+import com.office14.coffeedose.viewmodels.OrderDetailsViewModel
 import com.office14.coffeedose.viewmodels.SelectDoseAndAddinsViewModel
 import com.shawnlin.numberpicker.NumberPicker
+import dagger.android.AndroidInjector
+import dagger.android.DispatchingAndroidInjector
+import dagger.android.HasAndroidInjector
+import dagger.android.support.AndroidSupportInjection
+import javax.inject.Inject
 
 
 /**
  * A simple [Fragment] subclass.
  */
-class SelectDoseAndAddinsFragment (private val onDrinkAddListener:OnDrinkAddListener, private val drinkId:Int, private val drinkName:String) : BottomSheetDialogFragment() {
+class SelectDoseAndAddinsFragment (private val onDrinkAddListener:OnDrinkAddListener, private val drinkId:Int, private val drinkName:String) :  BottomSheetDialogFragment(),
+    HasAndroidInjector, HasDefaultViewModelProviderFactory {
 
-    private lateinit var viewModel : SelectDoseAndAddinsViewModel
+    @Inject
+    lateinit var defaultViewModelFactory: InjectingSavedStateViewModelFactory
+
+    @Inject
+    lateinit var androidInjector: DispatchingAndroidInjector<Any>
+
+    private val viewModel: SelectDoseAndAddinsViewModel by viewModels()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,savedInstanceState: Bundle?): View? {
-
-        viewModel = ViewModelProvider(this, SelectDoseAndAddinsViewModel
-            .Factory(requireNotNull(this.activity).application,drinkId)).get(SelectDoseAndAddinsViewModel::class.java)
-
         val binding: FragmentSelectDoseAndAddinsBinding = DataBindingUtil.inflate(inflater,R.layout.fragment_select_dose_and_addins,container,false)
         binding.viewModel = viewModel
         binding.lifecycleOwner = this
@@ -50,6 +66,11 @@ class SelectDoseAndAddinsFragment (private val onDrinkAddListener:OnDrinkAddList
 
         setPeekHeight(binding.root)
         return binding.root
+    }
+
+    override fun onAttach(context: Context) {
+        AndroidSupportInjection.inject(this)
+        super.onAttach(context)
     }
 
 
@@ -144,6 +165,13 @@ class SelectDoseAndAddinsFragment (private val onDrinkAddListener:OnDrinkAddList
     companion object{
         const val TAG = "SelectDoseAndAddinsFragment"
     }
+
+    override fun androidInjector(): AndroidInjector<Any> {
+        return androidInjector
+    }
+
+    override fun getDefaultViewModelProviderFactory(): ViewModelProvider.Factory =
+        defaultViewModelFactory.create(this, bundleOf("drinkId" to drinkId))
 
     /*private fun showAddOrProceedDialog(){
         val builder: AlertDialog.Builder = AlertDialog.Builder(requireContext())

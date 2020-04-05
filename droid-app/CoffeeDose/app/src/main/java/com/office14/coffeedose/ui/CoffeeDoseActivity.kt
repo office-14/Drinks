@@ -3,11 +3,12 @@ package com.office14.coffeedose.ui
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.coffeedose.R
@@ -20,26 +21,43 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.iid.FirebaseInstanceId
-import com.office14.coffeedose.domain.OrderStatus
+import com.office14.coffeedose.CoffeeDoseApplication
+import com.office14.coffeedose.database.CoffeeDatabase
+import com.office14.coffeedose.di.InjectingSavedStateViewModelFactory
 import com.office14.coffeedose.repository.PreferencesRepository
 import com.office14.coffeedose.viewmodels.MenuInfoViewModel
+import dagger.android.AndroidInjector
+import dagger.android.support.DaggerAppCompatActivity
+import dagger.android.support.DaggerApplication
 import kotlinx.android.synthetic.main.activity_main.*
+import javax.inject.Inject
 
 
-class CoffeeDoseActivity : AppCompatActivity() {
+class CoffeeDoseActivity : DaggerAppCompatActivity() {
 
     private lateinit var auth: FirebaseAuth
     private lateinit var googleSignInClient: GoogleSignInClient
 
-    private val viewModel: MenuInfoViewModel by lazy {
-        ViewModelProvider(this,MenuInfoViewModel.Factory(requireNotNull(this).application)).get(MenuInfoViewModel::class.java)
-    }
+
+    @Inject
+    lateinit var message:String
+
+    @Inject
+    lateinit var abstractViewModelFactory: InjectingSavedStateViewModelFactory
+
+    lateinit var viewModel : MenuInfoViewModel
 
     private lateinit var bottomNavigationView: BottomNavigationView
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        //(application as CoffeeDoseApplication).appComponent.activityComponent().create().inject(this)
+
         setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
+        val viewModelFactory = abstractViewModelFactory.create(this)
+        viewModel = ViewModelProvider(this,viewModelFactory).get(MenuInfoViewModel::class.java)
         setContentView(R.layout.activity_main)
 
         prepareSignIn()

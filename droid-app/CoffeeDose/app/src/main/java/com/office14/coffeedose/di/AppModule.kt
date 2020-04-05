@@ -1,14 +1,13 @@
 package com.office14.coffeedose.di
 
+import android.app.Application
 import android.content.Context
 import androidx.room.Room
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.office14.coffeedose.CoffeeDoseApplication
 import com.office14.coffeedose.database.CoffeeDatabase
 import com.office14.coffeedose.network.CoffeeApiService
-import com.office14.coffeedose.repository.OrderDetailsRepository
-import com.office14.coffeedose.repository.OrdersRepository
-import com.office14.coffeedose.repository.PreferencesRepository
+import com.office14.coffeedose.repository.*
 import com.squareup.moshi.Moshi
 import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import dagger.Module
@@ -20,11 +19,18 @@ import javax.inject.Singleton
 @Module
 abstract class AppModule {
 
+    @Singleton
     @Module
     companion object {
+
         @Singleton
         @Provides
-        fun provideContext(application: CoffeeDoseApplication): Context {
+        fun provideMessage() = "All fine"
+
+
+        @Singleton
+        @Provides
+        fun provideContext(application: Application): Context {
             return application.applicationContext
         }
 
@@ -48,11 +54,13 @@ abstract class AppModule {
 
         @Singleton
         @Provides
-        fun provideDataBase(context: Context) = Room.databaseBuilder(
-            context,
-            CoffeeDatabase::class.java,
-            "drinks_database"
-        ).fallbackToDestructiveMigration().build()
+        fun provideDataBase(context: Context) : CoffeeDatabase {
+            return Room.databaseBuilder(
+                context,
+                CoffeeDatabase::class.java,
+                "drinks_database"
+            ).fallbackToDestructiveMigration().build()
+        }
 
         @Singleton
         @Provides
@@ -67,5 +75,6 @@ abstract class AppModule {
                 database.ordersQueueDatabaseDao,
                 apiService
             )
+
     }
 }

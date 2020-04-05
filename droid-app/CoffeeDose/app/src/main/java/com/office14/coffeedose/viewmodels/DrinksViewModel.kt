@@ -3,18 +3,22 @@ package com.office14.coffeedose.viewmodels
 import android.app.Application
 import androidx.lifecycle.*
 import com.office14.coffeedose.database.CoffeeDatabase
+import com.office14.coffeedose.di.AssistedSavedStateViewModelFactory
 import com.office14.coffeedose.domain.Coffee
 import com.office14.coffeedose.extensions.mutableLiveData
 import com.office14.coffeedose.network.HttpExceptionEx
 import com.office14.coffeedose.repository.CoffeeRepository
 import com.office14.coffeedose.repository.OrderDetailsRepository
+import com.squareup.inject.assisted.Assisted
+import com.squareup.inject.assisted.AssistedInject
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import java.lang.Exception
+import javax.inject.Inject
 
-class DrinksViewModel(application:Application) : AndroidViewModel(application) {
+class DrinksViewModel @Inject constructor(application:Application, private val coffeeRepository : CoffeeRepository) : AndroidViewModel(application) {
 
     private val notDefinedId = -1
 
@@ -22,11 +26,6 @@ class DrinksViewModel(application:Application) : AndroidViewModel(application) {
 
     private val viewModelScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
-    private val database = CoffeeDatabase.getInstance(application)
-    private val coffeeRepository = CoffeeRepository(database.drinksDatabaseDao)
-
-    private val orderDetailsRepository = OrderDetailsRepository(CoffeeDatabase.getInstance(application).orderDetailsDatabaseDao)
-    // list of drinks
     val drinks = coffeeRepository.drinks
 
     var isRefreshing = mutableLiveData(false)
@@ -35,10 +34,6 @@ class DrinksViewModel(application:Application) : AndroidViewModel(application) {
 
     private val _selectedId = mutableLiveData(notDefinedId)
     private val _navigatingOrders = MutableLiveData<Boolean>()
-
-    val ordersButtonVisible = Transformations.map(orderDetailsRepository.unAttachedOrderDetails){
-         return@map  (it != null && it.isNotEmpty())
-    }
 
     val navigatingOrders : LiveData<Boolean>
         get() = _navigatingOrders
@@ -95,16 +90,4 @@ class DrinksViewModel(application:Application) : AndroidViewModel(application) {
     fun navigateOrders(){
         _navigatingOrders.value = true
     }
-
-
-    class Factory(val app: Application) : ViewModelProvider.Factory {
-        override fun <T : ViewModel?> create(modelClass: Class<T>): T {
-            if (modelClass.isAssignableFrom(DrinksViewModel::class.java)) {
-                @Suppress("UNCHECKED_CAST")
-                return DrinksViewModel(app) as T
-            }
-            throw IllegalArgumentException("Unable to construct viewmodel")
-        }
-    }
-
 }

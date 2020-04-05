@@ -1,5 +1,10 @@
 package com.office14.coffeedose.di
 
+import com.office14.coffeedose.di.catalog.*
+import com.office14.coffeedose.di.orders.OrdersVMModule
+import com.office14.coffeedose.di.orders.OrdersScope
+import com.office14.coffeedose.di.ordersawaiting.OrderAwaitingModule
+import com.office14.coffeedose.di.ordersawaiting.OrdersAwaitingScope
 import com.office14.coffeedose.ui.*
 import dagger.Module
 import dagger.android.ContributesAndroidInjector
@@ -7,19 +12,28 @@ import dagger.android.ContributesAndroidInjector
 @Module
 abstract class ActivityBuildersModule {
 
-    @ContributesAndroidInjector(modules = [ActivityModule::class])
+    @ContributesAndroidInjector(modules = [ActivityVMModule::class, ActivityBuildersSubModule::class])
     abstract fun contributeCoffeeDoseActivity() : CoffeeDoseActivity
 
-    /*@ContributesAndroidInjector(modules = [DrinksModule::class])
+}
+
+
+@Module
+abstract class ActivityBuildersSubModule {
+
+    @CatalogScope
+    @ContributesAndroidInjector(modules = [DrinksVMModule::class, DrinksModule::class])
     abstract fun contributeDrinksFragment(): DrinksFragment
 
-    @ContributesAndroidInjector(modules = [SelectDoseModule::class])
+    @CatalogScope
+    @ContributesAndroidInjector(modules = [SelectDoseVMModule::class, SelectDoseModule::class])
     abstract fun contributeSelectDoseAndAddinsFragment(): SelectDoseAndAddinsFragment
 
-    @ContributesAndroidInjector(modules = [OrdersModule::class])
+    @OrdersScope
+    @ContributesAndroidInjector(modules = [OrdersVMModule::class])
     abstract fun contributeOrderDetailsFragment(): OrderDetailsFragment
 
+    @OrdersAwaitingScope
     @ContributesAndroidInjector(modules = [OrderAwaitingModule::class])
-    abstract fun contributeOrderAwaitingFragment(): OrderAwaitingFragment*/
-
+    abstract fun contributeOrderAwaitingFragment(): OrderAwaitingFragment
 }

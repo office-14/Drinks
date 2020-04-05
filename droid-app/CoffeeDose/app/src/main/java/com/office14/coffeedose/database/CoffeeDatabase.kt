@@ -21,7 +21,7 @@ abstract class CoffeeDatabase : RoomDatabase() {
 
     abstract val ordersQueueDatabaseDao: OrdersQueueDao
 
-    companion object {
+    /*companion object {
 
         @Volatile
         private var INSTANCE: CoffeeDatabase? = null
@@ -46,5 +46,5 @@ abstract class CoffeeDatabase : RoomDatabase() {
                 return instance
             }
         }
-    }
+    }*/
 }

@@ -9,3 +9,9 @@ fun <T> mutableLiveData(default: T? = null): MutableLiveData<T> {
         data.value = default
     return  data
 }
+
+fun <T> mutableLiveDataNotNull(default: T): MutableLiveData<T> {
+    val data = MutableLiveData<T>()
+    data.value = default
+    return  data
+}

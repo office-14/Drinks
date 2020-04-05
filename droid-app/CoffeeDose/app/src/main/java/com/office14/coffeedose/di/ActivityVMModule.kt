@@ -10,21 +10,11 @@ import dagger.android.ContributesAndroidInjector
 import dagger.multibindings.IntoMap
 
 @Module
-internal abstract class ActivityModule {
+abstract class ActivityVMModule {
 
     @Binds
     @IntoMap
     @ViewModelKey(MenuInfoViewModel::class)
     abstract fun bindMenuInfoViewModel(viewModel: MenuInfoViewModel): ViewModel
-
-    /*@ContributesAndroidInjector
-    internal abstract fun contributeCoffeeDoseActivity(): CoffeeDoseActivity*/
-
-    @Module
-    companion object {
-        @Provides
-        fun getMessage() = "its message"
-    }
-
 
 }

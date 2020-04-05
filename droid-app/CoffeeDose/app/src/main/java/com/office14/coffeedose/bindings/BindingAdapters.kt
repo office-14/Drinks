@@ -24,7 +24,8 @@ fun popularityIcon(view: View, visible: Boolean) {
     view.setBooleanVisibility(visible)
 }*/
 
+/*
 @BindingAdapter("app:hideIfZero")
 fun hideIfZero(view: View, number: Int) {
     view.visibility = if (number == 0) View.GONE else View.VISIBLE
-}
+}*/

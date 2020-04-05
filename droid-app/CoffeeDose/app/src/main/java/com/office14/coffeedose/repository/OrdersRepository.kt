@@ -4,21 +4,21 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import com.office14.coffeedose.database.OrderDao
-import com.office14.coffeedose.database.OrderDetailDao
 import com.office14.coffeedose.database.OrdersQueueDao
 import com.office14.coffeedose.domain.Order
 import com.office14.coffeedose.domain.OrderDetailFull
 import com.office14.coffeedose.domain.OrderStatus
-import com.office14.coffeedose.network.CoffeeApi
+import com.office14.coffeedose.network.CoffeeApiService
 import com.office14.coffeedose.network.CreateOrderBody
 import com.office14.coffeedose.network.HttpExceptionEx
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class OrdersRepository(private  val ordersDao : OrderDao, private val ordersQueueDao : OrdersQueueDao) {
+class OrdersRepository @Inject constructor(private  val ordersDao : OrderDao, private val ordersQueueDao : OrdersQueueDao, private val coffeeApi : CoffeeApiService) {
 
     fun getOrderById(orderId:Int) = Transformations.map(ordersDao.getById(orderId)){ itDbo ->
         itDbo.map { it.toDomainModel() }
@@ -46,11 +46,12 @@ class OrdersRepository(private  val ordersDao : OrderDao, private val ordersQueu
         ordersBody.fillWithOrders(orders)
 
         withContext(Dispatchers.IO) {
-            var result = CoffeeApi.retrofitService.createOrderAsync(ordersBody,composeAuthHeader(token)).await()
+            var result = coffeeApi.createOrderAsync(ordersBody,composeAuthHeader(token)).await()
             if (result.hasError())
                 throw HttpExceptionEx(result.getError())
             else {
                 ordersQueueDao.insertAllOrders(result.payload!!.toOrderQueueDataBaseModel())
+                ordersDao.insertAllOrders(result.payload!!.toDataBaseModel())
                 id = result.payload!!.id
             }
 
@@ -64,14 +65,15 @@ class OrdersRepository(private  val ordersDao : OrderDao, private val ordersQueu
 
                 val savedOrder = ordersQueueDao.getById(orderId).value?.get(0)
 
-                var result = CoffeeApi.retrofitService.getOrderByIdAsync(orderId,composeAuthHeader(token)).await()
+                var result = coffeeApi.getOrderByIdAsync(orderId,composeAuthHeader(token)).await()
                 if (result.hasError())
                     throw HttpExceptionEx(result.getError())
                 else {
 
-                    if (savedOrder != null && savedOrder?.toDomainModel() == result.payload!!.toDataBaseModel().toDomainModel()) {
+                    val remoteOrder = result.payload!!.toDataBaseModel().toDomainModel()
+                    if (savedOrder != null && savedOrder?.toDomainModel().statusCode != remoteOrder.statusCode && remoteOrder.statusName?.toLowerCase() == "ready") {
+                        ordersQueueDao.insertAllOrders(result.payload!!.toOrderQueueDataBaseModel())
                         ordersDao.insertAllOrders(result.payload!!.toDataBaseModel())
-                        ordersQueueDao.delete(savedOrder)
                     }
                 }
             }
@@ -79,6 +81,19 @@ class OrdersRepository(private  val ordersDao : OrderDao, private val ordersQueu
         }
         catch (ex:Exception){
             Log.d("OrdersRepository.refreshOrder", ex.message?:"")
+        }
+    }
+
+    suspend fun clearQueueOrder(orderId:Int) {
+        try {
+            withContext(Dispatchers.IO) {
+                val savedOrder = ordersQueueDao.getById(orderId).value?.get(0)
+                savedOrder?.let { ordersQueueDao.delete(it) }
+            }
+
+        }
+        catch (ex:Exception){
+            Log.d("OrdersRepository.clearQueueOrder", ex.message?:"")
         }
     }
 

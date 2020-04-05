@@ -4,12 +4,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import com.office14.coffeedose.database.AddinDao
 import com.office14.coffeedose.domain.Addin
-import com.office14.coffeedose.network.CoffeeApi
+import com.office14.coffeedose.network.CoffeeApiService
 import com.office14.coffeedose.network.HttpExceptionEx
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import javax.inject.Inject
 
-class AddinsRepository(private val addinsDatabaseDao: AddinDao) {
+class AddinsRepository @Inject constructor(private val addinsDatabaseDao: AddinDao, private val coffeeApi : CoffeeApiService) {
 
     val addins: LiveData<List<Addin>> = Transformations.map(addinsDatabaseDao.getAllAddins()){ itDbo ->
         itDbo.map { it.toDomainModel() }
@@ -18,7 +19,7 @@ class AddinsRepository(private val addinsDatabaseDao: AddinDao) {
     suspend fun refreshAddins(){
         /*try {*/
             withContext(Dispatchers.IO){
-                val addinsResponse = CoffeeApi.retrofitService.getAddinsAsync().await()
+                val addinsResponse = coffeeApi.getAddinsAsync().await()
                 if (addinsResponse.hasError())
                     throw HttpExceptionEx(addinsResponse.getError())
                 else

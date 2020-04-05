@@ -1,6 +1,7 @@
-package com.office14.coffeedose.di
+package com.office14.coffeedose.di.orders
 
 import androidx.lifecycle.ViewModel
+import com.office14.coffeedose.di.ViewModelKey
 import com.office14.coffeedose.viewmodels.OrderDetailsViewModel
 import dagger.Binds
 import dagger.Module
