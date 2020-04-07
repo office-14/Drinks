@@ -22,11 +22,12 @@ import { AngularFireAuthModule } from '@angular/fire/auth';
 import { environment } from '../../../environments/environment';
 import { LocalStorageModule } from 'angular-2-local-storage';
 import { of, defer } from 'rxjs';
+import { MockDrinksService } from '../mock-drinks.service';
 
 export class MockTransition {
   params() {
     return {
-      drink_id: 0
+      drink_id: 1
     };
   }
 }
@@ -44,27 +45,17 @@ export class MockOrderService extends OrderService{
   }
 }
 
-export function asyncData<T>(data: T) {
-  return defer(() => Promise.resolve(data));
-}
-
 describe('DrinkDetailComponent', () => {
   let component: DrinkDetailComponent;
   let fixture: ComponentFixture<DrinkDetailComponent>;
 
   beforeEach(async(() => {
-    let test_drink = {
-      sizes: []
-    };
-    let test_addins = [];
-    let test_sizes = {
-      
-    };
-    const drinks_service = jasmine.createSpyObj('DrinksService', ['getDrink', 'getAddins', 'getSizes']);
-    drinks_service.getDrink.and.returnValue( asyncData(test_drink) );
-    drinks_service.getAddins.and.returnValue( asyncData(test_addins) );
-    drinks_service.getSizes.and.returnValue( asyncData(test_sizes) );
+    let mockDrinksServiceFactory = (http_client: HttpClient, http_error_handler_service: HttpErrorHandlerService) => {
+      let mock_drinks_service = new MockDrinksService(http_client, http_error_handler_service);
+      mock_drinks_service.loadDrinks();
 
+      return mock_drinks_service;
+    };
 
     TestBed.configureTestingModule({
       imports: [
@@ -90,7 +81,7 @@ describe('DrinkDetailComponent', () => {
           deps: [HttpClient, HttpErrorHandlerService, AuthService, LocalStorageService, AngularFireAuth, StateService]
         },
         AuthService,
-        { provide: DrinksService, useValue: drinks_service },
+        { provide: DrinksService, useFactory: mockDrinksServiceFactory, deps: [HttpClient, HttpErrorHandlerService] },
         { provide: Transition, useClass: MockTransition }
       ],
       declarations: [ DrinkDetailComponent ]

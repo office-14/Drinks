@@ -4,5 +4,5 @@ export interface Addin {
 	description: string,
 	photo_url: string,
 	price: number,
-	selected: boolean
+	selected?: boolean
 }

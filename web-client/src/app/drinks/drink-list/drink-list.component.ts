@@ -11,19 +11,16 @@ import { Drink } from '../drink';
   styleUrls: ['./drink-list.component.css']
 })
 export class DrinkListComponent implements OnInit {
-  drinks: Drink[];
-
   constructor (
     private service: DrinksService
   ) {}
 
   ngOnInit() {
-    this.getDrinks();
+    this.service.loadDrinks();
   }
 
-  getDrinks(): void {
-    this.service.getDrinks()
-      .subscribe(drinks => (this.drinks = drinks));
+  getDrinks(): Drink[] {
+    return this.service.getDrinks();
   }
 
 }

@@ -20,7 +20,7 @@
       <div *ngIf="drink.sizes">
         <h5>Размер</h5>
         <label>
-	        <select [(ngModel)]="draft_cart_product.size">
+	        <select [(ngModel)]="getDraftCartProduct().size">
 		        <option [value]="" disabled>Выберите размер</option>
 		        <option *ngFor="let size of drink.sizes" [ngValue]="size">
 		          {{ size.name + ' - ' + size.volume }}
@@ -31,7 +31,7 @@
         <div class="grid-x">
           <h5>Добавки</h5>
         </div>
-        <div class="grid-x" *ngFor="let addin of draft_cart_product.addins">
+        <div class="grid-x" *ngFor="let addin of getDraftCartProduct().addins">
           <div class="small-1 cell">
           	<input type="checkbox" [(ngModel)]="addin.selected" [attr.id]="'addin-' + addin.id" [value]="addin.id" [checked]="addin.selected" style="margin-top: 1.5rem;">
           </div>
@@ -51,11 +51,11 @@
             <h5>Количество</h5>
           </div>
           <div class="small-2 cell">
-            <input type="number" placeholder="Укажите кол-во напитков" [(ngModel)]="draft_cart_product.qty" min="1" (change)="change_draft_cart_product_qty()">
+            <input type="number" placeholder="Укажите кол-во напитков" [(ngModel)]="getDraftCartProduct().qty" min="1" (change)="change_draft_cart_product_qty()">
           </div>
         </div>
         <div class="grid-x">
-          <h3>Цена: {{get_selected_price()*draft_cart_product.qty}} ₽</h3>
+          <h3>Цена: {{get_selected_price()*getDraftCartProduct().qty}} ₽</h3>
         </div>
 
         <a href="#" class="button large expanded" (click)="addToCart($event)">В корзину</a>
