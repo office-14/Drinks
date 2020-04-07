@@ -57,12 +57,11 @@ jobs:
       services:
         - docker
       env:
-        global:
-          - GCP_PROJECT_ID=bionic-rock-273013
-          - IMAGE=gcr.io/bionic-rock-273013/drinks-webapi
-          - CLOUD_RUN_SERVICE=drinks-web-api-dev
-          - CLOUD_RUN_REGION=us-central1
-          - CLOUDSDK_CORE_DISABLE_PROMPTS=1 # prevent gcloud from prompting
+        - GCP_PROJECT_ID=bionic-rock-273013
+        - IMAGE=gcr.io/bionic-rock-273013/drinks-webapi
+        - CLOUD_RUN_SERVICE=drinks-web-api-dev
+        - CLOUD_RUN_REGION=us-central1
+        - CLOUDSDK_CORE_DISABLE_PROMPTS=1 # prevent gcloud from prompting
       before_install:
         - openssl aes-256-cbc -K $encrypted_98d237b7dbf4_key -iv $encrypted_98d237b7dbf4_iv -in deploy/google-key.json.enc -out google-key.json -d
         - curl https://sdk.cloud.google.com | bash > /dev/null
