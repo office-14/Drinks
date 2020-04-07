@@ -1,0 +1,17 @@
+{
+  "projects": {
+    "default": "coffeedose-eaef2"
+  },
+  "targets": {
+    "coffeedose-eaef2": {
+      "hosting": {
+        "web-admin": [
+          "web-admin-a6edb"
+        ],
+        "web-client": [
+          "web-client-d4f1d"
+        ]
+      }
+    }
+  }
+}
