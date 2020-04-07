@@ -46,7 +46,7 @@ jobs:
       node_js: 13
       script: ./deploy/build-sites.sh
       deploy:
-        cleanup: true
+        skip_cleanup: true
         provider: firebase
         token:
           secure: 'ftbkjPojl80yH+Fj37L/bJkTFkFMHnzj9f1j9pmvG3w6QGPxcWwXQP8QsxRu7pSH8biMqH/GUtE+Qff6HtgETYtl8mrYgUMOKz0ABFuKZDTx3y2e7kLATxAnRgOGPYD2tWbqaZV1xf0+uaG+XeZwg9Q+22R/9PIceXGOLUtqqgAXzkz9hqFUFeD4hgLuLy7ybdX715qBnMNt8NTbYQCZ6j1TKlQMpbsMhQyz48byhV2cEqQDzVDCKaRZwOHneFvZvM476NYU+QVw7gvROsmB7dV2iO4m5gLfsjd3caHTI0PZFJALvw0LNhah7i7SIYneTz/fvntH4WdSdEQOUjVwUHwwbMiZKf1ksUAOSKSYpWbT8hl9GjqyJrYmgNnotV8n6HlVi/G2Nuoa10Y8M82wZEG2AyWZf+0MG1GT3Iv6KsIPAVcquoPY0ETSe6gwoXUHfi8lTiWoJ41wGOXlDwdYTJFMZkqt2J2gfFMHtjQHag4R0k6/ToOXwLAJzfK4nnU5fM/GudV9Q3mLcUuHNiFp5xgN0dK0leHVA9ommLcpImfvkcGSCFoepBBddl1KscXSXUWDwhrR7hxHa3yPcIsYTPvNTT+bLj6Tt8xIeCU56YSU0v5Ehbucwaf3eKCFkJXnvjccQa7At3NQKGAMKN7ipWbWWYVOTX/BuglRp5m7ryA='
