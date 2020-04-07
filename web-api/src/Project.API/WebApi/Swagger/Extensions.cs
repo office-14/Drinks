@@ -41,7 +41,12 @@ namespace Project.API.WebApi.Swagger
                 c.PreSerializeFilters.Add((swagger, httpReq) =>
                 {
                     swagger.Servers = new List<OpenApiServer> {
-                        new OpenApiServer { Url = $"{httpReq.Scheme}://{httpReq.Host.Value}" } };
+                        // TODO: Had to manually add both HTTP and HTTPS schemes
+                        // because Cloud Run serves HTTPS but requires HTTP.
+                        // May be solved by introducing additional "Local" environment.
+                        new OpenApiServer { Url = $"https://{httpReq.Host.Value}" },
+                        new OpenApiServer { Url = $"http://{httpReq.Host.Value}" }
+                    };
                 });
             });
             app.UseSwaggerUI(c =>

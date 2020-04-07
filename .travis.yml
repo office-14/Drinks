@@ -52,6 +52,40 @@ jobs:
           secure: 'ftbkjPojl80yH+Fj37L/bJkTFkFMHnzj9f1j9pmvG3w6QGPxcWwXQP8QsxRu7pSH8biMqH/GUtE+Qff6HtgETYtl8mrYgUMOKz0ABFuKZDTx3y2e7kLATxAnRgOGPYD2tWbqaZV1xf0+uaG+XeZwg9Q+22R/9PIceXGOLUtqqgAXzkz9hqFUFeD4hgLuLy7ybdX715qBnMNt8NTbYQCZ6j1TKlQMpbsMhQyz48byhV2cEqQDzVDCKaRZwOHneFvZvM476NYU+QVw7gvROsmB7dV2iO4m5gLfsjd3caHTI0PZFJALvw0LNhah7i7SIYneTz/fvntH4WdSdEQOUjVwUHwwbMiZKf1ksUAOSKSYpWbT8hl9GjqyJrYmgNnotV8n6HlVi/G2Nuoa10Y8M82wZEG2AyWZf+0MG1GT3Iv6KsIPAVcquoPY0ETSe6gwoXUHfi8lTiWoJ41wGOXlDwdYTJFMZkqt2J2gfFMHtjQHag4R0k6/ToOXwLAJzfK4nnU5fM/GudV9Q3mLcUuHNiFp5xgN0dK0leHVA9ommLcpImfvkcGSCFoepBBddl1KscXSXUWDwhrR7hxHa3yPcIsYTPvNTT+bLj6Tt8xIeCU56YSU0v5Ehbucwaf3eKCFkJXnvjccQa7At3NQKGAMKN7ipWbWWYVOTX/BuglRp5m7ryA='
         message: 'Travis-CI automated deployment'
 
+    - stage: deploy
+      name: 'Deploy Web API to Google Cloud Run'
+      services:
+        - docker
+      env:
+        global:
+          - GCP_PROJECT_ID=bionic-rock-273013
+          - IMAGE=gcr.io/bionic-rock-273013/drinks-webapi
+          - CLOUD_RUN_SERVICE=drinks-web-api-dev
+          - CLOUD_RUN_REGION=us-central1
+          - CLOUDSDK_CORE_DISABLE_PROMPTS=1 # prevent gcloud from prompting
+      before_install:
+        - openssl aes-256-cbc -K $encrypted_98d237b7dbf4_key -iv $encrypted_98d237b7dbf4_iv -in deploy/google-key.json.enc -out google-key.json -d
+        - curl https://sdk.cloud.google.com | bash > /dev/null
+        - source "$HOME/google-cloud-sdk/path.bash.inc"
+        - gcloud auth activate-service-account --key-file=google-key.json
+        - gcloud auth configure-docker # enable "docker push" to gcr
+        - gcloud config set project "${GCP_PROJECT_ID}"
+        - gcloud components install beta # until Cloud Run is generally available (GA)
+      install: true # no-op
+      before_script:
+        - cd web-api
+      script:
+        - |
+          set -ex;
+          docker build -t "${IMAGE}:${TRAVIS_COMMIT}" -f docker/Dockerfile . && \
+          docker push "${IMAGE}:${TRAVIS_COMMIT}" && \
+          gcloud beta run deploy "${CLOUD_RUN_SERVICE}" \
+            --image="${IMAGE}:${TRAVIS_COMMIT}" \
+            --platform=managed \
+            --region="${CLOUD_RUN_REGION}" \
+            --allow-unauthenticated;
+          set +x
+
     - stage: local docker
       name: 'Local environment deployment test'
       services:

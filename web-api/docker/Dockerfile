@@ -10,6 +10,7 @@ COPY src/. ./src/
 RUN dotnet publish -c Release -o out
 
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1 AS runtime
+COPY docker/gcp-entrypoint.sh /gcp-entrypoint.sh
 WORKDIR /app
 COPY --from=build /app/out ./
-ENTRYPOINT ["dotnet", "Project.API.dll"]
+ENTRYPOINT ["/gcp-entrypoint.sh", "dotnet", "Project.API.dll"]
