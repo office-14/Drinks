@@ -2,7 +2,7 @@ stages:
   - test
   - name: deploy
     if: branch = master
-  - local docker
+  - name: local docker
     if: branch = dev
 
 jobs:
