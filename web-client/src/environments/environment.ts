@@ -17,6 +17,13 @@ export const environment = {
   local_storage:  {
     prefix: 'drinks-office-14',
     storage_type: 'localStorage'
+  },
+  api_urls: {
+    get_drinks: 'http://localhost:5000/api/drinks',
+    get_addins: 'http://localhost:5000/api/add-ins',
+    get_sizes: 'http://localhost:5000/api/drinks/{drink_id}/sizes',
+    post_orders: 'http://localhost:5000/api/orders',
+    get_order: 'http://localhost:5000/api/orders/{order_id}',
   }
 };
 

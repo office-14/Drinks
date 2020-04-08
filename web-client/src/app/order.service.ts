@@ -9,6 +9,7 @@ import { AuthService } from './auth/auth.service';
 import { LocalStorageService } from 'angular-2-local-storage';
 import { AngularFireAuth } from  "@angular/fire/auth";
 import { StateService } from "@uirouter/core";
+import { environment } from '../environments/environment';
 
 
 @Injectable()
@@ -19,6 +20,8 @@ export class OrderService {
 
   private handleError: HandleError;
   private stored_order: Subject<any>;
+  private post_orders_url = environment.api_urls.post_orders;
+  private get_order_url = environment.api_urls.get_order;
 
   constructor(
     protected http: HttpClient,
@@ -83,7 +86,7 @@ export class OrderService {
       })
     };
 
-  	return this.http.post<AjaxResponse<any>>('http://localhost:5000/api/orders', { drinks: order_products }, http_options).pipe(
+  	return this.http.post<AjaxResponse<any>>(this.post_orders_url, { drinks: order_products }, http_options).pipe(
         catchError(this.handleError('create_order')),
         map((ajax_response: AjaxResponse<any>) => ajax_response.payload),
         tap(resp => {
@@ -117,7 +120,7 @@ export class OrderService {
       };
 
 
-      return this.http.get<AjaxResponse<any>>(`http://localhost:5000/api/orders/${this.order.id}`, http_options)
+      return this.http.get<AjaxResponse<any>>(this.get_order_url.replace(/\{order_id\}/gi, this.order.id.toString()), http_options)
         .pipe(
           catchError(this.handleError('check_order_finishing')),
           delay(3000),

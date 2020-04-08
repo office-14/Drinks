@@ -10,11 +10,13 @@ import { Size } from "./size";
 import { AjaxResponse } from "../ajax-response";
 import { HttpErrorHandlerService, HandleError } from '../http-error-handler.service';
 import { DraftCartProduct } from "./draft-cart-product";
+import { environment } from '../../environments/environment';
 
 @Injectable()
 export class DrinksService {
-  drinksUrl = 'http://localhost:5000/api/drinks';
-  addinsUrl = 'http://localhost:5000/api/add-ins';
+  drinksUrl = environment.api_urls.get_drinks;
+  addinsUrl = environment.api_urls.get_addins;
+  get_sizes_url = environment.api_urls.get_sizes;
 
   private handleError: HandleError;
   protected drinks: Drink[] = [];
@@ -55,7 +57,7 @@ export class DrinksService {
   }
 
   getSizes (drink_id: number | string):Observable<Size[]> {
-    return this.http.get<AjaxResponse<Size[]>>(`http://localhost:5000/api/drinks/${drink_id}/sizes`)
+    return this.http.get<AjaxResponse<Size[]>>(this.get_sizes_url.replace(/\{drink_id\}/gi, drink_id.toString()))
     .pipe(
       catchError(this.handleError('getSizes')),
       map((ajax_response: AjaxResponse<Size[]>) => ajax_response.payload),
