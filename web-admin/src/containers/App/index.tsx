@@ -10,14 +10,16 @@ import Admin from 'containers/Admin'
 
 function App() {
   return (
-    <SnackbarProvider maxSnack={1}>
+    <>
       <CssBaseline />
-      <Switch>
-        <Route path={routes.LOGIN} component={Login} />
-        <Route path={routes.LOGOUT} component={Logout} />
-        <SecureRoute component={Admin} />
-      </Switch>
-    </SnackbarProvider>
+      <SnackbarProvider maxSnack={1}>
+        <Switch>
+          <Route path={routes.LOGIN} component={Login} />
+          <Route path={routes.LOGOUT} component={Logout} />
+          <SecureRoute component={Admin} />
+        </Switch>
+      </SnackbarProvider>
+    </>
   )
 }
 

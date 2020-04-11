@@ -6,6 +6,7 @@ import { useSnackbar } from 'notistack'
 
 import { useAuth } from 'auth'
 import { useTranslation } from 'localization'
+import { endpoints } from 'api'
 
 function renderOrderDetails(items: any[]) {
   return <>{items.map(renderOrderItem)}</>
@@ -33,20 +34,17 @@ function BookedOrders() {
 
   async function handleDataUpdate(): Promise<any> {
     const idToken = await user?.getIdToken()
-    const ordersResponse = await fetch(
-      'http://localhost:5000/api/orders/booked',
-      {
-        headers: {
-          Authorization: `Bearer ${idToken}`
-        }
-      }
-    )
+    const ordersResponse = await fetch(endpoints.bookedOrders, {
+      headers: {
+        Authorization: `Bearer ${idToken}`,
+      },
+    })
     const orders = await ordersResponse.json()
     return {
       data: orders.payload.map((o: any, idx: number) => ({
         index: idx + 1,
-        ...o
-      }))
+        ...o,
+      })),
     }
   }
 
@@ -60,15 +58,12 @@ function BookedOrders() {
 
       let response
       try {
-        response = await fetch(
-          `http://localhost:5000/api/orders/${rowData.id}/finish`,
-          {
-            method: 'POST',
-            headers: {
-              Authorization: `Bearer ${idToken}`
-            }
-          }
-        )
+        response = await fetch(endpoints.finishOrder(rowData.id), {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${idToken}`,
+          },
+        })
       } catch (e) {
         notify(e, { variant: 'error' })
         return
@@ -81,7 +76,7 @@ function BookedOrders() {
       }
 
       notify(`Order ${rowData.order_number} was finished`, {
-        variant: 'success'
+        variant: 'success',
       })
 
       handleRefresh()
@@ -105,48 +100,48 @@ function BookedOrders() {
         {
           title: t('bookedOrdersTable.orderNumber'),
           field: 'order_number',
-          width: 150
+          width: 150,
         },
         {
           title: t('bookedOrdersTable.totalPrice'),
           field: 'total_price',
-          render: row => `${row.total_price} ₽`,
-          width: 150
+          render: (row) => `${row.total_price} ₽`,
+          width: 150,
         },
         {
           title: t('bookedOrdersTable.details'),
           field: 'items',
-          render: row => renderOrderDetails(row.items)
-        }
+          render: (row) => renderOrderDetails(row.items),
+        },
       ]}
       data={handleDataUpdate}
       actions={[
         {
           icon: () => <DoneOutline />,
           tooltip: t('bookedOrdersTable.finishOrder'),
-          onClick: handleFinishOrder
+          onClick: handleFinishOrder,
         },
         {
           icon: () => <Refresh />,
           tooltip: t('bookedOrdersTable.refreshData'),
           isFreeAction: true,
-          onClick: handleRefresh
-        }
+          onClick: handleRefresh,
+        },
       ]}
       options={{
         paging: false,
         search: false,
         draggable: false,
         sorting: false,
-        actionsColumnIndex: -1
+        actionsColumnIndex: -1,
       }}
       localization={{
         body: {
-          emptyDataSourceMessage: t('bookedOrdersTable.noRecordsToDisplay')
+          emptyDataSourceMessage: t('bookedOrdersTable.noRecordsToDisplay'),
         },
         header: {
-          actions: t('bookedOrdersTable.actions')
-        }
+          actions: t('bookedOrdersTable.actions'),
+        },
       }}
     />
   )
