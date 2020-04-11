@@ -16,7 +16,6 @@ import { CartService } from '../../cart.service';
 export class DrinkDetailComponent implements OnInit {
   drink: Drink;
   addins: Addin[];
-  selected_test = null;
 
   constructor (
     private drinks_service: DrinksService,

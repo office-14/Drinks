@@ -19,10 +19,10 @@
       <p>{{drink.description}}</p>
       <div *ngIf="drink.sizes">
         <h5>Размер</h5>
-        <label>
-	        <select [(ngModel)]="getDraftCartProduct().size">
+        <label class="sizes__wrapper">
+	        <select [(ngModel)]="getDraftCartProduct().size" class="sizes-select">
 		        <option [value]="" disabled>Выберите размер</option>
-		        <option *ngFor="let size of drink.sizes" [ngValue]="size">
+		        <option *ngFor="let size of drink.sizes" [ngValue]="size" class="size-item__option">
 		          {{ size.name + ' - ' + size.volume }}
 		        </option>
 		      </select>
@@ -31,14 +31,14 @@
         <div class="grid-x">
           <h5>Добавки</h5>
         </div>
-        <div class="grid-x" *ngFor="let addin of getDraftCartProduct().addins">
+        <div class="grid-x addins-item" *ngFor="let addin of getDraftCartProduct().addins">
           <div class="small-1 cell">
           	<input type="checkbox" [(ngModel)]="addin.selected" [attr.id]="'addin-' + addin.id" [value]="addin.id" [checked]="addin.selected" style="margin-top: 1.5rem;">
           </div>
           <div class="small-5 cell">
             <label [attr.for]="'addin-' + addin.id" class="middle">
               <img src="{{addin.photo_url}}" width="50"/>
-              <span style="margin-left: 10px;">{{addin.name}}</span>
+              <span style="margin-left: 10px;" class="addins-item__name">{{addin.name}}</span>
             </label>
             
           </div>
@@ -51,14 +51,14 @@
             <h5>Количество</h5>
           </div>
           <div class="small-2 cell">
-            <input type="number" placeholder="Укажите кол-во напитков" [(ngModel)]="getDraftCartProduct().qty" min="1" (change)="change_draft_cart_product_qty()">
+            <input name="qty" type="number" placeholder="Укажите кол-во напитков" [(ngModel)]="getDraftCartProduct().qty" min="" class="drinks__qty-input" (change)="change_draft_cart_product_qty()">
           </div>
         </div>
         <div class="grid-x">
-          <h3>Цена: {{get_selected_price()*getDraftCartProduct().qty}} ₽</h3>
+          <h3 class="price">Цена: <span class="price__value">{{get_selected_price()*getDraftCartProduct().qty}}</span> ₽</h3>
         </div>
 
-        <a href="#" class="button large expanded" (click)="addToCart($event)">В корзину</a>
+        <a href="#" class="button large expanded add-to-cart-button" (click)="addToCart($event)">В корзину</a>
       </div>
     </div>
   </div>
