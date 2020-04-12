@@ -28,7 +28,9 @@ export class CartComponent implements OnInit {
   }
 
   remove_from_cart(index) {
-  	this.cart_service.remove_product(index);
+    if (this.cart_service.remove_product(index)) {
+      this.message_service.show_success('Товар удалён из корзины!');
+    }
   }
 
   get_total_price() {
@@ -41,8 +43,13 @@ export class CartComponent implements OnInit {
 
   create_order() {
       if (this.auth_service.check_auth()) {
-        if (!this.if_order_exist()) {
-          this.cart_service.create_order();
+        if (!this.order_service.if_order_exist()) {
+          this.cart_service.create_order().subscribe(
+            resp => {
+              this.state_service.go('order');
+              this.message_service.show_success('Заказ оформлен!');
+            }
+          );
         } else {
           this.message_service.show_error('Нельзя создать новый заказ, пока есть текущий!');
         }

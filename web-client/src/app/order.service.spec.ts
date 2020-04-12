@@ -25,10 +25,9 @@ export class MockOrderService extends OrderService{
     httpErrorHandler: HttpErrorHandlerService,
     protected auth_service: AuthService,
     protected local_storage_service: LocalStorageService,
-    protected afAuth: AngularFireAuth,
     protected state_service: StateService
   ) {
-     super(http, httpErrorHandler, auth_service, local_storage_service, afAuth, state_service);
+     super(http, httpErrorHandler, auth_service, local_storage_service, state_service);
   }
 }
 
@@ -56,10 +55,10 @@ describe('OrderService', () => {
     		MessageService,
     		{
           provide: OrderService,
-          useFactory: (http: HttpClient, httpErrorHandler: HttpErrorHandlerService, auth_service: AuthService, local_storage_service: LocalStorageService, afAuth: AngularFireAuth, state_service: StateService) => {
-            return new MockOrderService(http, httpErrorHandler, auth_service, local_storage_service, afAuth, state_service);
+          useFactory: (http: HttpClient, httpErrorHandler: HttpErrorHandlerService, auth_service: AuthService, local_storage_service: LocalStorageService, state_service: StateService) => {
+            return new MockOrderService(http, httpErrorHandler, auth_service, local_storage_service, state_service);
           },
-          deps: [HttpClient, HttpErrorHandlerService, AuthService, LocalStorageService, AngularFireAuth, StateService]
+          deps: [HttpClient, HttpErrorHandlerService, AuthService, LocalStorageService, StateService]
         }
     	]
     });

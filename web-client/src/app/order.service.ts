@@ -7,7 +7,6 @@ import { Order } from './order/order';
 import { HttpErrorHandlerService, HandleError } from './http-error-handler.service';
 import { AuthService } from './auth/auth.service';
 import { LocalStorageService } from 'angular-2-local-storage';
-import { AngularFireAuth } from  "@angular/fire/auth";
 import { StateService } from "@uirouter/core";
 import { environment } from '../environments/environment';
 
@@ -28,12 +27,11 @@ export class OrderService {
     httpErrorHandler: HttpErrorHandlerService,
     protected auth_service: AuthService,
     protected local_storage_service: LocalStorageService,
-    protected afAuth: AngularFireAuth,
     protected state_service: StateService
   ) {
     this.stored_order = new Subject;
     this.handleError = httpErrorHandler.createHandleError('DrinksService');
-    this.afAuth.authState.subscribe(user => {
+    this.auth_service.auth_state().subscribe(user => {
       if (user) {
         if (this.local_storage_service.get('order')) {
           this.set_order(this.local_storage_service.get('order'));
@@ -41,6 +39,7 @@ export class OrderService {
         this.stored_order.next(this.if_order_exist());
       } else {
         this.clear_order();
+
         this.state_service.go('drinks');
       }
     });

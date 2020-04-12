@@ -13,25 +13,25 @@
   <div class="grid-x">
     <div>
       <h1>Корзина</h1>
-      <div *ngIf="get_products_qty() == 0">Нет товаров</div>
+      <div *ngIf="get_products_qty() == 0" class="no-products-text">Нет товаров</div>
       <div *ngIf="get_products_qty() > 0">
-        <div class="media-object stack-for-small" *ngFor="let product of get_products(); index as i">
+        <div class="media-object stack-for-small product-item" *ngFor="let product of get_products(); index as i">
           <div class="media-object-section">
-            <img class="thumbnail" src="{{product.drink_image}}" width="200">
+            <img class="product-item__image thumbnail" src="{{product.drink_image}}" width="200">
           </div>
           <div class="media-object-section">
             <h5>{{product.drink_name}}</h5>
-            <p>Размер: {{product.size_volume}}</p>
-            <p>Добавки: <span *ngFor="let addin of product.addins">{{addin.name}}</span></p>
+            <p class="product-item__size-volume">Размер: {{product.size_volume}}</p>
+            <p>Добавки: <span *ngFor="let addin of product.addins" class="product-item-addins__name">{{addin.name}}</span></p>
             <p>Количество:</p>
-            <input type="number" min="1" [(ngModel)]="product.qty" ng-change="change_product_qty(product)">
-            <p *ngIf="product.qty > 0">Цена: {{product.price * product.qty}} ₽</p>
-            <button class="button" (click)="remove_from_cart(i)">Удалить</button>
+            <input type="number" min="1" [(ngModel)]="product.qty" ng-change="change_product_qty(product)" class="product-item-addins__qty">
+            <p *ngIf="product.qty > 0" class="product-item__price">Цена: {{product.price * product.qty}} ₽</p>
+            <button class="button product-item__remove-button" (click)="remove_from_cart(i)">Удалить</button>
           </div>
         </div>
-        <h4>Сумма заказа: {{get_total_price()}} ₽</h4>
-        <button class="button" (click)="create_order()" *ngIf="!if_order_exist()">Оформить заказ</button>
-        <p *ngIf="if_order_exist()">У вас уже есть оформленный заказ. Дождитесь его завершения, прежде, чем оформлять новый.</p>
+        <h4 class="total-price">Сумма заказа: {{get_total_price()}} ₽</h4>
+        <button class="button create-order-button" (click)="create_order()" *ngIf="!if_order_exist()">Оформить заказ</button>
+        <p class="not-allow-create-order-text" *ngIf="if_order_exist()">У вас уже есть оформленный заказ. Дождитесь его завершения, прежде, чем оформлять новый.</p>
       </div>
     </div>
   </div>

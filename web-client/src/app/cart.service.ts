@@ -2,9 +2,8 @@ import { Injectable } from '@angular/core';
 import { MessageService } from './message.service';
 import { OrderService } from './order.service';
 import { AngularFireAuth } from  "@angular/fire/auth";
-import { StateService } from "@uirouter/core";
 import { Observable } from 'rxjs';
-import { map, catchError } from 'rxjs/operators';
+import { map, catchError, tap } from 'rxjs/operators';
 import { LocalStorageService } from 'angular-2-local-storage';
 
 @Injectable()
@@ -14,14 +13,11 @@ export class CartService {
   order_creating_started = false;
 
   constructor(
-    private message_serivce: MessageService,
+    private message_service: MessageService,
     private order_service: OrderService,
     private afAuth: AngularFireAuth,
-    private state_service: StateService,
     private local_storage_service: LocalStorageService
   ) {
-  	this.cart_products = [];
-
     if (this.local_storage_service.get('cart_products')) {
       this.cart_products = this.local_storage_service.get('cart_products');
     }
@@ -29,7 +25,7 @@ export class CartService {
     this.order_service.get_stored_order().subscribe((is_order_exist) => {
       if (is_order_exist) {
         if (this.order_creating_started) {
-          this.message_serivce.show_error('Не аозможно создать заказ, так как есть текущий!');
+          this.message_service.show_error('Не аозможно создать заказ, так как есть текущий!');
         }
       } else {
         if (this.order_creating_started) {
@@ -69,7 +65,8 @@ export class CartService {
   		this.cart_products.push(cart_product);
   	}
     this.local_storage_service.set('cart_products', this.cart_products);
-    this.message_serivce.show_success('Товар успешно добавлен в корзину!');
+    
+    return true;
   }
 
   get_products() {
@@ -87,8 +84,10 @@ export class CartService {
   	if (index > -1) {
       this.cart_products.splice(index, 1);
       this.local_storage_service.set('cart_products', this.cart_products);
-      this.message_serivce.show_success('Товар удалён из корзины!');
+
+      return true;
 	  }
+    return false;
   }
 
   get_total_price() {
@@ -98,12 +97,10 @@ export class CartService {
     }, 0);
   }
 
-  create_order() {
-    this.order_service.create_order(this.cart_products).subscribe(
-     (data: any) => {
+  create_order(): Observable<any> {
+    return this.order_service.create_order(this.cart_products).pipe(
+     tap((data: any) => {
         this.clear_cart();
-        this.state_service.go('order');
-        this.message_serivce.show_success('Заказ оформлен!');
-      });    
+      }));    
   }
 }

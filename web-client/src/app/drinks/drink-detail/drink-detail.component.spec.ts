@@ -24,6 +24,7 @@ import { of, defer } from 'rxjs';
 import { MockDrinksService } from '../mock-drinks.service';
 import { By } from '@angular/platform-browser';
 import { FormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 export class MockTransition {
   params() {
@@ -37,6 +38,10 @@ describe('DrinkDetailComponent', () => {
   let component: DrinkDetailComponent;
   let cart_service: CartService;
   let fixture: ComponentFixture<DrinkDetailComponent>;
+
+  const message_service = jasmine.createSpyObj('MessageService', ['show_success', 'show_error']);
+  message_service.show_success.and.returnValue(true);
+  message_service.show_error.and.returnValue(false);
 
   beforeEach(async(() => {
     let mockDrinksServiceFactory = (http_client: HttpClient, http_error_handler_service: HttpErrorHandlerService) => {
@@ -56,11 +61,12 @@ describe('DrinkDetailComponent', () => {
         AngularFireModule.initializeApp(environment.firebase),
         AngularFireAuthModule,
         AppRoutingModule,
-        FormsModule
+        FormsModule,
+        BrowserAnimationsModule
       ],
       providers: [
         HttpErrorHandlerService,
-        MessageService,
+        { provide: MessageService, useValue: message_service },
         CartService,
         { provide: LocalStorageService, useValue: local_storage_service },
         OrderService,

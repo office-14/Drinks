@@ -51,7 +51,7 @@
             <h5>Количество</h5>
           </div>
           <div class="small-2 cell">
-            <input name="qty" type="number" placeholder="Укажите кол-во напитков" [(ngModel)]="getDraftCartProduct().qty" min="" class="drinks__qty-input" (change)="change_draft_cart_product_qty()">
+            <input name="qty" type="number" placeholder="Укажите кол-во напитков" [(ngModel)]="getDraftCartProduct().qty" min="1" class="drinks__qty-input" (change)="change_draft_cart_product_qty()">
           </div>
         </div>
         <div class="grid-x">

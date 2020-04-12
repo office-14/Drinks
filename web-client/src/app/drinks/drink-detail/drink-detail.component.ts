@@ -7,6 +7,7 @@ import { Addin } from "../addin";
 import { Observable } from 'rxjs';
 
 import { CartService } from '../../cart.service';
+import { MessageService } from '../../message.service';
 
 @Component({
   selector: 'app-drink-detail',
@@ -18,6 +19,7 @@ export class DrinkDetailComponent implements OnInit {
   addins: Addin[];
 
   constructor (
+    private message_service: MessageService,
     private drinks_service: DrinksService,
     private trans: Transition,
     private cart_service: CartService
@@ -45,7 +47,7 @@ export class DrinkDetailComponent implements OnInit {
 
   public addToCart(event) {
     let draft_cart_product = this.drinks_service.getDraftCartProduct();
-  	this.cart_service.add_product({
+  	if (this.cart_service.add_product({
   		drink_id: this.drink.id,
   		drink_name: this.drink.name,
   		drink_image: this.drink.photo_url,
@@ -54,7 +56,9 @@ export class DrinkDetailComponent implements OnInit {
   		addins: draft_cart_product.addins.filter(addin => addin.selected == true),
   		price: this.get_selected_price(),
   		qty: draft_cart_product.qty
-  	});
+  	})) {
+      this.message_service.show_success('Товар успешно добавлен в корзину!');
+    }
   }
 
   public change_draft_cart_product_qty() {
