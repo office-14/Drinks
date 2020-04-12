@@ -14,11 +14,15 @@ import androidx.lifecycle.HasDefaultViewModelProviderFactory
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 import com.coffeedose.R
 import com.coffeedose.databinding.FragmentOrderAwaitingBinding
 import com.office14.coffeedose.di.InjectingSavedStateViewModelFactory
 import com.office14.coffeedose.extensions.setBooleanVisibility
+import com.office14.coffeedose.ui.Adapters.OrderAwaitingAdapter
 import com.office14.coffeedose.viewmodels.MenuInfoViewModel
 import com.office14.coffeedose.viewmodels.OrderAwaitingViewModel
 import dagger.android.support.DaggerFragment
@@ -50,13 +54,25 @@ class OrderAwaitingFragment : DaggerFragment(), HasDefaultViewModelProviderFacto
 
         initNavigation()
 
+        initRecyclerView(binding.rvOrderAwaitingDetails)
+
         return binding.root
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        //val viewModelFactory = defaultViewModelFactory.create(this)
-        //viewModel = ViewModelProvider(this,viewModelFactory).get(OrderAwaitingViewModel::class.java)
+    private  fun initRecyclerView( recyclerView: RecyclerView){
+        val rvAdapter = OrderAwaitingAdapter()
+
+        val dividerDecor = DividerItemDecoration(this.context, DividerItemDecoration.VERTICAL)
+
+        with(recyclerView){
+            adapter = rvAdapter
+            layoutManager = LinearLayoutManager(this.context)
+            addItemDecoration(dividerDecor)
+        }
+
+        viewModel.orderDetails.observe(viewLifecycleOwner, Observer {
+            it?.let { rvAdapter.setSource(it) }
+        })
     }
 
 

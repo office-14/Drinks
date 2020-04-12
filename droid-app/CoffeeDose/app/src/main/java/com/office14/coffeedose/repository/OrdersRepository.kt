@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Transformations
 import com.office14.coffeedose.database.OrderDao
+import com.office14.coffeedose.database.OrderDbo
 import com.office14.coffeedose.database.OrdersQueueDao
 import com.office14.coffeedose.domain.Order
 import com.office14.coffeedose.domain.OrderDetailFull
@@ -19,6 +20,12 @@ import javax.inject.Singleton
 
 @Singleton
 class OrdersRepository @Inject constructor(private  val ordersDao : OrderDao, private val ordersQueueDao : OrdersQueueDao, private val coffeeApi : CoffeeApiService) {
+
+    fun getCurrentQueueOrderNormal() : Order? {
+        val list = ordersQueueDao.getAllNormal()
+        if (list.isNullOrEmpty()) return null
+        return list[0].toDomainModel()
+    }
 
     fun getOrderById(orderId:Int) = Transformations.map(ordersDao.getById(orderId)){ itDbo ->
         itDbo.map { it.toDomainModel() }

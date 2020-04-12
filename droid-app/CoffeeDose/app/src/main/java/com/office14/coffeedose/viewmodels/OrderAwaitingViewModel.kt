@@ -2,19 +2,19 @@ package com.office14.coffeedose.viewmodels
 
 import android.app.Application
 import androidx.lifecycle.*
-import com.office14.coffeedose.database.CoffeeDatabase
+import com.coffeedose.BuildConfig
 import com.office14.coffeedose.domain.Order
+import com.office14.coffeedose.extensions.mutableLiveData
+import com.office14.coffeedose.repository.OrderDetailsRepository
 import com.office14.coffeedose.repository.OrdersRepository
 import com.office14.coffeedose.repository.PreferencesRepository
-import com.squareup.inject.assisted.Assisted
-import com.squareup.inject.assisted.AssistedInject
 import kotlinx.coroutines.*
 import javax.inject.Inject
 
-class OrderAwaitingViewModel @Inject constructor(application : Application, private val ordersRepository : OrdersRepository) : AndroidViewModel(application) {
+class OrderAwaitingViewModel @Inject constructor(application : Application, private val ordersRepository : OrdersRepository, private val ordersDetailsRepository : OrderDetailsRepository) : AndroidViewModel(application) {
 
 
-    //private val orderId = savedStateHandle.get<Int>("orderId") ?: -1
+    private var orderId = mutableLiveData(-1)
 
     //private lateinit var
 
@@ -24,6 +24,10 @@ class OrderAwaitingViewModel @Inject constructor(application : Application, priv
         if (it.isNotEmpty()) return@map it[0]
         return@map null
     }*/
+
+    val orderDetails = Transformations.map(orderId){
+        return@map ordersDetailsRepository.getOrderDetailsByOrderId(it).value
+    }
 
     val order : LiveData<Order> = Transformations.map(ordersRepository.getCurrentQueueOrder()) {
         if (it != null) {
@@ -36,10 +40,10 @@ class OrderAwaitingViewModel @Inject constructor(application : Application, priv
     }
 
     init {
-        //longPollingOrder(order.)
+        //initOrderId()
 
-        val queueOrders = ordersRepository.getCurrentQueueOrder()
-        val orderId = queueOrders.value?.id
+        //val queueOrders = ordersRepository.getCurrentQueueOrder()
+        //val orderId = queueOrders.value?.id
     }
 
     private val _navigateToCoffeeList = MutableLiveData<Boolean>()
@@ -51,13 +55,16 @@ class OrderAwaitingViewModel @Inject constructor(application : Application, priv
 
     private val viewModelScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
-    private fun longPollingOrder(orderId : Int){
+    private fun longPollingOrder(_orderId : Int){
 
         isPolling = true
 
         val job = viewModelScope.launch {
+
+            orderId.value = getOrderId()
+
             while (isActive) {
-                ordersRepository.refreshOrder(orderId, PreferencesRepository.getIdToken())
+                ordersRepository.refreshOrder(_orderId, PreferencesRepository.getIdToken())
             }
         }
 
@@ -68,8 +75,22 @@ class OrderAwaitingViewModel @Inject constructor(application : Application, priv
                 isPolling = false
             }
         })
+    }
 
+    suspend fun getOrderId() : Int{
+        var result = -1
+        withContext(Dispatchers.IO) {
+            val order = ordersRepository.getCurrentQueueOrderNormal()
+            result = order!!.id
+        }
+        return result
+    }
 
+    private fun initOrderId(){
+        viewModelScope.launch {
+            val order = ordersRepository.getCurrentQueueOrderNormal()
+            order?.let { orderId.value = it.id }
+        }
     }
 
     fun approve(){

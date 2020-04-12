@@ -15,6 +15,14 @@
         android:background="@color/color_primary_light"
         tools:context="com.office14.coffeedose.ui.OrderAwaitingFragment">
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_order_awaiting_details"
+            android:background="@drawable/bg_round_border_with_solid"
+            android:elevation="@dimen/spacing_tiny_4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tv_order_status"
             style="@style/Base.TextView"

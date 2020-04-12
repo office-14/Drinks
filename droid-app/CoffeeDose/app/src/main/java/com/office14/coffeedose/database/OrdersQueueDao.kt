@@ -7,6 +7,9 @@ import androidx.room.*
 interface OrdersQueueDao{
 
     @Query("select * from orders_queue")
+    fun getAllNormal() : List<OrderQueueDbo>
+
+    @Query("select * from orders_queue")
     fun getAll() : LiveData<List<OrderQueueDbo>>
 
     @Query("select * from orders_queue where id = :orderId")
