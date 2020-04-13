@@ -7,7 +7,7 @@ import { tap } from 'rxjs/operators';
 export class MockOrderService extends OrderService{
   private mock_order = {
     "id": 1,
-    "status_code": "1",
+    "status_code": "COOKING",
     "status_name": "COOKING",
     "order_number": "ORD-1",
     "total_price": 1234,

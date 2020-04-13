@@ -26,17 +26,14 @@ describe('CartComponent', () => {
   let router: StateService;
 
   const message_service = jasmine.createSpyObj('MessageService', ['show_success', 'show_error']);
-  message_service.show_success.and.returnValue(true);
-  message_service.show_error.and.returnValue(false);
-
   const auth_service = jasmine.createSpyObj('AuthService', ['check_auth', 'get_access_token', 'auth_state']);
-  auth_service.check_auth.and.returnValue(true);
-  auth_service.get_access_token.and.returnValue('234');
-  auth_service.auth_state.and.returnValue(of(true));
-
   const state_service = jasmine.createSpyObj('StateService', ['go']);
 
   beforeEach(async(() => {
+    auth_service.check_auth.and.returnValue(true);
+    auth_service.get_access_token.and.returnValue('test_token');
+    auth_service.auth_state.and.returnValue(of(true));
+
     TestBed.configureTestingModule({
       imports: [
         AppRoutingModule,

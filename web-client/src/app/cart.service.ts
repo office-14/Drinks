@@ -101,6 +101,6 @@ export class CartService {
     return this.order_service.create_order(this.cart_products).pipe(
      tap((data: any) => {
         this.clear_cart();
-      }));    
+     }));    
   }
 }
