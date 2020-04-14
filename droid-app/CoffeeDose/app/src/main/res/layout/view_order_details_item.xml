@@ -2,6 +2,7 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:background="@drawable/bg_round_border_with_solid"
+    android:id="@+id/rl_order_details_root"
     android:elevation="@dimen/spacing_tiny_4"
     android:layout_marginBottom="@dimen/spacing_small_8"
     android:layout_width="match_parent"

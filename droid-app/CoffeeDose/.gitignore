@@ -24,8 +24,8 @@ gradlew.bat
 /.idea/assetWizardSettings.xml
 
 app/libs
-app/src/test/
-app/src/androidTest/
+# app/src/test/
+# app/src/androidTest/
 
 # Signing files
 .signing/
