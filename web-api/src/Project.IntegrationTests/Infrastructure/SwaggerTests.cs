@@ -1,27 +1,26 @@
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.Testing;
-using Project.API.WebApi;
 using Project.API.WebApi.Swagger;
+using Project.IntegrationTests.Configuration;
 using Xunit;
 
 namespace Project.IntegrationTests.Infrastructure
 {
     public class SwaggerTests
-        : IClassFixture<WebApplicationFactory<Startup>>
+        : IClassFixture<ApiWebApplicationFactory>
     {
-        private readonly WebApplicationFactory<Startup> factory;
+        private readonly ApiWebApplicationFactory factory;
 
-        public SwaggerTests(WebApplicationFactory<Startup> factory)
+        public SwaggerTests(ApiWebApplicationFactory factory)
         {
             this.factory = factory;
         }
 
         [Fact]
-        public async Task Swagger_UI_page_should_be_accessible()
+        public async Task Swagger_UI_page_should_be_accessible_for_anonymous_user()
         {
-            var client = factory.CreateClient();
+            var client = factory.CreateAnonymous();
 
-            var response = await client.GetAsync("swagger");
+            var response = await client.GetAsync("swagger/index.html");
 
             response.EnsureSuccessStatusCode();
             Assert.Equal("text/html; charset=utf-8",
@@ -31,15 +30,14 @@ namespace Project.IntegrationTests.Infrastructure
         [Theory]
         [InlineData(AvailableDocuments.Ordering)]
         [InlineData(AvailableDocuments.Servicing)]
-        public async Task Swagger_API_page_should_be_accessible(string apiPage)
+        [InlineData(AvailableDocuments.Infrastructure)]
+        public async Task Swagger_API_page_should_be_accessible_for_anonymous_user(string apiPage)
         {
-            var client = factory.CreateClient();
+            var client = factory.CreateAnonymous();
 
             var response = await client.GetAsync($"swagger/{apiPage}/swagger.json");
 
-            response.EnsureSuccessStatusCode();
-            Assert.Equal("application/json; charset=utf-8",
-                response.Content.Headers.ContentType.ToString());
+            response.EnsureSuccessResponse();
         }
     }
 }

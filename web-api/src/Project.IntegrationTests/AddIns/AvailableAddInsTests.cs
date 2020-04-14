@@ -1,40 +1,32 @@
 using System.Collections.Generic;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Project.API.Ordering.Domain.Drinks;
-using Project.API.WebApi;
+using Project.IntegrationTests.Configuration;
 using Xunit;
 
 namespace Project.IntegrationTests.AddIns
 {
     public class AvailableAddInsTests
-        : IClassFixture<WebApplicationFactory<Startup>>
+        : IClassFixture<ApiWebApplicationFactory>
     {
-        private static readonly string AvailableAddInsUrl = "api/add-ins";
+        private readonly ApiWebApplicationFactory factory;
 
-        private readonly WebApplicationFactory<Startup> factory;
-
-        public AvailableAddInsTests(WebApplicationFactory<Startup> factory)
+        public AvailableAddInsTests(ApiWebApplicationFactory factory)
         {
             this.factory = factory;
         }
 
         [Fact]
-        public async Task When_there_are_add_ins_Then_return_them_all()
+        public async Task AddIns_are_available_for_anonymous_user()
         {
-            var client = factory.CreateClient();
+            var client = factory.CreateAnonymous();
 
-            var response = await client.GetAsync(AvailableAddInsUrl);
+            var response = await client.GetAsync("api/add-ins");
 
-            response.EnsureSuccessStatusCode();
-            Assert.Equal("application/json; charset=utf-8",
-                response.Content.Headers.ContentType.ToString());
+            response.EnsureSuccessResponse();
         }
 
         [Fact]
@@ -48,16 +40,11 @@ namespace Project.IntegrationTests.AddIns
                         services.AddSingleton<IAddInsRepository, FailedAddInsRepository>();
                     });
                 })
-                .CreateClient();
+                .CreateAnonymous();
 
-            var response = await client.GetAsync(AvailableAddInsUrl);
+            var response = await client.GetAsync("api/add-ins");
 
-            Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
-            Assert.Equal("application/problem+json; charset=utf-8",
-                response.Content.Headers.ContentType.ToString());
-            var parsedResponse = await response.Parse<ProblemDetails>();
-            Assert.Equal(StatusCodes.Status500InternalServerError, parsedResponse.Status);
-            Assert.NotEmpty(parsedResponse.Title);
+            await response.EnsureServerError();
         }
 
         private class FailedAddInsRepository : IAddInsRepository

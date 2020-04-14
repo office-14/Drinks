@@ -1,40 +1,32 @@
 using System.Collections.Generic;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.DependencyInjection;
 using Project.API.Ordering.Application.DrinkDetails;
-using Project.API.WebApi;
+using Project.IntegrationTests.Configuration;
 using Xunit;
 
 namespace Project.IntegrationTests.Drinks
 {
     public class AvailableDrinksTests
-        : IClassFixture<WebApplicationFactory<Startup>>
+        : IClassFixture<ApiWebApplicationFactory>
     {
-        private static readonly string AvailableDrinksUrl = "api/drinks";
+        private readonly ApiWebApplicationFactory factory;
 
-        private readonly WebApplicationFactory<Startup> factory;
-
-        public AvailableDrinksTests(WebApplicationFactory<Startup> factory)
+        public AvailableDrinksTests(ApiWebApplicationFactory factory)
         {
             this.factory = factory;
         }
 
         [Fact]
-        public async Task When_there_are_drinks_Then_return_them_all()
+        public async Task Drinks_are_available_for_anonymous_user()
         {
-            var client = factory.CreateClient();
+            var client = factory.CreateAnonymous();
 
-            var response = await client.GetAsync(AvailableDrinksUrl);
+            var response = await client.GetAsync("api/drinks");
 
-            response.EnsureSuccessStatusCode();
-            Assert.Equal("application/json; charset=utf-8",
-                response.Content.Headers.ContentType.ToString());
+            response.EnsureSuccessResponse();
         }
 
         [Fact]
@@ -48,16 +40,11 @@ namespace Project.IntegrationTests.Drinks
                         services.AddSingleton<IDrinkDetailsRepository, FailedDrinksRepository>();
                     });
                 })
-                .CreateClient();
+                .CreateAnonymous();
 
-            var response = await client.GetAsync(AvailableDrinksUrl);
+            var response = await client.GetAsync("api/drinks");
 
-            Assert.Equal(HttpStatusCode.InternalServerError, response.StatusCode);
-            Assert.Equal("application/problem+json; charset=utf-8",
-                response.Content.Headers.ContentType.ToString());
-            var parsedResponse = await response.Parse<ProblemDetails>();
-            Assert.Equal(StatusCodes.Status500InternalServerError, parsedResponse.Status);
-            Assert.NotEmpty(parsedResponse.Title);
+            await response.EnsureServerError();
         }
 
         private class FailedDrinksRepository : IDrinkDetailsRepository

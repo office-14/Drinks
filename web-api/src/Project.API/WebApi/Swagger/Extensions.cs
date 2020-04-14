@@ -15,6 +15,8 @@ namespace Project.API.WebApi.Swagger
                     new OpenApiInfo { Title = "Drinks Ordering API", Version = "v1" });
                 c.SwaggerDoc(AvailableDocuments.Servicing,
                     new OpenApiInfo { Title = "Drinks Servicing API", Version = "v1" });
+                c.SwaggerDoc(AvailableDocuments.Infrastructure,
+                    new OpenApiInfo { Title = "Drinks Infrastructure API", Version = "v1" });
 
                 c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
                 {
@@ -55,6 +57,8 @@ namespace Project.API.WebApi.Swagger
                     "Drinks Ordering API v1");
                 c.SwaggerEndpoint($"/swagger/{AvailableDocuments.Servicing}/swagger.json",
                     "Drinks Servicing API v1");
+                c.SwaggerEndpoint($"/swagger/{AvailableDocuments.Infrastructure}/swagger.json",
+                    "Drinks Infrastructure API v1");
             });
 
             return app;
