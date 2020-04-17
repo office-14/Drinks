@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Project.API.Ordering.Domain.Users;
 using Project.API.Servicing.Application.BookedOrders;
 using Project.API.WebApi.Endpoints.Shared;
 using Project.API.WebApi.Swagger;
@@ -12,7 +13,7 @@ using Project.API.WebApi.Swagger;
 namespace Project.API.WebApi.Endpoints.Servicing.BookedOrders
 {
     [ApiExplorerSettings(GroupName = AvailableDocuments.Servicing)]
-    [Authorize]
+    [Authorize(Roles = Role.Administrator)]
     public class BookedOrdersController : ControllerBase
     {
         private readonly IBookedOrdersRepository bookedOrdersRepository;

@@ -26,7 +26,7 @@ namespace Project.IntegrationTests.AddIns
 
             var response = await client.GetAsync("api/add-ins");
 
-            response.EnsureSuccessResponse();
+            response.EnsureSuccess();
         }
 
         [Fact]

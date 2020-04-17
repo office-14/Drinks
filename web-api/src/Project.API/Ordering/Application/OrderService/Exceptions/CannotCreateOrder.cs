@@ -29,5 +29,10 @@ namespace Project.API.Ordering.Application.OrderService.Exceptions
         {
             return new CannotCreateOrder($"Cannot add add-in with id='{addInId.Value}' because it doesn't exist");
         }
+
+        public static CannotCreateOrder BecauseUserAlreadyHasUnfinishedOrder()
+        {
+            return new CannotCreateOrder($"Cannot create new order because user already has order in-progress");
+        }
     }
 }

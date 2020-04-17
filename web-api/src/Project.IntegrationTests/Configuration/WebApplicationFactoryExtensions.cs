@@ -1,5 +1,7 @@
+using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text.Json;
 using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace Project.IntegrationTests.Configuration
@@ -9,29 +11,34 @@ namespace Project.IntegrationTests.Configuration
         internal static HttpClient CreateAnonymous<T>(this WebApplicationFactory<T> factory) where T : class
             => factory.DefaultApiClient();
 
-        internal static HttpClient CreateAlice<T>(this WebApplicationFactory<T> factory) where T : class
+        internal static HttpClient CreateClientUser<T>(this WebApplicationFactory<T> factory) where T : class
         {
             var client = factory.DefaultApiClient();
 
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(TestAuthHandler.TestScheme, "Alice");
+            var jsonCredentials = JsonSerializer.Serialize(new TestAuthHandler.Credentials
+            {
+                Id = Guid.NewGuid().ToString(),
+                IsAdmin = false
+            });
+
+            client.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue(TestAuthHandler.TestScheme, jsonCredentials);
 
             return client;
         }
 
-        internal static HttpClient CreateBob<T>(this WebApplicationFactory<T> factory) where T : class
+        internal static HttpClient CreateAdminUser<T>(this WebApplicationFactory<T> factory) where T : class
         {
             var client = factory.DefaultApiClient();
 
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(TestAuthHandler.TestScheme, "Bob");
+            var jsonCredentials = JsonSerializer.Serialize(new TestAuthHandler.Credentials
+            {
+                Id = Guid.NewGuid().ToString(),
+                IsAdmin = true
+            });
 
-            return client;
-        }
-
-        internal static HttpClient CreateAdminZod<T>(this WebApplicationFactory<T> factory) where T : class
-        {
-            var client = factory.DefaultApiClient();
-
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue(TestAuthHandler.TestScheme, "Zod");
+            client.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue(TestAuthHandler.TestScheme, jsonCredentials);
 
             return client;
         }

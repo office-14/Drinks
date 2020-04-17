@@ -14,7 +14,10 @@ namespace Project.API.Infrastructure.Notifications
 
         public Task Handle(OrderIsCreated notification, CancellationToken cancellationToken)
         {
-            notifyableOrders[notification.OrderId] = notification.Client;
+            lock (notifyableOrders)
+            {
+                notifyableOrders[notification.OrderId] = notification.Client;
+            }
 
             return Task.CompletedTask;
         }

@@ -21,7 +21,7 @@ namespace Project.IntegrationTests.Drinks
 
             var response = await client.GetAsync("api/drinks/1/sizes");
 
-            response.EnsureSuccessResponse();
+            response.EnsureSuccess();
         }
 
         [Fact]

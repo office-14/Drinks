@@ -10,7 +10,7 @@ namespace Project.API.Ordering.Domain.Orders.Exceptions
         {
         }
 
-        public static CannotFinishOrder becauseOrderIsAlreadyFinished(OrderId id)
+        public static CannotFinishOrder BecauseOrderIsAlreadyFinished(OrderId id)
         {
             return new CannotFinishOrder($"Can't finish order with id='{id.Value}' because it's already finished");
         }

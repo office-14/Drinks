@@ -1,6 +1,6 @@
-using System;
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
+using Project.API.Ordering.Application.LastUserOrder;
 using Project.API.Ordering.Application.OrderDetails;
 
 namespace Project.API.WebApi.Endpoints.Ordering.Shared
@@ -28,6 +28,18 @@ namespace Project.API.WebApi.Endpoints.Ordering.Shared
         public int TotalPrice { get; set; }
 
         public static SingleOrder From(OrderDetails order)
+        {
+            return new SingleOrder
+            {
+                Id = order.Id.Value,
+                StatusCode = order.Status.Code,
+                StatusName = order.Status.Name,
+                TotalPrice = order.TotalPrice.Amount,
+                OrderNumber = order.OrderNumber.Value
+            };
+        }
+
+        public static SingleOrder From(LastOrderDetails order)
         {
             return new SingleOrder
             {

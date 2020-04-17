@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Project.API.Ordering.Domain.Users;
 using Project.API.Servicing.Application.FinishOrder;
 using Project.API.SharedKernel.Domain.Orders;
 using Project.API.WebApi.Swagger;
@@ -10,7 +11,7 @@ using Project.API.WebApi.Swagger;
 namespace Project.API.WebApi.Endpoints.Servicing.FinishOrder
 {
     [ApiExplorerSettings(GroupName = AvailableDocuments.Servicing)]
-    [Authorize]
+    [Authorize(Roles = Role.Administrator)]
     public class FinishOrderController : ControllerBase
     {
         private readonly FinishOrderService finishOrderService;

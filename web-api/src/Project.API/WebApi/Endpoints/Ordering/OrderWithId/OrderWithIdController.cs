@@ -1,3 +1,4 @@
+using System;
 using System.Net.Mime;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -28,6 +29,7 @@ namespace Project.API.WebApi.Endpoints.Ordering.OrderWithId
             this.logger = logger;
         }
 
+        [Obsolete("This method may be removed in the future.")]
         [HttpGet("api/orders/{id}")]
         [Produces(MediaTypeNames.Application.Json)]
         [ProducesResponseType(typeof(ResponseWrapper<SingleOrder>), StatusCodes.Status200OK)]

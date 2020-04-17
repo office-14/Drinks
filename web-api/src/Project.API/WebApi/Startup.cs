@@ -12,12 +12,14 @@ using Project.API.Ordering.Domain.Orders;
 using Project.API.Infrastructure.Repositories;
 using Project.API.WebApi.Swagger;
 using Project.API.Servicing.Application.BookedOrders;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration;
 using Project.API.Infrastructure.Notifications;
 using Project.API.WebApi.MediatR;
 using Project.API.Infrastructure.Firebase;
 using Project.API.Servicing.Application.FinishOrder;
+using Project.API.Ordering.Application.LastUserOrder;
+using Project.API.Infrastructure.Repositories.LastOrders;
+using Project.API.WebApi.Authentication;
 
 [assembly: ApiController]
 namespace Project.API.WebApi
@@ -48,19 +50,7 @@ namespace Project.API.WebApi
                 });
             });
 
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                .AddJwtBearer(options =>
-                {
-                    options.Authority = Configuration["Oidc:Authority"];
-                    options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters
-                    {
-                        ValidateIssuer = true,
-                        ValidIssuer = Configuration["Oidc:Issuer"],
-                        ValidateAudience = true,
-                        ValidAudience = Configuration["Oidc:Audience"],
-                        ValidateLifetime = true
-                    };
-                });
+            services.AddFirebaseAuthentication(Configuration);
 
             services.AddAuthorization();
 
@@ -76,6 +66,8 @@ namespace Project.API.WebApi
             services.AddSingleton<IOrderDetailsRepository>(provider => provider.GetRequiredService<InMemoryOrdersRepository>());
             services.AddSingleton<IOrdersRepository>(provider => provider.GetRequiredService<InMemoryOrdersRepository>());
             services.AddSingleton<IBookedOrdersRepository>(provider => provider.GetRequiredService<InMemoryOrdersRepository>());
+            services.AddSingleton<ILastUserOrderProvider, InMemoryLastUserOrders>();
+            services.AddSingleton<LastUserOrders>();
             services.AddSingleton<CreateOrderService>();
             services.AddSingleton<OrderNumberProvider>();
             services.AddSingleton<OrderDraftFactory>();

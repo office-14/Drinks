@@ -1,6 +1,8 @@
 using System;
+using System.Collections.Generic;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.Extensions.Logging;
@@ -40,66 +42,32 @@ namespace Project.IntegrationTests.Configuration
                 return Task.FromResult(AuthenticateResult.NoResult());
             }
 
-            ClaimsPrincipal principal = default;
-
-            switch (token)
-            {
-                case "Alice":
-                    principal = FindAlice();
-                    break;
-
-                case "Bob":
-                    principal = FindBob();
-                    break;
-
-                case "Zod":
-                    principal = FindZod();
-                    break;
-
-                default:
-                    return Task.FromResult(AuthenticateResult.NoResult());
-            }
-
+            var credentials = JsonSerializer.Deserialize<Credentials>(token);
+            var principal = CreateUser(credentials);
             var ticket = new AuthenticationTicket(principal, TestScheme);
             var result = AuthenticateResult.Success(ticket);
 
             return Task.FromResult(result);
         }
 
-        private static ClaimsPrincipal FindAlice()
+        private static ClaimsPrincipal CreateUser(Credentials credentials)
         {
-            var claims = new[]
+            var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Name, "Alice"),
-                new Claim(ClaimTypes.NameIdentifier, Guid.NewGuid().ToString())
+                new Claim(ClaimTypes.NameIdentifier, credentials.Id),
+                new Claim(ClaimTypes.Role, credentials.IsAdmin ? "admin" : "client")
             };
+
             var identity = new ClaimsIdentity(claims, TestScheme);
             var principal = new ClaimsPrincipal(identity);
             return principal;
         }
 
-        private static ClaimsPrincipal FindBob()
+        internal sealed class Credentials
         {
-            var claims = new[]
-            {
-                new Claim(ClaimTypes.Name, "Bob"),
-                new Claim(ClaimTypes.NameIdentifier, Guid.NewGuid().ToString())
-            };
-            var identity = new ClaimsIdentity(claims, TestScheme);
-            var principal = new ClaimsPrincipal(identity);
-            return principal;
-        }
+            public string Id { get; set; }
 
-        private static ClaimsPrincipal FindZod()
-        {
-            var claims = new[]
-            {
-                new Claim(ClaimTypes.Name, "Bob"),
-                new Claim(ClaimTypes.NameIdentifier, Guid.NewGuid().ToString())
-            };
-            var identity = new ClaimsIdentity(claims, TestScheme);
-            var principal = new ClaimsPrincipal(identity);
-            return principal;
+            public bool IsAdmin { get; set; }
         }
     }
 }

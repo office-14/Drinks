@@ -26,7 +26,7 @@ namespace Project.IntegrationTests.Drinks
 
             var response = await client.GetAsync("api/drinks");
 
-            response.EnsureSuccessResponse();
+            response.EnsureSuccess();
         }
 
         [Fact]

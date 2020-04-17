@@ -1,8 +1,4 @@
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using Project.API.WebApi.Endpoints.Ordering.CreateOrder;
-using Project.API.WebApi.Endpoints.Ordering.Shared;
-using Project.API.WebApi.Endpoints.Shared;
 using Project.IntegrationTests.Configuration;
 using Xunit;
 
@@ -29,9 +25,31 @@ namespace Project.IntegrationTests.Orders
         }
 
         [Fact]
+        public async Task Client_user_cannot_finish_orders()
+        {
+            var client = factory.CreateClientUser();
+
+            var response = await client.PostAsync("api/orders/123/finish", null);
+
+            response.EnsureUnauthorized();
+        }
+
+        [Fact]
+        public async Task Admin_user_can_finish_orders()
+        {
+            var client = factory.CreateClientUser();
+            var order = await client.MakeSimpleOrderAndGetDetails();
+
+            var admin = factory.CreateAdminUser();
+            var response = await admin.PostAsync($"api/orders/{order.Id}/finish", null);
+
+            response.EnsureSuccessStatusCode();
+        }
+
+        [Fact]
         public async Task When_there_is_no_order_with_provided_id_Then_return_404_with_error_response()
         {
-            var client = factory.CreateAlice();
+            var client = factory.CreateAdminUser();
 
             var response = await client.PostAsync("api/orders/123/finish", null);
 
@@ -41,23 +59,13 @@ namespace Project.IntegrationTests.Orders
         [Fact]
         public async Task When_finish_order_twice_Then_return_bad_request()
         {
-            var client = factory.CreateAlice();
-            var createdOrderResponse = await client.PostContentAsync(
-                "api/orders",
-                new CreateOrderDetails
-                {
-                    Drinks = new List<CreateOrderDrinksItem> {
-                        new CreateOrderDrinksItem {
-                            DrinkId = 1,
-                            SizeId = 7
-                        }
-                    }
-                });
-            var orderResponse = await createdOrderResponse.Parse<ResponseWrapper<SingleOrder>>();
-            var createdOrderId = orderResponse.Payload.Id;
-            await client.PostAsync($"api/orders/{createdOrderId}/finish", null);
+            var client = factory.CreateClientUser();
+            var order = await client.MakeSimpleOrderAndGetDetails();
 
-            var response = await client.PostAsync($"api/orders/{createdOrderId}/finish", null);
+            var admin = factory.CreateAdminUser();
+            await admin.PostAsync($"api/orders/{order.Id}/finish", null);
+
+            var response = await admin.PostAsync($"api/orders/{order.Id}/finish", null);
 
             await response.EnsureBadRequest();
         }

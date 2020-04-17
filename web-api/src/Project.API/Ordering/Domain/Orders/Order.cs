@@ -30,11 +30,13 @@ namespace Project.API.Ordering.Domain.Orders
 
         public void Finish()
         {
-            if (Status == Status.Ready)
-                throw CannotFinishOrder.becauseOrderIsAlreadyFinished(Id);
+            if (IsFinished())
+                throw CannotFinishOrder.BecauseOrderIsAlreadyFinished(Id);
 
             Status = Status.Ready;
         }
+
+        public bool IsFinished() => Status == Status.Ready;
 
         public bool Equals([AllowNull] Order other)
         {
@@ -61,5 +63,7 @@ namespace Project.API.Ordering.Domain.Orders
             Status status,
             OrderDraft draft
         ) => new Order(id, orderNumber, totalPrice, status, draft);
+
+
     }
 }

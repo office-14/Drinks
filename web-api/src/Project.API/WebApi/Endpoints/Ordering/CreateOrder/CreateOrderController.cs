@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Project.API.Ordering.Application.OrderDetails;
 using Project.API.Ordering.Application.OrderService;
 using Project.API.Ordering.Domain.Clients;
+using Project.API.Ordering.Domain.Users;
 using Project.API.WebApi.Endpoints.Ordering.Shared;
 using Project.API.WebApi.Endpoints.Shared;
 using Project.API.WebApi.Swagger;
@@ -14,7 +15,7 @@ using Project.API.WebApi.Swagger;
 namespace Project.API.WebApi.Endpoints.Ordering.CreateOrder
 {
     [ApiExplorerSettings(GroupName = AvailableDocuments.Ordering)]
-    [Authorize]
+    [Authorize(Roles = Role.Client)]
     public class CreateOrderController : ControllerBase
     {
         private readonly CreateOrderService orderService;
@@ -41,6 +42,7 @@ namespace Project.API.WebApi.Endpoints.Ordering.CreateOrder
             [FromHeader(Name = "Registration-Token")] string registrationToken)
         {
             var createdOrderId = await orderService.CreateNewOrder(
+                this.DomainUser(),
                 CreateClient(registrationToken),
                 orderDetails.AsClientOrder()
             );

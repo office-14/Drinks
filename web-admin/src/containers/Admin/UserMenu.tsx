@@ -11,11 +11,11 @@ import { routes } from 'routing'
 import { useAuth } from 'auth'
 import { useTranslation } from 'localization'
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   smallAvatar: {
     width: theme.spacing(5),
-    height: theme.spacing(5)
-  }
+    height: theme.spacing(5),
+  },
 }))
 
 function UserMenu() {
@@ -40,7 +40,7 @@ function UserMenu() {
 
   return (
     <div>
-      <Tooltip title={user?.displayName}>
+      <Tooltip title={user?.displayName || ''}>
         <IconButton
           aria-label="account of current user"
           aria-controls="menu-appbar"
@@ -57,12 +57,12 @@ function UserMenu() {
         getContentAnchorEl={null}
         anchorOrigin={{
           vertical: 'bottom',
-          horizontal: 'right'
+          horizontal: 'right',
         }}
         keepMounted
         transformOrigin={{
           vertical: 'top',
-          horizontal: 'right'
+          horizontal: 'right',
         }}
         open={!!anchorEl}
         onClose={handleClose}

@@ -37,7 +37,7 @@ namespace Project.IntegrationTests.Infrastructure
 
             var response = await client.GetAsync($"swagger/{apiPage}/swagger.json");
 
-            response.EnsureSuccessResponse();
+            response.EnsureSuccess();
         }
     }
 }

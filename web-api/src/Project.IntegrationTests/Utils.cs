@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Net;
 using System.Net.Http;
 using System.Net.Mime;
@@ -6,6 +7,9 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Project.API.WebApi.Endpoints.Ordering.CreateOrder;
+using Project.API.WebApi.Endpoints.Ordering.Shared;
+using Project.API.WebApi.Endpoints.Shared;
 using Xunit;
 
 namespace Project.IntegrationTests
@@ -16,6 +20,12 @@ namespace Project.IntegrationTests
         {
             var responseString = await response.Content.ReadAsStringAsync();
             return JsonSerializer.Deserialize<T>(responseString);
+        }
+
+        public static async Task<T> ParseApiResponse<T>(this HttpResponseMessage response)
+        {
+            var parseResult = await response.Parse<ResponseWrapper<T>>();
+            return parseResult.Payload;
         }
 
         public static Task<HttpResponseMessage> PostContentAsync<T>(this HttpClient client, string requestUri, T content)
@@ -65,11 +75,33 @@ namespace Project.IntegrationTests
             Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
         }
 
-        public static void EnsureSuccessResponse(this HttpResponseMessage response)
+        public static void EnsureSuccess(this HttpResponseMessage response)
         {
             response.EnsureSuccessStatusCode();
             Assert.Equal("application/json; charset=utf-8",
                 response.Content.Headers.ContentType.ToString());
+        }
+
+        public static async Task<HttpResponseMessage> MakeSimpleOrder(this HttpClient client)
+        {
+            return await client.PostContentAsync(
+                "api/orders",
+                new CreateOrderDetails
+                {
+                    Drinks = new List<CreateOrderDrinksItem> {
+                        new CreateOrderDrinksItem {
+                            DrinkId = 1,
+                            SizeId = 7,
+                            AddIns = new List<int> { 4 }
+                        }
+                    }
+                });
+        }
+
+        public static async Task<SingleOrder> MakeSimpleOrderAndGetDetails(this HttpClient client)
+        {
+            var response = await client.MakeSimpleOrder();
+            return await response.ParseApiResponse<SingleOrder>();
         }
     }
 }
