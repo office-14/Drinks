@@ -30,8 +30,8 @@
           </div>
         </div>
         <h4 class="total-price">Сумма заказа: {{get_total_price()}} ₽</h4>
-        <button class="button create-order-button" (click)="create_order()" *ngIf="!if_order_exist()">Оформить заказ</button>
-        <p class="not-allow-create-order-text" *ngIf="if_order_exist()">У вас уже есть оформленный заказ. Дождитесь его завершения, прежде, чем оформлять новый.</p>
+        <button class="button create-order-button" (click)="create_order()" *ngIf="!is_allow_to_order()">Оформить заказ</button>
+        <p class="not-allow-create-order-text" *ngIf="is_allow_to_order()">Ваш предыдущий заказ ещё не готов! Дождитесь его завершения, прежде, чем оформлять новый.</p>
       </div>
     </div>
   </div>

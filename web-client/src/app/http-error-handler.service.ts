@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { HttpErrorResponse } from '@angular/common/http';
 
-import { Observable, of } from 'rxjs';
+import { Observable, of, throwError } from 'rxjs';
 
 import { MessageService } from './message.service';
+import { BaseError } from './base-error';
 
 export type HandleError =
   <T> (operation?: string, result?: T) => (error: HttpErrorResponse) => Observable<T>;
@@ -29,10 +30,14 @@ export class HttpErrorHandlerService {
       // TODO: send the error to remote logging infrastructure
       console.error(error); // log to console instead
 
-      let error_title = '';
+      let error_title = 'Неизвестная ошибка';
       if (error.status == 0) {
         error_title = 'Не установлено соединение с сервером';
-      }  else {
+      }
+      else if(error.status == 404) {
+        error_title = 'Сервер не нашёл данных ддя ответа';
+      }
+      else if(error.status == 500) {
         error_title = error.error.title;
       }
 
@@ -40,11 +45,12 @@ export class HttpErrorHandlerService {
         error.error.message :
        `Сервер вернул код ${error.status} с описанием ошибки "${error_title}"`;
 
-      // TODO: better job of transforming error for user consumption
       this.messageService.show_error(`${serviceName}: ${operation} ошибка: ${message}`);
+      let base_error: BaseError= {
+        'error_type': 'http_error'
+      };
 
-      // Let the app keep running by returning a safe result.
-      return of( result );
+      return throwError(base_error);
     };
 
   }

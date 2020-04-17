@@ -25,8 +25,8 @@ export class AppComponent {
   	return this.cart_service.get_products_qty();
   }
 
-  public if_order_exist() {
-  	return this.order_service.if_order_exist();
+  public is_allow_to_order() {
+  	return this.order_service.is_allow_to_order();
   }
 
   public is_user_logged_in() {

@@ -1,6 +1,4 @@
 import { Injectable } from '@angular/core';
-import { MessageService } from './message.service';
-import { OrderService } from './order.service';
 import { AngularFireAuth } from  "@angular/fire/auth";
 import { Observable } from 'rxjs';
 import { map, catchError, tap } from 'rxjs/operators';
@@ -13,28 +11,12 @@ export class CartService {
   order_creating_started = false;
 
   constructor(
-    private message_service: MessageService,
-    private order_service: OrderService,
     private afAuth: AngularFireAuth,
     private local_storage_service: LocalStorageService
   ) {
     if (this.local_storage_service.get('cart_products')) {
       this.cart_products = this.local_storage_service.get('cart_products');
     }
-    
-    this.order_service.get_stored_order().subscribe((is_order_exist) => {
-      if (is_order_exist) {
-        if (this.order_creating_started) {
-          this.message_service.show_error('Не аозможно создать заказ, так как есть текущий!');
-        }
-      } else {
-        if (this.order_creating_started) {
-          this.create_order();
-        }
-      }
-      this.order_creating_started = false;
-    });
-      
   }
 
   private comparing_addins(addins1, addins2) {
@@ -95,12 +77,5 @@ export class CartService {
     {
         return prev + cur.qty * cur.price;
     }, 0);
-  }
-
-  create_order(): Observable<any> {
-    return this.order_service.create_order(this.cart_products).pipe(
-     tap((data: any) => {
-        this.clear_cart();
-     }));    
   }
 }

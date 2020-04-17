@@ -70,7 +70,7 @@ describe('OrderComponent', () => {
   it('order state should display correctly after order created', () => {
     order_service.create_order(cart_service.get_products()).subscribe(order => true);
     fixture.detectChanges();
-    expect(order_service.if_order_exist()).toBeTruthy('order created');
+    expect(order_service.is_allow_to_order()).toBeTruthy('order created');
 
     let order = order_service.get_order();
     expect(order.id).toBe(1, '#get_order returned right id');

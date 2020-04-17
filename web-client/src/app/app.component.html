@@ -5,7 +5,7 @@
       <li class="menu-text">Кофейня 14</li>
       <li><a uiSref="drinks" uiSrefActive="active">Меню</a></li>
       <li><a uiSref="cart" uiSrefActive="active">Корзина <span *ngIf="get_cart_products_qty() > 0">({{get_cart_products_qty()}})</span></a></li>
-      <li *ngIf="if_order_exist()"><a uiSref="order" uiSrefActive="active">Заказ</a></li>
+      <li *ngIf="is_allow_to_order()"><a uiSref="order" uiSrefActive="active">Заказ</a></li>
       <li *ngIf="is_user_logged_in()" style="padding: .4375rem 0 .4375rem 1rem">Вы авторизованы</li>
       <li *ngIf="is_user_logged_in()"><a (click)="sign_out()" >Выйти</a></li>
       <li *ngIf="!is_user_logged_in()"><a uiSref="signin" (click)="sign_in()">Войти</a></li>

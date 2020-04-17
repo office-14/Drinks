@@ -37,21 +37,26 @@ export class CartComponent implements OnInit {
   	return this.cart_service.get_total_price();
   }
 
-  if_order_exist() {
-  	return this.order_service.if_order_exist()
+  is_allow_to_order() {
+  	return this.order_service.is_allow_to_order()
   }
 
   create_order() {
       if (this.auth_service.check_auth()) {
-        if (!this.order_service.if_order_exist()) {
-          this.cart_service.create_order().subscribe(
+        if (!this.order_service.is_allow_to_order()) {
+          this.order_service.create_order().subscribe(
             resp => {
               this.state_service.go('order');
               this.message_service.show_success('Заказ оформлен!');
+            },
+            err => {
+              if (err.error_type != 'http_error') {
+                this.message_service.show_error('Нельзя создать новый заказ! ' + err.text);
+              }
             }
           );
         } else {
-          this.message_service.show_error('Нельзя создать новый заказ, пока есть текущий!');
+          this.message_service.show_error('Нельзя создать новый заказ! У вас есть текущий заказ, который ещё не готов.');
         }
       } else {
         this.state_service.go('signin', {order_creating_started: true});

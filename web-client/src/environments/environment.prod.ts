@@ -15,10 +15,11 @@ export const environment = {
     storage_type: 'localStorage'
   },
   api_urls: {
-    get_drinks: 'https://drinks-web-api-dev-ytpe32lyxq-uc.a.run.app/api/drinks',
-    get_addins: 'https://drinks-web-api-dev-ytpe32lyxq-uc.a.run.app/api/add-ins',
-    get_sizes: 'https://drinks-web-api-dev-ytpe32lyxq-uc.a.run.app/api/drinks/{drink_id}/sizes',
-    post_orders: 'https://drinks-web-api-dev-ytpe32lyxq-uc.a.run.app/api/orders',
-    get_order: 'https://drinks-web-api-dev-ytpe32lyxq-uc.a.run.app/api/orders/{order_id}',
+    get_drinks: 'https://drinks-api.office-14.com/api/drinks',
+    get_addins: 'https://drinks-api.office-14.com/api/add-ins',
+    get_sizes: 'https://drinks-api.office-14.com/api/drinks/{drink_id}/sizes',
+    post_orders: 'https://drinks-api.office-14.com/api/orders',
+    get_order: 'https://drinks-api.office-14.com/api/orders/{order_id}',
+    get_last_order_url: 'https://drinks-api.office-14.com/api/orders/last',
   }
 };

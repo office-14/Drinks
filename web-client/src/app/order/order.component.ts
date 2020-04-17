@@ -24,7 +24,7 @@ export class OrderComponent implements OnInit {
   
 
   is_order_exist() {
-  	return this.order_service.if_order_exist();
+  	return this.order_service.is_allow_to_order();
   }
 
   get_order() {
