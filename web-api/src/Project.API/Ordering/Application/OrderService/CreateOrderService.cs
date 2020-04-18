@@ -2,7 +2,6 @@ using System.Threading.Tasks;
 using MediatR;
 using Project.API.Ordering.Application.LastUserOrder;
 using Project.API.Ordering.Application.OrderService.Exceptions;
-using Project.API.Ordering.Domain.Clients;
 using Project.API.Ordering.Domain.Orders;
 using Project.API.Ordering.Domain.Users;
 using Project.API.Ordering.Events;
@@ -37,7 +36,6 @@ namespace Project.API.Ordering.Application.OrderService
 
         public async Task<OrderId> CreateNewOrder(
             User user,
-            Client client,
             ClientOrder clientOrder
         )
         {
@@ -46,13 +44,13 @@ namespace Project.API.Ordering.Application.OrderService
                 throw CannotCreateOrder.BecauseUserAlreadyHasUnfinishedOrder();
             }
 
-            var order = await orderFactory.CreateOrderFrom(clientOrder);
+            var order = await orderFactory.CreateOrderFrom(user, clientOrder);
 
             var persistedOrder = await orders.Save(order);
 
             // TODO: Should we use default MediatR publish strategy here?
             // https://github.com/jbogard/MediatR/wiki#publish-strategies
-            await mediator.Publish(new OrderIsCreated(persistedOrder.Id, client, user.Id));
+            await mediator.Publish(new OrderIsCreated(persistedOrder.Id, user.Id));
 
             return persistedOrder.Id;
         }

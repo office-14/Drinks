@@ -59,7 +59,8 @@ namespace Project.API.Infrastructure.Repositories
                 order.OrderNumber,
                 order.TotalPrice,
                 order.Status,
-                order.Draft
+                order.Draft,
+                order.ClientId
             );
 
             lock (syncLock)
@@ -72,7 +73,8 @@ namespace Project.API.Infrastructure.Repositories
                 newOrder.OrderNumber,
                 newOrder.TotalPrice,
                 newOrder.Status,
-                newOrder.Draft
+                newOrder.Draft,
+                newOrder.ClientId
             );
 
             return persistedOrder;
@@ -85,7 +87,8 @@ namespace Project.API.Infrastructure.Repositories
                 order.OrderNumber,
                 order.TotalPrice,
                 order.Status,
-                order.Draft
+                order.Draft,
+                order.ClientId
             );
 
             lock (syncLock)

@@ -1,6 +1,6 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Project.API.Ordering.Domain.Clients;
 using Project.API.Servicing.Events;
 
 namespace Project.API.Infrastructure.Notifications
@@ -12,13 +12,11 @@ namespace Project.API.Infrastructure.Notifications
         public NoopNotificationService(ILogger<NoopNotificationService> logger)
             => this.logger = logger;
 
-        public Task NotifyClientWhenOrderIsFinished(OrderIsFinished @event, Client client)
+        public Task NotifyClientWhenOrderIsFinished(OrderIsFinished @event, IEnumerable<DeviceToken> tokens)
         {
             logger.LogDebug(
-                "Simulating sending a notification of order id: {} to device id: {}",
-                @event.OrderId.Value,
-                client.DeviceId!.Value.Value
-                );
+                "Simulating sending a notification of order id: {}",
+                @event.OrderId.Value);
 
             return Task.CompletedTask;
         }
