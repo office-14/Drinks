@@ -4,7 +4,6 @@ services:
   webapi:
     build:
       context: web-api
-      dockerfile: docker/Dockerfile
 
   webclient:
     build:
