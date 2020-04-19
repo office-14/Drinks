@@ -19,10 +19,21 @@ namespace Project.API.Infrastructure.Firebase
         public async Task NotifyClientWhenOrderIsFinished(OrderIsFinished @event, IEnumerable<DeviceToken> tokens)
         {
             var messaging = FirebaseMessaging.DefaultInstance;
+            var tokensList = tokens.ToList();
+
+            if (tokensList.Count == 0)
+            {
+                logger.LogInformation(
+                    "There are no registered device tokens. No notifications will be sent."
+                );
+                return;
+            }
+
+            logger.LogInformation("Have '{}' devices to send notifications to.", tokensList.Count);
 
             try
             {
-                await messaging.SendAllAsync(tokens.Select(token => new Message
+                await messaging.SendAllAsync(tokensList.Select(token => new Message
                 {
                     Token = token.Value,
 
