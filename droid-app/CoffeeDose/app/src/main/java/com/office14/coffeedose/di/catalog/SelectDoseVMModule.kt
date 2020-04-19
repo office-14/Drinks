@@ -13,11 +13,6 @@ import dagger.multibindings.IntoMap
 @AssistedModule
 @Module(includes=[AssistedInject_SelectDoseVMModule::class])
 abstract class SelectDoseVMModule {
-    /*@Binds
-    @IntoMap
-    @ViewModelKey(SelectDoseAndAddinsViewModel::class)
-    abstract fun bindSelectDoseAndAddinsViewModel(viewModel: SelectDoseAndAddinsViewModel): ViewModel*/
-
     @Binds
     @IntoMap
     @ViewModelKey(SelectDoseAndAddinsViewModel::class)

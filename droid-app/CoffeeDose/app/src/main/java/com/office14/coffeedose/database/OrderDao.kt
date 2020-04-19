@@ -12,6 +12,9 @@ interface OrderDao{
     @Query("select * from orders where id = :orderId")
     fun getById(orderId:Int) : LiveData<List<OrderDbo>>
 
+    @Query("select * from orders where id = :orderId and owner = :owner")
+    fun getByIdAndOwner(orderId:Int, owner:String) : LiveData<List<OrderDbo>>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAllOrders(vararg orders: OrderDbo)
 

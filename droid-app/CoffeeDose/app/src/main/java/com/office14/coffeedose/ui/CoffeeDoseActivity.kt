@@ -3,16 +3,14 @@ package com.office14.coffeedose.ui
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.NavigationUI
 import com.coffeedose.R
 import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
@@ -21,14 +19,11 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.GoogleAuthProvider
 import com.google.firebase.iid.FirebaseInstanceId
-import com.office14.coffeedose.CoffeeDoseApplication
-import com.office14.coffeedose.database.CoffeeDatabase
 import com.office14.coffeedose.di.InjectingSavedStateViewModelFactory
 import com.office14.coffeedose.repository.PreferencesRepository
+import com.office14.coffeedose.repository.PreferencesRepository.EMPTY_STRING
 import com.office14.coffeedose.viewmodels.MenuInfoViewModel
-import dagger.android.AndroidInjector
 import dagger.android.support.DaggerAppCompatActivity
-import dagger.android.support.DaggerApplication
 import kotlinx.android.synthetic.main.activity_main.*
 import javax.inject.Inject
 
@@ -45,7 +40,7 @@ class CoffeeDoseActivity : DaggerAppCompatActivity() {
     @Inject
     lateinit var abstractViewModelFactory: InjectingSavedStateViewModelFactory
 
-    lateinit var viewModel : MenuInfoViewModel
+    private lateinit var menuInfoViewModel : MenuInfoViewModel
 
     private lateinit var bottomNavigationView: BottomNavigationView
 
@@ -57,7 +52,7 @@ class CoffeeDoseActivity : DaggerAppCompatActivity() {
         setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
         val viewModelFactory = abstractViewModelFactory.create(this)
-        viewModel = ViewModelProvider(this,viewModelFactory).get(MenuInfoViewModel::class.java)
+        menuInfoViewModel = ViewModelProvider(this,viewModelFactory).get(MenuInfoViewModel::class.java)
         setContentView(R.layout.activity_main)
 
         prepareSignIn()
@@ -81,7 +76,7 @@ class CoffeeDoseActivity : DaggerAppCompatActivity() {
     }
 
     private fun handleMenuUpdate(){
-        viewModel.orderDetailsCount.observe(this, Observer {
+        menuInfoViewModel.orderDetailsCount.observe(this, Observer {
              if (it == 0)
                  bottomNavigationView.removeBadge(R.id.orderFragment)
             else
@@ -89,7 +84,7 @@ class CoffeeDoseActivity : DaggerAppCompatActivity() {
         })
 
 
-        viewModel.currentOrderBadgeColor.observe(this, Observer {
+        menuInfoViewModel.currentOrderBadgeColor.observe(this, Observer {
             val orderStatusBadge = bottomNavigationView.getOrCreateBadge(R.id.orderAwaitingFragment)
             orderStatusBadge.backgroundColor = it
         })
@@ -136,7 +131,7 @@ class CoffeeDoseActivity : DaggerAppCompatActivity() {
             try {
                 // Google Sign In was successful, authenticate with Firebase
                 val account = task.getResult(ApiException::class.java)
-                firebaseAuthWithGoogle(account?.idToken)
+                account?.let { firebaseAuthWithGoogle(it) }
             } catch (e: ApiException) {
                 // Google Sign In failed, update UI appropriately
                 Log.w(TAG, "Google sign in failed", e)
@@ -147,28 +142,32 @@ class CoffeeDoseActivity : DaggerAppCompatActivity() {
         }
     }
 
-    private fun firebaseAuthWithGoogle(idToken : String?) : Boolean {
-        val credential = GoogleAuthProvider.getCredential(idToken, null)
+    private fun firebaseAuthWithGoogle(account: GoogleSignInAccount) : Boolean {
+        val credential = GoogleAuthProvider.getCredential(account.idToken, null)
         var result = false
         auth.signInWithCredential(credential)
             .addOnCompleteListener(this) { task ->
                 result = task.isSuccessful
                 if (task.isSuccessful) {
-                    idToken?.let { PreferencesRepository.saveGoogleToken(it) }
-                    getUserAndUpdateToken()
+                    getUserAndUpdateToken(account)
                 }
             }
 
         return result
     }
 
-    private fun getUserAndUpdateToken(){
+    private fun getUserAndUpdateToken(account: GoogleSignInAccount){
         val user = auth.currentUser
         user?.getIdToken(true)?.addOnCompleteListener(this){ tokenIdTask ->
             if (tokenIdTask.isSuccessful){
                 if (tokenIdTask.result != null && tokenIdTask.result!!.token != null) {
                     val token = tokenIdTask.result!!.token!!
                     PreferencesRepository.saveIdToken(token)
+                    PreferencesRepository.saveUserEmail(account.email!!)
+                    menuInfoViewModel.refreshOrderDetailsByUser()
+                    menuInfoViewModel.user?.let { it.idToken = token }
+                    menuInfoViewModel.updateUser()
+                    //menuInfoViewModel.refresh()
                     successAuthCallback()
                 }
             }
@@ -176,6 +175,10 @@ class CoffeeDoseActivity : DaggerAppCompatActivity() {
     }
 
     fun signIn(successCallback:() -> Unit) {
+
+        if (PreferencesRepository.getUserEmail() != EMPTY_STRING)
+            logout()
+
         successAuthCallback = successCallback
         //try sighnIn with current google token
         //if (!firebaseAuthWithGoogle(PreferencesRepository.getGoogleToken())){
@@ -184,6 +187,26 @@ class CoffeeDoseActivity : DaggerAppCompatActivity() {
             signInIntent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
             startActivityForResult(signInIntent, RC_SIGN_IN)
         //}
+    }
+
+    fun logout(){
+
+        if (auth.currentUser != null){
+            FirebaseAuth.getInstance().signOut()
+            auth.signOut()
+            googleSignInClient.signOut()
+        }
+
+
+        with(PreferencesRepository){
+            saveUserEmail(EMPTY_STRING)
+            saveIdToken(EMPTY_STRING)
+            saveFcmRegToken(EMPTY_STRING)
+        }
+
+        menuInfoViewModel.refreshOrderDetailsByUser()
+        //menuInfoViewModel.refresh()
+        invalidateOptionsMenu()
     }
 
     private fun initToolbar() {

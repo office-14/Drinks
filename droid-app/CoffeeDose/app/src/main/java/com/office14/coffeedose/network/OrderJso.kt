@@ -24,10 +24,10 @@ data class OrderJso (
     val totalPrice : Int
 ){
     fun toDataBaseModel() = OrderDbo(
-        id, statusCode,statusName,orderNumber,totalPrice
+        id, statusCode,statusName,orderNumber,totalPrice,null
     )
 
     fun toOrderQueueDataBaseModel() = OrderQueueDbo(
-        id, statusCode,statusName,orderNumber,totalPrice
+        id, statusCode,statusName,orderNumber,totalPrice,null
     )
 }

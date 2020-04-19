@@ -6,6 +6,7 @@ import androidx.room.Room
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.office14.coffeedose.CoffeeDoseApplication
 import com.office14.coffeedose.database.CoffeeDatabase
+import com.office14.coffeedose.domain.User
 import com.office14.coffeedose.network.CoffeeApiService
 import com.office14.coffeedose.repository.*
 import com.squareup.moshi.Moshi
@@ -22,6 +23,12 @@ abstract class AppModule {
     @Singleton
     @Module
     companion object {
+
+        /*@Singleton
+        @Provides
+        var provideUser() : User? {
+            return nul
+        }*/
 
         @Singleton
         @Provides
@@ -76,5 +83,10 @@ abstract class AppModule {
                 apiService
             )
 
+
+        @Singleton
+        @Provides
+        fun provideUsersRepository(database: CoffeeDatabase) =
+            UsersRepository(database.usersDatabaseDao)
     }
 }

@@ -5,8 +5,16 @@
         android:id="@+id/showEnvDialog"
         android:title="@string/BaseURL" />
     <item
+        android:id="@+id/userInfo"
+        android:title="@string/Unauthrorized"
+        android:enabled="false"
+        android:checkable="false"/>
+    <item
         android:id="@+id/login"
         android:title="@string/Login" />
+    <item
+        android:id="@+id/changeUser"
+        android:title="@string/ChangeUser" />
     <item
         android:id="@+id/logout"
         android:title="@string/Logout" />

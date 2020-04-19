@@ -49,11 +49,14 @@ data class OrderDetailDbo (
     @ColumnInfo(name = "order_id")
     var orderId:Int?,
 
+    @ColumnInfo(name = "owner")
+    var owner : String?,
+
     val count:Int
 ){
 
     constructor(orderDetail : OrderDetail) : this(
-        orderDetail.id,orderDetail.drinkId,orderDetail.sizeId,orderDetail.orderId,orderDetail.count
+        orderDetail.id,orderDetail.drinkId,orderDetail.sizeId,orderDetail.orderId,null,orderDetail.count
         //, orderDetail.addIns.map { AddinDbo(it) }
     )
 
@@ -79,10 +82,10 @@ data class OrderDetailsAndAddinsCrossRef(
     val addinId: Int
 )
 
-class OrderDetailsContaner(orderDetailsModel: OrderDetail){
+class OrderDetailsContainer(orderDetail: OrderDetail){
 
-    val orderDetails : OrderDetailDbo = OrderDetailDbo(orderDetailsModel)
+    val orderDetails : OrderDetailDbo = OrderDetailDbo(orderDetail)
 
-    val addIns : List<AddinDbo> = orderDetailsModel.addIns.map { AddinDbo(it) }
+    val addIns : List<AddinDbo> = orderDetail.addIns.map { AddinDbo(it) }
 
 }

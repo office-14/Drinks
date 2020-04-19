@@ -12,6 +12,7 @@ import com.office14.coffeedose.domain.OrderStatus
 import com.office14.coffeedose.network.CoffeeApiService
 import com.office14.coffeedose.network.CreateOrderBody
 import com.office14.coffeedose.network.HttpExceptionEx
+import com.office14.coffeedose.repository.PreferencesRepository.EMPTY_STRING
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
@@ -38,9 +39,36 @@ class OrdersRepository @Inject constructor(private  val ordersDao : OrderDao, pr
         return@map null
     }
 
-    val queueOrderStatus : LiveData<OrderStatus> = Transformations.map(ordersQueueDao.getAll()){
-        if (it?.size == 1){
-            return@map OrderStatus.getStatusByString(it[0].statusCode)
+    fun getCurrentQueueOrderByUser(email:LiveData<String>) : LiveData<Order> = Transformations.map(email){
+
+        var list = if (it == EMPTY_STRING) ordersQueueDao.getAll() else  ordersQueueDao.getAllForUser(it)
+
+        val item = list.value?.get(0)
+        if (list?.value?.size == 1){
+            return@map item!!.toDomainModel()
+        }
+        return@map null
+
+        /*if (itDbo.size == 1){
+            return@map itDbo[0].toDomainModel()
+        }
+        return@map null*/
+    }
+
+    /*fun getCurrentQueueOrderByUser(email:String) : LiveData<Order> = Transformations.map(ordersQueueDao.getAllForUser(email)){ itDbo ->
+        if (itDbo.size == 1){
+            return@map itDbo[0].toDomainModel()
+        }
+        return@map null
+    }*/
+
+    fun queueOrderStatus(email:LiveData<String>) : LiveData<OrderStatus> = Transformations.map( email ){
+
+        var list = if (it == EMPTY_STRING) ordersQueueDao.getAll() else  ordersQueueDao.getAllForUser(it)
+
+        val item = list.value?.get(0)
+        if (list?.value?.size == 1){
+            return@map OrderStatus.getStatusByString(item!!.statusCode)
         }
         return@map OrderStatus.NONE
     }

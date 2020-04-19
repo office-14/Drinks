@@ -17,6 +17,8 @@
     <string name="EmptyOrderDetails">Список заказов пуст</string>
     <string name="AddOrProceedDialogMessage">Заказ добавлен в корзину\nХотите продолжить выбор или перейти в корзину?</string>
     <string name="Login">Войти</string>
-    <string name="Logout">Logout</string>
+    <string name="Logout">Выйти</string>
+    <string name="ChangeUser">Сменить пользователя</string>
+    <string name="Unauthrorized">Не авторизирован</string>
     <string name="default_notification_channel_id" translatable="false">cd_fcm_default_channel</string>
 </resources>

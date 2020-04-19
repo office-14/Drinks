@@ -20,7 +20,10 @@ data class OrderDbo (
     val orderNumber : String,
 
     @ColumnInfo(name = "total_price")
-    val totalPrice : Int
+    val totalPrice : Int,
+
+    @ColumnInfo(name = "owner")
+    val owner : String?
 ){
     fun toDomainModel() = Order(
         id, statusCode,statusName,orderNumber,totalPrice

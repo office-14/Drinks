@@ -5,10 +5,12 @@ import androidx.lifecycle.*
 import com.office14.coffeedose.database.CoffeeDatabase
 import com.office14.coffeedose.domain.OrderDetail
 import com.office14.coffeedose.domain.OrderDetailFull
+import com.office14.coffeedose.extensions.mutableLiveData
 import com.office14.coffeedose.network.HttpExceptionEx
 import com.office14.coffeedose.repository.OrderDetailsRepository
 import com.office14.coffeedose.repository.OrdersRepository
 import com.office14.coffeedose.repository.PreferencesRepository
+import com.office14.coffeedose.repository.PreferencesRepository.EMPTY_STRING
 import kotlinx.coroutines.*
 import javax.inject.Inject
 
@@ -18,11 +20,13 @@ class OrderDetailsViewModel @Inject constructor(application : Application, priva
     private val viewModelJob = Job()
     private val viewModelScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
+    private val email = mutableLiveData(EMPTY_STRING)
+
     private val _navigateOrderAwaiting = MutableLiveData<Boolean>()
     val navigateOrderAwaiting : LiveData<Boolean>
         get() = _navigateOrderAwaiting
 
-    val unAttachedOrders = orderDetailsRepository.unAttachedOrderDetails
+    val unAttachedOrders = orderDetailsRepository.unAttachedOrderDetails(email)
 
     private val _errorMessage = MutableLiveData<String>()
     val errorMessage : LiveData<String>
@@ -36,8 +40,12 @@ class OrderDetailsViewModel @Inject constructor(application : Application, priva
         return@map it.isEmpty()
     }
 
-    val hasOrderInQueue = Transformations.map(ordersRepository.getCurrentQueueOrder()){
+    val hasOrderInQueue = Transformations.map(ordersRepository.getCurrentQueueOrderByUser(email)){
         return@map it != null
+    }
+
+    init {
+        email.value = PreferencesRepository.getUserEmail()
     }
 
     fun deleteOrderDetailsItem(item : OrderDetailFull){
@@ -98,7 +106,10 @@ class OrderDetailsViewModel @Inject constructor(application : Application, priva
 
     fun clearOrderDetails(){
         viewModelScope.launch {
-            orderDetailsRepository.deleteUnAttached()
+            if (email.value == EMPTY_STRING)
+                orderDetailsRepository.deleteUnAttached()
+            else
+                orderDetailsRepository.deleteOrderDetailsByEmail(email.value!!)
         }
     }
 

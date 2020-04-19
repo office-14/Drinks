@@ -1,6 +1,5 @@
 package com.office14.coffeedose
 
-import android.app.Application
 import android.content.Context
 import androidx.databinding.DataBindingUtil
 import com.office14.coffeedose.bindings.BindingComponent
@@ -16,10 +15,11 @@ import dagger.android.support.DaggerApplication
 class CoffeeDoseApplication : DaggerApplication() {
 
 
-    /*val appComponent: AppComponent by lazy {
+    private lateinit var appComponent: AppComponent
+            /*by lazy {
         // Creates an instance of AppComponent using its Factory constructor
         // We pass the applicationContext that will be used as Context in the graph
-        DaggerAppComponent.factory().create(applicationContext)
+        DaggerAppComponent.factory().create(this)
     }*/
 
 
@@ -43,7 +43,8 @@ class CoffeeDoseApplication : DaggerApplication() {
 
     override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
         //return DaggerAppComponent.builder().create(this)
-        return DaggerAppComponent.factory().create(this)
+        appComponent = DaggerAppComponent.factory().create(this)
+        return appComponent
     }
 
 

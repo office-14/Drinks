@@ -137,6 +137,7 @@ class SelectDoseAndAddinsViewModel @AssistedInject constructor(application: Appl
     fun addIntoOrderDetails(){
         viewModelScope.launch {
             try {
+
                 orderDetailsRepository.insertNew( OrderDetail(
                     id = 0,
                     drinkId = drinkId,

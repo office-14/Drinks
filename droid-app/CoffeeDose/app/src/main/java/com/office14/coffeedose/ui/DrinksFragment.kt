@@ -6,6 +6,7 @@ import android.view.*
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.HasDefaultViewModelProviderFactory
@@ -163,6 +164,14 @@ class DrinksFragment : DaggerFragment(),HasDefaultViewModelProviderFactory, Sele
     }
 
 
+    override fun onPrepareOptionsMenu(menu: Menu) {
+        super.onPrepareOptionsMenu(menu)
+        val email = PreferencesRepository.getUserEmail()
+        menu.findItem(R.id.userInfo).title = if (email == PreferencesRepository.EMPTY_STRING) getString(R.string.Unauthrorized) else email
+        menu.findItem(R.id.login).isVisible = email == PreferencesRepository.EMPTY_STRING
+        menu.findItem(R.id.logout).isVisible = email != PreferencesRepository.EMPTY_STRING
+        menu.findItem(R.id.changeUser).isVisible = email != PreferencesRepository.EMPTY_STRING
+    }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when(item.itemId){
@@ -170,20 +179,28 @@ class DrinksFragment : DaggerFragment(),HasDefaultViewModelProviderFactory, Sele
                 showEditBaseUrlDialog()
                 return true
             }
+            R.id.changeUser -> {
+                prepareAuth()
+                return true
+            }
             R.id.login -> {
                 prepareAuth()
                 return true
             }
-            /*R.id.goToOrderDetails -> {
-                findNavController().navigate(DrinksFragmentDirections.actionDrinksFragmentToOrderFragment())
+            R.id.logout -> {
+                logout()
                 return true
-            }*/
+            }
             else -> return false
         }
     }
 
     private fun prepareAuth(){
+        (activity as CoffeeDoseActivity).signIn {  }
+    }
 
+    private fun logout(){
+        (activity as CoffeeDoseActivity).logout()
     }
 
 

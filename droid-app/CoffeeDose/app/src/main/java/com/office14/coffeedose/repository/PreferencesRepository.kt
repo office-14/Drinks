@@ -11,9 +11,9 @@ object PreferencesRepository {
     //private const val ORDER_ID_KEY = "ORDER_ID_KEY"
     private const val BASE_URL_KEY = "BASE_URL_KEY"
     private const val NAVIGATE_TO_ORDER_AWAITING_FRAGMENT_KEY = "NAVIGATE_TO_ORDER_AWAITING_FRAGMENT_KEY"
-    private const val GOOGLE_AUTH_TOKEN_KEY = "GOOGLE_AUTH_TOKEN_KEY"
     private const val FIREBASE_AUTH_ID_TOKEN_KEY = "FIREBASE_AUTH_ID_TOKEN_KEY"
     private const val FIREBASE_MESSAGE_REG_TOKEN_KEY = "FIREBASE_MESSAGE_REG_TOKEN_KEY"
+    private const val USER_EMAIL_KEY = "USER_EMAIL_KEY"
     const val EMPTY_STRING = "not initialized"
 
     private const val BASE_URL = "http://10.0.2.2:5000/api/"
@@ -51,9 +51,11 @@ object PreferencesRepository {
 
     fun getAppTheme(): Int = prefs.getInt(APP_THEME_KEY, AppCompatDelegate.MODE_NIGHT_NO)
 
-    fun saveGoogleToken(token:String) = putValue(GOOGLE_AUTH_TOKEN_KEY to token)
+    fun saveUserEmail(email:String){
+        putValue(USER_EMAIL_KEY to email)
+    }
 
-    fun getGoogleToken() = prefs.getString(GOOGLE_AUTH_TOKEN_KEY,EMPTY_STRING)
+    fun getUserEmail() = prefs.getString(USER_EMAIL_KEY, EMPTY_STRING)
 
 
     private fun putValue(pair : Pair<String, Any>) = with(prefs.edit()){
