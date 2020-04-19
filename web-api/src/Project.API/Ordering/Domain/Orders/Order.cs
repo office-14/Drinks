@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using Project.API.Ordering.Domain.Orders.Exceptions;
+using Project.API.Ordering.Domain.Users;
 using Project.API.SharedKernel.Domain.Core;
 using Project.API.SharedKernel.Domain.Orders;
 
@@ -13,10 +14,11 @@ namespace Project.API.Ordering.Domain.Orders
             OrderNumber orderNumber,
             Roubles totalPrice,
             Status status,
-            OrderDraft draft
+            OrderDraft draft,
+            UserId clientId
         ) =>
-            (Id, OrderNumber, TotalPrice, Status, Draft) =
-            (id, orderNumber, totalPrice, status, draft);
+            (Id, OrderNumber, TotalPrice, Status, Draft, ClientId) =
+            (id, orderNumber, totalPrice, status, draft, clientId);
 
         public OrderId Id { get; private set; }
 
@@ -27,6 +29,8 @@ namespace Project.API.Ordering.Domain.Orders
         public Status Status { get; private set; }
 
         public OrderDraft Draft { get; private set; }
+
+        public UserId ClientId { get; private set; }
 
         public void Finish()
         {
@@ -53,16 +57,32 @@ namespace Project.API.Ordering.Domain.Orders
         public static Order New(
             OrderNumber orderNumber,
             Roubles totalPrice,
-            OrderDraft draft
-        ) => new Order(default, orderNumber, totalPrice, Status.Cooking, draft);
+            OrderDraft draft,
+            UserId clientId
+        ) => new Order(
+            default,
+            orderNumber,
+            totalPrice,
+            Status.Cooking,
+            draft,
+            clientId
+        );
 
         public static Order Existing(
             OrderId id,
             OrderNumber orderNumber,
             Roubles totalPrice,
             Status status,
-            OrderDraft draft
-        ) => new Order(id, orderNumber, totalPrice, status, draft);
+            OrderDraft draft,
+            UserId clientId
+        ) => new Order(
+            id,
+            orderNumber,
+            totalPrice,
+            status,
+            draft,
+            clientId
+        );
 
 
     }

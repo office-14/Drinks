@@ -13,13 +13,13 @@ using Project.API.Infrastructure.Repositories;
 using Project.API.WebApi.Swagger;
 using Project.API.Servicing.Application.BookedOrders;
 using Microsoft.Extensions.Configuration;
-using Project.API.Infrastructure.Notifications;
 using Project.API.WebApi.MediatR;
 using Project.API.Infrastructure.Firebase;
 using Project.API.Servicing.Application.FinishOrder;
 using Project.API.Ordering.Application.LastUserOrder;
 using Project.API.Infrastructure.Repositories.LastOrders;
 using Project.API.WebApi.Authentication;
+using Project.API.Infrastructure.Notifications;
 
 [assembly: ApiController]
 namespace Project.API.WebApi
@@ -73,7 +73,7 @@ namespace Project.API.WebApi
             services.AddSingleton<OrderDraftFactory>();
             services.AddSingleton<OrderFactory>();
             services.AddSingleton<FinishOrderService>();
-            services.AddSingleton<NotifiableOrders>();
+            services.AddSingleton<RegisteredDevices>();
             services.AddFirebaseNotifications();
         }
 

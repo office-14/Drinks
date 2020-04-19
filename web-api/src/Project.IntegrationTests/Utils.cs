@@ -103,5 +103,17 @@ namespace Project.IntegrationTests
             var response = await client.MakeSimpleOrder();
             return await response.ParseApiResponse<SingleOrder>();
         }
+
+        public static async Task<HttpResponseMessage> DeleteContentAsync<T>(this HttpClient client, string uri, T content)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Delete, uri);
+            request.Content = new StringContent(
+                JsonSerializer.Serialize(content),
+                Encoding.UTF8,
+                "application/json"
+            );
+
+            return await client.SendAsync(request);
+        }
     }
 }

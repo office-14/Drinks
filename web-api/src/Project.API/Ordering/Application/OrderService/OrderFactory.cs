@@ -1,5 +1,6 @@
 using System.Threading.Tasks;
 using Project.API.Ordering.Domain.Orders;
+using Project.API.Ordering.Domain.Users;
 
 namespace Project.API.Ordering.Application.OrderService
 {
@@ -16,14 +17,15 @@ namespace Project.API.Ordering.Application.OrderService
             (this.orderDraftFactory, this.orderNumberProvider) =
             (orderDraftFactory, orderNumberProvider);
 
-        public async Task<Order> CreateOrderFrom(ClientOrder clientOrder)
+        public async Task<Order> CreateOrderFrom(User user, ClientOrder clientOrder)
         {
             var orderDraft = await orderDraftFactory.CreateOrderDraftFrom(clientOrder);
 
             return Order.New(
                 orderNumberProvider.Generate(),
                 orderDraft.TotalPrice(),
-                orderDraft
+                orderDraft,
+                user.Id
             );
         }
     }

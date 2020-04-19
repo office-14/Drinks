@@ -1,9 +1,10 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using FirebaseAdmin.Messaging;
 using Microsoft.Extensions.Logging;
 using Project.API.Infrastructure.Notifications;
-using Project.API.Ordering.Domain.Clients;
 using Project.API.Servicing.Events;
 
 namespace Project.API.Infrastructure.Firebase
@@ -15,32 +16,39 @@ namespace Project.API.Infrastructure.Firebase
         public FirebaseNotificationService(ILogger<FirebaseNotificationService> logger)
             => this.logger = logger;
 
-        public async Task NotifyClientWhenOrderIsFinished(OrderIsFinished @event, Client client)
+        public async Task NotifyClientWhenOrderIsFinished(OrderIsFinished @event, IEnumerable<DeviceToken> tokens)
         {
             var messaging = FirebaseMessaging.DefaultInstance;
-            var deviceId = client.DeviceId!.Value.Value;
+            var tokensList = tokens.ToList();
 
-            logger.LogInformation("Trying to send a notification to device id: {}", deviceId);
+            if (tokensList.Count == 0)
+            {
+                logger.LogInformation(
+                    "There are no registered device tokens. No notifications will be sent."
+                );
+                return;
+            }
+
+            logger.LogInformation("Have '{}' devices to send notifications to.", tokensList.Count);
 
             try
             {
-                await messaging.SendAsync(new Message
+                await messaging.SendAllAsync(tokensList.Select(token => new Message
                 {
-                    Token = deviceId,
+                    Token = token.Value,
 
                     Notification = new Notification
                     {
                         Title = "Order status change",
                         Body = "Your order is finished"
                     }
-                });
+                }));
             }
             catch (Exception ex)
             {
                 logger.LogError(
                     ex,
-                    "Cannot deliver notification message for device id: {}",
-                    deviceId);
+                    "Cannot deliver notification message");
             }
         }
     }
