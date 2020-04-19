@@ -2,7 +2,6 @@ package com.office14.coffeedose.viewmodels
 
 import android.app.Application
 import androidx.lifecycle.*
-import com.coffeedose.BuildConfig
 import com.office14.coffeedose.domain.Order
 import com.office14.coffeedose.extensions.mutableLiveData
 import com.office14.coffeedose.repository.OrderDetailsRepository
@@ -15,24 +14,14 @@ class OrderAwaitingViewModel @Inject constructor(application : Application, priv
 
 
     private var orderId = mutableLiveData(-1)
-
-    //private lateinit var
-
-    private var isPolling = false
-
-    /*val order = Transformations.map(ordersRepository.getOrderById(queueOrder.value?.id ?: -1){
-        if (it.isNotEmpty()) return@map it[0]
-        return@map null
-    }*/
+    private val email = mutableLiveData(PreferencesRepository.EMPTY_STRING)
 
     val orderDetails = Transformations.map(orderId){
         return@map ordersDetailsRepository.getOrderDetailsByOrderId(it).value
     }
 
-    val order : LiveData<Order> = Transformations.map(ordersRepository.getCurrentQueueOrder()) {
+    val order : LiveData<Order> = Transformations.map(ordersRepository.getCurrentQueueOrderByUser(email)) {
         if (it != null) {
-            if (!isPolling)
-                longPollingOrder(it.id)
             return@map it
         }
         return@map null
@@ -40,10 +29,7 @@ class OrderAwaitingViewModel @Inject constructor(application : Application, priv
     }
 
     init {
-        //initOrderId()
-
-        //val queueOrders = ordersRepository.getCurrentQueueOrder()
-        //val orderId = queueOrders.value?.id
+        email.value = PreferencesRepository.getUserEmail()
     }
 
     private val _navigateToCoffeeList = MutableLiveData<Boolean>()
@@ -55,29 +41,7 @@ class OrderAwaitingViewModel @Inject constructor(application : Application, priv
 
     private val viewModelScope = CoroutineScope(viewModelJob + Dispatchers.Main)
 
-    private fun longPollingOrder(_orderId : Int){
-
-        isPolling = true
-
-        val job = viewModelScope.launch {
-
-            orderId.value = getOrderId()
-
-            while (isActive) {
-                ordersRepository.refreshOrder(_orderId, PreferencesRepository.getIdToken())
-            }
-        }
-
-        order.observeForever(Observer {
-            if (it?.statusName?.toLowerCase() == "ready"){
-                //PreferencesRepository.saveLastOrderId(-1)
-                job.cancel()
-                isPolling = false
-            }
-        })
-    }
-
-    suspend fun getOrderId() : Int{
+    private suspend fun getOrderId() : Int{
         var result = -1
         withContext(Dispatchers.IO) {
             val order = ordersRepository.getCurrentQueueOrderNormal()
@@ -97,7 +61,7 @@ class OrderAwaitingViewModel @Inject constructor(application : Application, priv
         //PreferencesRepository.saveLastOrderId(-1)
         //PreferencesRepository.saveNavigateToOrderAwaitFrag(false)
         viewModelScope.launch {
-            ordersRepository.clearQueueOrder(order.value!!.id)
+            ordersRepository.markAsFinishedForUser(email.value!!)
         }
         _navigateToCoffeeList.value = true
     }

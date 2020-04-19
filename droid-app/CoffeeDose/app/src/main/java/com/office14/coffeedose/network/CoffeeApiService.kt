@@ -1,12 +1,6 @@
 package com.office14.coffeedose.network
 
-import com.office14.coffeedose.repository.PreferencesRepository
-import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
-import com.squareup.moshi.Moshi
-import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import kotlinx.coroutines.Deferred
-import retrofit2.Retrofit
-import retrofit2.converter.moshi.MoshiConverterFactory
 import retrofit2.http.*
 
 interface CoffeeApiService {
@@ -22,6 +16,15 @@ interface CoffeeApiService {
     @GET("/api/orders/{orderId}")
     fun getOrderByIdAsync(@Path(value = "orderId", encoded = true) orderId : Int, @Header("Authorization") authHeader:String):Deferred<ResponseContainer<OrderJso>>
 
+    @GET("/api/user/orders/last")
+    fun getLastOrderForUserAsync(@Header("Authorization") authHeader:String):Deferred<ResponseContainer<OrderJso>>
+
     @POST("/api/orders")
     fun createOrderAsync(@Body body : CreateOrderBody, @Header("Authorization") authHeader:String) :Deferred<ResponseContainer<OrderJso>>
+
+    @POST("/api/user/device-tokens")
+    fun updateFcmDeviceToken(@Body body : PostFcmDeviceTokenBody, @Header("Authorization") authHeader:String) :Deferred<ResponseContainer<Any>>
+
+    @HTTP(method = "DELETE", path = "/api/user/device-tokens", hasBody = true)
+    fun deleteFcmDeviceToken(@Body body : DeleteFcmDeviceTokenBody, @Header("Authorization") authHeader:String):Deferred<ResponseContainer<Any>>
 }

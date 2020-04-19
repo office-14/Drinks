@@ -2,17 +2,13 @@ package com.office14.coffeedose.repository
 
 import android.util.Log
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.Transformations
 import com.office14.coffeedose.database.OrderDao
-import com.office14.coffeedose.database.OrderDbo
-import com.office14.coffeedose.database.OrdersQueueDao
 import com.office14.coffeedose.domain.Order
 import com.office14.coffeedose.domain.OrderDetailFull
 import com.office14.coffeedose.domain.OrderStatus
-import com.office14.coffeedose.network.CoffeeApiService
-import com.office14.coffeedose.network.CreateOrderBody
-import com.office14.coffeedose.network.HttpExceptionEx
-import com.office14.coffeedose.repository.PreferencesRepository.EMPTY_STRING
+import com.office14.coffeedose.network.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
@@ -20,10 +16,10 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class OrdersRepository @Inject constructor(private  val ordersDao : OrderDao, private val ordersQueueDao : OrdersQueueDao, private val coffeeApi : CoffeeApiService) {
+class OrdersRepository @Inject constructor(private  val ordersDao : OrderDao, private val coffeeApi : CoffeeApiService) {
 
     fun getCurrentQueueOrderNormal() : Order? {
-        val list = ordersQueueDao.getAllNormal()
+        val list = ordersDao.getAll().value
         if (list.isNullOrEmpty()) return null
         return list[0].toDomainModel()
     }
@@ -32,27 +28,27 @@ class OrdersRepository @Inject constructor(private  val ordersDao : OrderDao, pr
         itDbo.map { it.toDomainModel() }
     }
 
-    fun getCurrentQueueOrder() : LiveData<Order> = Transformations.map(ordersQueueDao.getAll()){ itDbo ->
+    fun getCurrentQueueOrder() : LiveData<Order> = Transformations.map(ordersDao.getAll()){ itDbo ->
         if (itDbo.size == 1){
             return@map itDbo[0].toDomainModel()
         }
         return@map null
     }
 
-    fun getCurrentQueueOrderByUser(email:LiveData<String>) : LiveData<Order> = Transformations.map(email){
+    fun getCurrentQueueOrderByUser(email:LiveData<String>) : LiveData<Order> {
 
-        var list = if (it == EMPTY_STRING) ordersQueueDao.getAll() else  ordersQueueDao.getAllForUser(it)
+        val result = MediatorLiveData<Order>()
+        val allOrders = ordersDao.getAllNotFinished()
 
-        val item = list.value?.get(0)
-        if (list?.value?.size == 1){
-            return@map item!!.toDomainModel()
+        val update =  {
+            val list = allOrders?.value?.filter { it.owner == email.value!! } ?: listOf()
+            result.value = if (list.size == 1) list[0].toDomainModel() else null
         }
-        return@map null
 
-        /*if (itDbo.size == 1){
-            return@map itDbo[0].toDomainModel()
-        }
-        return@map null*/
+        result.addSource(email){update.invoke()}
+        result.addSource(allOrders){update.invoke()}
+
+        return result
     }
 
     /*fun getCurrentQueueOrderByUser(email:String) : LiveData<Order> = Transformations.map(ordersQueueDao.getAllForUser(email)){ itDbo ->
@@ -62,20 +58,31 @@ class OrdersRepository @Inject constructor(private  val ordersDao : OrderDao, pr
         return@map null
     }*/
 
-    fun queueOrderStatus(email:LiveData<String>) : LiveData<OrderStatus> = Transformations.map( email ){
+    fun queueOrderStatus(email:LiveData<String>) : LiveData<OrderStatus> {
 
-        var list = if (it == EMPTY_STRING) ordersQueueDao.getAll() else  ordersQueueDao.getAllForUser(it)
+        val result = MediatorLiveData<OrderStatus>()
+        val allOrdersInQueue = ordersDao.getAllNotFinished()
 
-        val item = list.value?.get(0)
-        if (list?.value?.size == 1){
-            return@map OrderStatus.getStatusByString(item!!.statusCode)
+        val update = {
+            val list = allOrdersInQueue.value?.filter { it.owner == email.value }
+            if (list?.size == 1){
+                result.value = OrderStatus.getStatusByString(list[0].statusCode)
+            }
+            else
+                result.value = OrderStatus.NONE
         }
-        return@map OrderStatus.NONE
+
+
+        result.addSource(email){update.invoke()}
+        result.addSource(allOrdersInQueue){update.invoke()}
+
+        return result
+
     }
 
     private fun composeAuthHeader(token:String?) = "Bearer $token"
 
-    suspend fun createOrder(orders:List<OrderDetailFull>,token:String?) : Int {
+    suspend fun createOrder(orders:List<OrderDetailFull>,token:String?, email: String) : Int {
         var id = -1
         val ordersBody = CreateOrderBody()
         ordersBody.fillWithOrders(orders)
@@ -85,8 +92,7 @@ class OrdersRepository @Inject constructor(private  val ordersDao : OrderDao, pr
             if (result.hasError())
                 throw HttpExceptionEx(result.getError())
             else {
-                ordersQueueDao.insertAllOrders(result.payload!!.toOrderQueueDataBaseModel())
-                ordersDao.insertAllOrders(result.payload!!.toDataBaseModel())
+                ordersDao.insertAllOrders(result.payload!!.toDataBaseModel(email))
                 id = result.payload!!.id
             }
 
@@ -94,22 +100,15 @@ class OrdersRepository @Inject constructor(private  val ordersDao : OrderDao, pr
         return id
     }
 
-    suspend fun refreshOrder(orderId:Int, token:String?) {
+    suspend fun refreshOrder(token:String?, email:String) {
         try {
             withContext(Dispatchers.IO) {
 
-                val savedOrder = ordersQueueDao.getById(orderId).value?.get(0)
-
-                var result = coffeeApi.getOrderByIdAsync(orderId,composeAuthHeader(token)).await()
+                var result = coffeeApi.getLastOrderForUserAsync(composeAuthHeader(token)).await()
                 if (result.hasError())
                     throw HttpExceptionEx(result.getError())
                 else {
-
-                    val remoteOrder = result.payload!!.toDataBaseModel().toDomainModel()
-                    if (savedOrder != null && savedOrder?.toDomainModel().statusCode != remoteOrder.statusCode && remoteOrder.statusName?.toLowerCase() == "ready") {
-                        ordersQueueDao.insertAllOrders(result.payload!!.toOrderQueueDataBaseModel())
-                        ordersDao.insertAllOrders(result.payload!!.toDataBaseModel())
-                    }
+                    ordersDao.insertAllOrders(result.payload!!.toDataBaseModel(email))
                 }
             }
             delay(5000)
@@ -119,16 +118,47 @@ class OrdersRepository @Inject constructor(private  val ordersDao : OrderDao, pr
         }
     }
 
-    suspend fun clearQueueOrder(orderId:Int) {
+    suspend fun markAsFinishedForUser(email:String) {
         try {
             withContext(Dispatchers.IO) {
-                val savedOrder = ordersQueueDao.getById(orderId).value?.get(0)
-                savedOrder?.let { ordersQueueDao.delete(it) }
+                //val savedOrder = ordersQueueDao.getById(orderId).value?.get(0)
+                //savedOrder?.let { ordersQueueDao.delete(it) }
+                ordersDao.markAsFinishedForUser(email)
             }
 
         }
         catch (ex:Exception){
             Log.d("OrdersRepository.clearQueueOrder", ex.message?:"")
+        }
+    }
+
+    suspend fun getLastOrderForUserAndPutIntoDB(token:String?, email:String) {
+        try {
+            withContext(Dispatchers.IO) {
+                var result = coffeeApi.getLastOrderForUserAsync(composeAuthHeader(token)).await()
+                if (result.hasError())
+                    throw HttpExceptionEx(result.getError())
+                else {
+                    ordersDao.insertAllOrders(result.payload!!.toDataBaseModel(email))
+                }
+            }
+
+        }
+        catch (ex:Exception){
+            Log.d("OrdersRepository.clearQueueOrder", ex.message?:"")
+        }
+    }
+
+    fun updateFcmDeviceToken(deviceId : String, fcmToken:String , idToken : String){
+        with(Dispatchers.IO){
+            val body = PostFcmDeviceTokenBody(deviceId,fcmToken)
+            coffeeApi.updateFcmDeviceToken(body, idToken)
+        }
+    }
+
+    fun deleteFcmDeviceTokenOnLogOut(deviceId : String, idToken : String){
+        with(Dispatchers.IO){
+            coffeeApi.deleteFcmDeviceToken(DeleteFcmDeviceTokenBody(deviceId), idToken)
         }
     }
 

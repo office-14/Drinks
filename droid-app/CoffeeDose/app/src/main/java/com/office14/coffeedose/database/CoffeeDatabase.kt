@@ -3,7 +3,7 @@ package com.office14.coffeedose.database
 import androidx.room.Database
 import androidx.room.RoomDatabase
 
-@Database(entities = [CoffeeDbo::class,SizeDbo::class,AddinDbo::class,OrderDetailDbo::class,OrderDbo::class,OrderDetailsAndAddinsCrossRef::class,OrderQueueDbo::class,UserDbo::class],
+@Database(entities = [CoffeeDbo::class,SizeDbo::class,AddinDbo::class,OrderDetailDbo::class,OrderDbo::class,OrderDetailsAndAddinsCrossRef::class,UserDbo::class],
     version = 8, exportSchema = false)
 abstract class CoffeeDatabase : RoomDatabase() {
 
@@ -16,8 +16,6 @@ abstract class CoffeeDatabase : RoomDatabase() {
     abstract val orderDetailsDatabaseDao: OrderDetailDao
 
     abstract val ordersDatabaseDao: OrderDao
-
-    abstract val ordersQueueDatabaseDao: OrdersQueueDao
 
     abstract val usersDatabaseDao : UserDao
 

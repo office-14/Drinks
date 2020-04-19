@@ -1,12 +1,16 @@
 package com.office14.coffeedose
 
+import android.app.Application
+import android.app.Service
 import android.content.Context
 import androidx.databinding.DataBindingUtil
 import com.office14.coffeedose.bindings.BindingComponent
 import com.office14.coffeedose.di.AppComponent
 import com.office14.coffeedose.di.DaggerAppComponent
 import dagger.android.AndroidInjector
+import dagger.android.DispatchingAndroidInjector
 import dagger.android.support.DaggerApplication
+import javax.inject.Inject
 
 /*
     Override app class
@@ -46,6 +50,13 @@ class CoffeeDoseApplication : DaggerApplication() {
         appComponent = DaggerAppComponent.factory().create(this)
         return appComponent
     }
+
+    /*@Inject
+    lateinit var dispatchingServiceInjector: DispatchingAndroidInjector<Service>
+
+    override fun serviceInjector(): AndroidInjector<Service> {
+        return dispatchingServiceInjector
+    }*/
 
 
 }

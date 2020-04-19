@@ -79,7 +79,6 @@ abstract class AppModule {
         fun provideOrdersRepository(database: CoffeeDatabase, apiService: CoffeeApiService) =
             OrdersRepository(
                 database.ordersDatabaseDao,
-                database.ordersQueueDatabaseDao,
                 apiService
             )
 

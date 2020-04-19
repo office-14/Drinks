@@ -11,6 +11,10 @@ interface OrderDetailDao {
     fun getUnAttachedDetails(): LiveData<List<OrderDetailAndDrinkAndSize>>
 
     @Transaction
+    @Query("select * from order_details where order_id is null and owner is null")
+    fun getUnAttachedDetailsWithoutOwner(): LiveData<List<OrderDetailAndDrinkAndSize>>
+
+    @Transaction
     @Query("select * from order_details where order_id is null and owner = :email")
     fun getUnAttachedDetailsForUser(email:String): LiveData<List<OrderDetailAndDrinkAndSize>>
 
@@ -58,17 +62,17 @@ interface OrderDetailDao {
         insertAllOrderDetailsToAddInsCross(*crossRefsList.toTypedArray())
     }
 
-    @Query("update order_details set owner = :email where order_id is null")
+    @Query("update order_details set owner = :email where order_id is null and owner is null ")
     fun updateUnattachedOrderDetailsWithEmailQ(email:String): Int
 
-    @Transaction
+   /* @Transaction
     fun updateUnattachedOrderDetailsWithEmail(email:String){
-        val list = getUnAttachedDetails().value?.map { it.orderDetail }
+        val list = getUnAttachedDetailsWithoutOwner().value?.map { it.orderDetail }
         list?.let {
             it.forEach {
                 it.owner = email
             }
             insertAllOrderDetails(*it.toTypedArray())
         }
-    }
+    }*/
 }

@@ -1,13 +1,15 @@
 package com.office14.coffeedose.repository
 
 import android.content.SharedPreferences
-import androidx.preference.PreferenceManager
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.preference.PreferenceManager
 import com.office14.coffeedose.CoffeeDoseApplication
+import java.util.*
 
 object PreferencesRepository {
 
     private const val APP_THEME_KEY = "APP_THEME_KEY"
+    private const val DEVICE_ID = "DEVICE_ID"
     //private const val ORDER_ID_KEY = "ORDER_ID_KEY"
     private const val BASE_URL_KEY = "BASE_URL_KEY"
     private const val NAVIGATE_TO_ORDER_AWAITING_FRAGMENT_KEY = "NAVIGATE_TO_ORDER_AWAITING_FRAGMENT_KEY"
@@ -57,6 +59,15 @@ object PreferencesRepository {
 
     fun getUserEmail() = prefs.getString(USER_EMAIL_KEY, EMPTY_STRING)
 
+    fun getDeviceID() : String {
+        var id = prefs.getString(DEVICE_ID, EMPTY_STRING)
+        if (id == EMPTY_STRING){
+            id = UUID.randomUUID().toString()
+            putValue(DEVICE_ID to id)
+
+        }
+        return id!!
+    }
 
     private fun putValue(pair : Pair<String, Any>) = with(prefs.edit()){
         val key = pair.first

@@ -5,7 +5,10 @@ data class Order (
     val statusCode : String,
     val statusName : String,
     val orderNumber : String,
-    val totalPrice : Int
+    val totalPrice : Int,
+    val owner : String?,
+    val isFinished : Boolean
+
 )
 
 enum class OrderStatus {

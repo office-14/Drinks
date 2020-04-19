@@ -55,28 +55,37 @@ class OrderDetailsViewModel @Inject constructor(application : Application, priva
     }
 
     fun confirmOrder(){
+        email.value = PreferencesRepository.getUserEmail()
+
+        if (email.value != EMPTY_STRING && ordersRepository.getCurrentQueueOrderByUser(email).value != null){
+            _errorMessage.value = "Сначала закончите текущий заказ"
+            return
+        }
+
+
         viewModelScope.launch {
             try {
 
-                val newOrderId = ordersRepository.createOrder(unAttachedOrders.value ?: listOf(),PreferencesRepository.getIdToken())
+                //if (email.value != EMPTY_STRING){
 
-                //orderId.value = newOrderId
+                    val newOrderId = ordersRepository.createOrder(unAttachedOrders.value ?: listOf(),PreferencesRepository.getIdToken(),email.value!!)
 
-                val orderDetails = mutableListOf<OrderDetail>()
-                unAttachedOrders.value?.forEach {
-                    val orderDetail = OrderDetail(
-                        it.orderDetailInner.id,
-                        it.orderDetailInner.drinkId,
-                        it.orderDetailInner.sizeId,
-                        newOrderId,
-                        it.orderDetailInner.count,
-                        listOf()
-                    )
-                    orderDetails.add(orderDetail)
-                }
-                orderDetailsRepository.insertAll(orderDetails)
+                    val orderDetails = mutableListOf<OrderDetail>()
+                    unAttachedOrders.value?.forEach {
+                        val orderDetail = OrderDetail(
+                            it.orderDetailInner.id,
+                            it.orderDetailInner.drinkId,
+                            it.orderDetailInner.sizeId,
+                            newOrderId,
+                            it.orderDetailInner.count,
+                            listOf()
+                        )
+                        orderDetails.add(orderDetail)
+                    }
+                    orderDetailsRepository.insertAll(orderDetails)
 
-                _navigateOrderAwaiting.value = true
+                    _navigateOrderAwaiting.value = true
+                //}
             }
             catch (responseEx: HttpExceptionEx) {
                 _errorMessage.value = responseEx.error.title
@@ -85,8 +94,8 @@ class OrderDetailsViewModel @Inject constructor(application : Application, priva
                     _needLogin.value = true
                     _errorMessage.value = "Необходима авторизация"
                 }
-                else
-                    _errorMessage.value = "Ошибка получения данных"
+                /*else
+                    _errorMessage.value = "Ошибка получения данных"*/
             }
         }
     }

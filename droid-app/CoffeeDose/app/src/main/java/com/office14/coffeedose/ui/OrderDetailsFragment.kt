@@ -168,6 +168,7 @@ class OrderDetailsFragment : DaggerFragment(), HasDefaultViewModelProviderFactor
             if (it){
                 (activity as CoffeeDoseActivity).signIn{
                     viewModel.confirmOrder()
+                    (activity as CoffeeDoseActivity).forceLongPolling()
                 }
                 viewModel.doneLogin()
             }

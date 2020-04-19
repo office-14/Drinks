@@ -167,6 +167,7 @@ class CoffeeDoseActivity : DaggerAppCompatActivity() {
                     menuInfoViewModel.refreshOrderDetailsByUser()
                     menuInfoViewModel.user?.let { it.idToken = token }
                     menuInfoViewModel.updateUser()
+                    getAndUpdateActualFcmToken()
                     //menuInfoViewModel.refresh()
                     successAuthCallback()
                 }
@@ -205,6 +206,7 @@ class CoffeeDoseActivity : DaggerAppCompatActivity() {
         }
 
         menuInfoViewModel.refreshOrderDetailsByUser()
+        menuInfoViewModel.deleteFcmDeviceTokenOnLogOut()
         //menuInfoViewModel.refresh()
         invalidateOptionsMenu()
     }
@@ -233,9 +235,15 @@ class CoffeeDoseActivity : DaggerAppCompatActivity() {
                     return@OnCompleteListener
                 }
 
-                if (task.result?.token?.isNotEmpty() == true)
+                if (task.result?.token?.isNotEmpty() == true) {
                     PreferencesRepository.saveFcmRegToken(task.result!!.token!!)
+                    menuInfoViewModel.updateFcmDeviceToken()
+                }
             })
+    }
+
+    fun forceLongPolling(){
+        menuInfoViewModel.longPollingOrder()
     }
 
     fun isStarted() : Boolean = lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)

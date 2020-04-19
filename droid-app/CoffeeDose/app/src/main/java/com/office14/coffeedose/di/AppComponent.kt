@@ -16,7 +16,8 @@ import javax.inject.Singleton
         AndroidSupportInjectionModule::class,
         ActivityBuildersModule::class,
         ViewModelBuilder::class,
-        AppModule::class
+        AppModule::class,
+        ServiceBuilderModule::class
     ]
 )
 interface AppComponent : AndroidInjector<CoffeeDoseApplication> {
