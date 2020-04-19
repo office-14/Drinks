@@ -4,6 +4,10 @@ WORKDIR /app
 COPY package.json package-lock.json ./
 RUN npm install
 
+# Add dev environment variables explicitly
+# in order to override .env.production build variables
+ENV REACT_APP_WEB_API=http://localhost:5000
+
 COPY . .
 RUN npm run build
 
