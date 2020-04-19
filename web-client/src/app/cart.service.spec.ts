@@ -2,18 +2,19 @@ import { TestBed } from '@angular/core/testing';
 
 import { CartService } from './cart.service';
 import { MockCartService } from './mock-cart.service';
-import { AppModule } from './app.module';
+import { LocalStorageService } from 'angular-2-local-storage';
 
 describe('CartService', () => {
   let service: CartService;
+  const local_storage_service = jasmine.createSpyObj('LocalStorageService', ['get', 'set']);
+  local_storage_service.get.and.returnValue([]);
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-    	imports: [
-    		AppModule
-    	],
+    	imports: [],
       providers: [
-        { provide: CartService, useClass: MockCartService }
+        { provide: CartService, useClass: MockCartService },
+        { provide: LocalStorageService, useValue: local_storage_service }
       ]
     });
     service = TestBed.inject(CartService);

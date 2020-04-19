@@ -1,4 +1,4 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed, tick, fakeAsync } from '@angular/core/testing';
 
 import { HttpErrorHandlerService } from './http-error-handler.service';
 import { AuthService } from './auth/auth.service';
@@ -7,59 +7,37 @@ import { AngularFireAuth } from  "@angular/fire/auth";
 import { StateService } from "@uirouter/core";
 
 import { OrderService } from './order.service';
+import { MockOrderService } from './mock-order.service';
 
 import { HttpClientModule } from '@angular/common/http';
-
-import { MessageService } from './message.service';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFireModule } from '@angular/fire';
 import { environment } from '../environments/environment';
-import { LocalStorageModule } from 'angular-2-local-storage';
 import { HttpClient, HttpParams, HttpHeaders, HttpResponse } from '@angular/common/http';
-import { AppRoutingModule } from './app-routing.module';
-
-export class MockOrderService extends OrderService{
-  constructor(
-    protected http: HttpClient,
-    httpErrorHandler: HttpErrorHandlerService,
-    protected auth_service: AuthService,
-    protected local_storage_service: LocalStorageService,
-    protected state_service: StateService
-  ) {
-     super(http, httpErrorHandler, auth_service, local_storage_service, state_service);
-  }
-}
-
+import { CartService } from './cart.service';
+import { MockCartService } from './mock-cart.service';
+import { MessageService } from './message.service';
 
 describe('OrderService', () => {
   let service: OrderService;
   let http_error_handler_service: HttpErrorHandlerService;
 
   beforeEach(() => {
+    const message_service = jasmine.createSpyObj('MessageService', ['']);
+    const local_storage_service = jasmine.createSpyObj('LocalStorageService', ['set', 'get']);
     TestBed.configureTestingModule({
     	imports: [
-    		AppRoutingModule,
 	    	HttpClientModule,
-	    	MatSnackBarModule,
 	    	AngularFireModule.initializeApp(environment.firebase),
-	    	AngularFireAuthModule,
-	    	LocalStorageModule.forRoot({
-		        prefix: environment.local_storage.prefix,
-		        storageType: 'localStorage'
-		    })
+	    	AngularFireAuthModule
     	],
     	providers: [
 			  HttpErrorHandlerService,
 			  AuthService,
-    		MessageService,
-    		{
-          provide: OrderService,
-          useFactory: (http: HttpClient, httpErrorHandler: HttpErrorHandlerService, auth_service: AuthService, local_storage_service: LocalStorageService, state_service: StateService) => {
-            return new MockOrderService(http, httpErrorHandler, auth_service, local_storage_service, state_service);
-          },
-          deps: [HttpClient, HttpErrorHandlerService, AuthService, LocalStorageService, StateService]
-        }
+        { provide: CartService, useClass: MockCartService },
+        { provide: MessageService, useValue: message_service },
+        { provide: LocalStorageService, useValue: local_storage_service },
+        { provide: OrderService, useClass: MockOrderService }
     	]
     });
     service = TestBed.inject(OrderService);
@@ -69,4 +47,25 @@ describe('OrderService', () => {
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
+
+  it('#load_last_order should return last order ', () => {
+    service.load_last_order().subscribe();
+    let order = service.get_order();
+    expect(order.id).toBe(2);
+  });
+
+  it('#create should set new order ', () => {
+    service.create_order().subscribe();
+    let order = service.get_order();
+    expect(order.id).toBe(2);
+  });
+
+  it('#check_order_finishing should work correctly', fakeAsync(() => {
+    service.create_order().subscribe();
+    let order = service.get_order();
+    expect(order.status_code).toBe('COOKING', 'order status_code is COOKING');
+    tick(3000);
+    order = service.get_order();
+    expect(order.status_code).toBe('READY', 'order status_code is READY after 3 seconds');
+  }));
 });

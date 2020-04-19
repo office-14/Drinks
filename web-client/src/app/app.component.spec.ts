@@ -15,6 +15,9 @@ import { LocalStorageModule } from 'angular-2-local-storage';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
+    const auth_service = jasmine.createSpyObj('AuthService', ['check_auth', 'sign_out', 'auth_state']);
+    auth_service.check_auth.and.returnValue(true);
+    const cart_service = jasmine.createSpyObj('AuthService', ['load_products_from_local_storage', 'get_products_qty']);
     TestBed.configureTestingModule({
       imports: [
         AppRoutingModule,
@@ -29,9 +32,9 @@ describe('AppComponent', () => {
       ],
       providers: [
         OrderService,
-        CartService,
         MessageService,
-        AuthService,
+        { provide: AuthService, useValue: auth_service },
+        { provide: CartService, useValue: cart_service },
         HttpErrorHandlerService
       ],
       declarations: [

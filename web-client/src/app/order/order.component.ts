@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { OrderService } from '../order.service';
 import { Order } from './order';
-import { MessageService } from '../message.service';
-import { AuthService } from '../auth/auth.service';
 
 @Component({
   selector: 'app-order',
@@ -12,33 +10,17 @@ import { AuthService } from '../auth/auth.service';
 export class OrderComponent implements OnInit {
   order: Order;
   constructor(
-    private order_service: OrderService,
-    private messageService: MessageService,
-    private auth_service: AuthService
+    private order_service: OrderService
   ) { }
 
-  ngOnInit(): void {
-    
-    
-  }
-  
+  ngOnInit(): void {}
 
-  is_order_exist() {
-  	return this.order_service.is_allow_to_order();
+  is_last_order_exist() {
+  	return this.order_service.is_last_order_exist();
   }
 
   get_order() {
     return this.order_service.get_order();
-  }
-
-  is_order_status_ready() {
-    return this.order_service.is_order_status_ready();
-  }
-
-  clear_ready_order() {
-    if (this.order_service.is_order_status_ready()) {
-      this.order_service.clear_order();
-    }
   }
 
 }

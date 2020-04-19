@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { TestBed, tick, fakeAsync, ComponentFixture, async } from '@angular/core/testing';
 import { CartComponent } from './cart.component';
 import { OrderService } from '../order.service';
 import { CartService } from '../cart.service';
@@ -151,32 +151,34 @@ describe('CartComponent', () => {
     expect(cart_products.length).toBe(1, 'cart products length is correct');
   });
 
-  it('should create order when create order button clicked', () => {
-    const create_order_button : HTMLButtonElement = fixture.nativeElement.querySelector('.create-order-button');
-    create_order_button.click();
-    fixture.detectChanges();
-    let order_service = TestBed.get(OrderService);
-
-    expect(order_service.get_order().id).toBe(1, 'order created');
-  });
-
-  it('should not allow creating a new order when there is a current order', () => {
+  it('should create order when create order button clicked', fakeAsync(() => {
     const cart_products = cart_service.get_products();
-    const create_order_button : HTMLButtonElement = fixture.nativeElement.querySelector('.create-order-button');
+
+    let create_order_button : HTMLButtonElement = fixture.nativeElement.querySelector('.create-order-button');
+    expect(create_order_button).not.toBe(null, 'create order button display');
+    
     create_order_button.click();
     fixture.detectChanges();
     let order_service = TestBed.get(OrderService);
     const no_products_text : HTMLElement = fixture.nativeElement.querySelector('.no-products-text');
-    expect(no_products_text).not.toBe(null, 'no products text displayed');
+    expect(no_products_text).not.toBe(null, 'no products text display after order created');
 
+    // add products to cart and will try to add them to cart
     cart_products.forEach(function (cart_product) {
       cart_service.add_product(cart_product);
     }); 
     fixture.detectChanges();
-    const new_no_products_text : HTMLElement = fixture.nativeElement.querySelector('.no-products-text');
-    expect(new_no_products_text).toBe(null, 'no products text hid');
 
     const deprecation_text : HTMLElement = fixture.nativeElement.querySelector('.not-allow-create-order-text');
-    expect(deprecation_text).not.toBe(null, 'deprecation text displayed');
-  });
+    expect(deprecation_text).not.toBe(null, 'deprecation text display after added new products to cart');
+
+    const new_no_products_text : HTMLElement = fixture.nativeElement.querySelector('.no-products-text');
+    expect(new_no_products_text).toBe(null, 'no products text hide after added new products to cart');
+
+    //tick so order status becomes READY
+    tick(3000);
+    fixture.detectChanges();
+    let new_create_order_button : HTMLButtonElement = fixture.nativeElement.querySelector('.create-order-button');
+    expect(new_create_order_button).not.toBe(null, 'create order button show again when order finished');
+  }));
 });

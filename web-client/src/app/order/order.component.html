@@ -13,8 +13,8 @@
   <div class="grid-x">
     <div>
       <h1>Заказ</h1>
-      <div *ngIf="!is_order_exist()">Нет заказов</div>
-      <div *ngIf="is_order_exist()">
+      <div *ngIf="!is_last_order_exist()">Нет заказов</div>
+      <div *ngIf="is_last_order_exist()">
         <h3>Заказ № {{get_order().order_number}}</h3>
         <div class="media-object stack-for-small" *ngFor="let product of get_order().products">
           <div class="media-object-section">
@@ -30,7 +30,6 @@
         </div>
         <h4>Сумма заказа: {{get_order().total_price}} ₽</h4>
         <p class="order__status">Статус: {{get_order().status_name}}</p>
-        <button *ngIf="is_order_status_ready()" class="button order__clear-button" (click)="clear_ready_order()">Очистить</button>
       </div>
     </div>
   </div>

@@ -7,10 +7,7 @@ import { Order } from './order/order';
 import { HttpErrorHandlerService, HandleError } from './http-error-handler.service';
 import { AuthService } from './auth/auth.service';
 import { CartService } from './cart.service';
-import { LocalStorageService } from 'angular-2-local-storage';
-import { StateService } from "@uirouter/core";
 import { environment } from '../environments/environment';
-import { MessageService } from './message.service';
 import { BaseError } from './base-error';
 
 @Injectable()
@@ -18,6 +15,7 @@ export class OrderService {
   _READY_STATUS_ = 'READY';
   _COOKING_STATUS_ = 'COOKING';
   last_order: Order = null;
+  order_creating_started = false;
 
   private handleError: HandleError;
   private post_orders_url = environment.api_urls.post_orders;
@@ -25,62 +23,76 @@ export class OrderService {
   private get_last_order_url = environment.api_urls.get_last_order_url;
 
   constructor(
-    private message_service: MessageService,
     protected http: HttpClient,
     httpErrorHandler: HttpErrorHandlerService,
     protected auth_service: AuthService,
-    protected local_storage_service: LocalStorageService,
-    protected state_service: StateService,
     protected cart_service: CartService
   ) {
     this.handleError = httpErrorHandler.createHandleError('OrderService');
-    this.auth_service.auth_state().subscribe(user => {
-      if (user) {
-
-        if (this.cart_service.order_creating_started) {
-          this.create_order();
-        }
-        if (this.is_allow_to_order()) {
-          
-        } else {
-          if (this.cart_service.order_creating_started) {
-            this.message_service.show_error('Не возможно создать заказ, так как есть текущий!');
-          }
-        }
-        this.cart_service.order_creating_started = false;
-      } else {
-        this.clear_order();
-        this.state_service.go('drinks');
-      }
-    });
   }
 
-  is_allow_to_order() {
-  	if (this.last_order && this.last_order.status_code == this._COOKING_STATUS_) {
-  		return true;
-  	}
-  	return false;
-  }
-
-  is_order_status_ready() {
-    if (this.last_order && this.last_order.status_code == this._READY_STATUS_) {
-      return true;
-    }
-    return false;
-  }
-
-  is_order_status_cooking() {
-    if (this.last_order && this.last_order.status_code == this._COOKING_STATUS_) {
-      return true;
-    }
-    return false;
-  }
-
-  get_last_order(): Observable<Order> {
-    return this.http.get<AjaxResponse<Order>>(this.get_last_order_url).pipe(
+  protected api_get_last_order(): Observable<any> {
+    const http_options = {
+      headers: new HttpHeaders({
+        'Content-Type':  'application/json',
+        'Authorization': 'Bearer ' + this.auth_service.get_access_token()
+      })
+    };
+    return this.http.get<AjaxResponse<Order>>(this.get_last_order_url, http_options).pipe(
       catchError(this.handleError('get_last_order')),
       map((ajax_response: AjaxResponse<Order>) => ajax_response.payload)
+    )
+  }
+
+  protected api_create_order(order_products): Observable<any> {
+    const http_options = {
+      headers: new HttpHeaders({
+        'Content-Type':  'application/json',
+        'Authorization': 'Bearer ' + this.auth_service.get_access_token()
+      })
+    };
+
+    return this.http.post<AjaxResponse<any>>(this.post_orders_url, { drinks: order_products }, http_options).pipe(
+      catchError(this.handleError('create_order')),
+      map((ajax_response: AjaxResponse<any>) => ajax_response.payload)
     );
+  }
+
+  protected refresh_order_status(status_code, status_name) {
+    this.last_order.status_code = status_code;
+    this.last_order.status_name = status_name;
+  }
+
+  protected check_order_finishing() {
+    if (this.is_last_order_exist() && this.is_order_status_cooking()) {
+      this.api_get_last_order()
+      .subscribe(order => {
+        if (order.status_code == this._READY_STATUS_) {
+          this.refresh_order_status(order.status_code, order.status_name);
+        } else {
+          setTimeout(() => {this.check_order_finishing();}, 3000);
+        }
+      });
+    }
+  }
+
+  protected set_order(order) {
+    this.last_order = order;
+    if (this.is_order_status_cooking()) {
+      this.check_order_finishing();
+    }
+  }
+
+  load_last_order(): Observable<Order> {
+    return this.api_get_last_order()
+      .pipe(
+        tap(order => {
+          if (order !== null) {
+            order['products'] = [];
+            this.set_order(order);
+          }
+        })
+      );
   }
 
   create_order(): Observable<any> {
@@ -92,88 +104,53 @@ export class OrderService {
       };
       return throwError(base_error);
     }
-  	let order_products = [];
-  	for (let product of cart_products) {
-  	  for (let i = product.qty; i > 0; i--) {
-  			order_products.push({
-  				"drink_id": product.drink_id,
-  				"size_id": product.size_id,
-  				"add-ins": product.addins.map(addin => addin.id)
-  			});
-  		}
-  	}
+    let order_products = [];
+    for (let product of cart_products) {
+      for (let i = product.qty; i > 0; i--) {
+        order_products.push({
+          "drink_id": product.drink_id,
+          "size_id": product.size_id,
+          "add-ins": product.addins.map(addin => addin.id)
+        });
+      }
+    }
 
-    const http_options = {
-      headers: new HttpHeaders({
-        'Content-Type':  'application/json',
-        'Authorization': 'Bearer ' + this.auth_service.get_access_token()
-      })
-    };
-
-  	return this.http.post<AjaxResponse<any>>(this.post_orders_url, { drinks: order_products }, http_options).pipe(
-      catchError(this.handleError('create_order')),
-      map((ajax_response: AjaxResponse<any>) => ajax_response.payload),
-      map(resp => {
-        resp['products'] = cart_products;
-        this.set_order(resp);
-      }) 
+    return this.api_create_order(order_products).pipe(
+      tap(order => {
+          order['products'] = cart_products;
+          this.set_order(order);
+      }),
+      tap(resp => this.cart_service.clear_cart())
     );
   }
 
-  refresh_order_status(order) {
-    this.last_order.status_code = order.status_code;
-    this.last_order.status_name = order.status_name;
-    this.local_storage_service.set('order', this.last_order);
+  is_allow_to_order() {
+  	if (this.is_last_order_exist() && this.is_order_status_cooking()) {
+  		return false;
+  	}
+  	return true;
   }
 
-  start_longpolling_order_finishing() {
-    this.check_order_finishing();
+  is_order_status_ready() {
+    return (this.last_order.status_code == this._READY_STATUS_);
   }
 
-  check_order_finishing() {
-    if (this.is_allow_to_order() && this.is_order_status_cooking()) {
+  is_order_status_cooking() {
+    return (this.last_order.status_code == this._COOKING_STATUS_);
+  }
 
-      if (this.auth_service.get_access_token() == false) {
-        return false;
-      }
-      const http_options = {
-        headers: new HttpHeaders({
-          'Content-Type':  'application/json',
-          'Authorization': 'Bearer ' + this.auth_service.get_access_token()
-        })
-      };
-
-
-      return this.http.get<AjaxResponse<any>>(this.get_order_url.replace(/\{order_id\}/gi, this.last_order.id.toString()), http_options)
-        .pipe(
-          catchError(this.handleError('check_order_finishing')),
-          delay(3000),
-          map((ajax_response: AjaxResponse<any>) => ajax_response.payload)
-        )
-        .subscribe(res => {
-          if (res.status_code == this._READY_STATUS_) {
-            this.refresh_order_status(res);
-          } else {
-            this.check_order_finishing();
-          }
-        });
+  is_last_order_exist() {
+    if (this.last_order) {
+      return true;
     }
-  }
-
-  set_order(order) {
-  	this.last_order = order;
-    this.local_storage_service.set('order', this.last_order);
-    this.start_longpolling_order_finishing();
-  }
-
-  clear_order() {
-  	this.last_order = null;
-    if (this.auth_service.get_access_token()) {
-      this.local_storage_service.remove('order');
-    }
+    return false;
   }
 
   get_order() {
-  	return this.last_order;
+    return this.last_order;
+  }
+
+  remove_order() {
+  	this.last_order = null;
   }
 }

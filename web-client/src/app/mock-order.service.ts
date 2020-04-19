@@ -5,19 +5,44 @@ import { tap } from 'rxjs/operators';
 
 @Injectable()
 export class MockOrderService extends OrderService{
-  private mock_order = {
+  private mock_new_order_finished = {
+    "id": 2,
+    "status_code": "READY",
+    "status_name": "READY",
+    "order_number": "ORD-2",
+    "total_price": 2345,
+    "products": []
+  };
+  private mock_last_order = {
     "id": 1,
-    "status_code": "COOKING",
-    "status_name": "COOKING",
+    "status_code": "READY",
+    "status_name": "READY",
     "order_number": "ORD-1",
     "total_price": 1234,
     "products": []
   };
+  private mock_new_order = {
+    "id": 2,
+    "status_code": "COOKING",
+    "status_name": "COOKING",
+    "order_number": "ORD-2",
+    "total_price": 2345,
+    "products": []
+  };
 
-  create_order(cart_products) {
-    return of(this.mock_order).pipe(
-      tap(order => order.products = cart_products),
-      tap(order => this.order = order)
-    );
+  private last_order_counter = 0;
+
+  api_get_last_order() {
+    this.last_order_counter += 1;
+    if (this.last_order_counter > 1) {
+      return of(this.mock_new_order_finished);
+    }
+
+    return of(this.mock_new_order);    
   }
+
+  api_create_order(order_products) {
+    return of(this.mock_new_order);
+  }
+
 };

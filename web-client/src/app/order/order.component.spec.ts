@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { TestBed, tick, fakeAsync, ComponentFixture, async } from '@angular/core/testing';
 
 import { OrderComponent } from './order.component';
 import { AppModule } from '../app.module';
@@ -16,6 +16,7 @@ import { CartService } from '../cart.service';
 import { MockCartService } from '../mock-cart.service';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFireModule } from '@angular/fire';
+import { LocalStorageService } from 'angular-2-local-storage';
 
 describe('OrderComponent', () => {
   let component: OrderComponent;
@@ -23,32 +24,24 @@ describe('OrderComponent', () => {
   let cart_service: CartService;
   let order_service: OrderService;
 
-  const message_service = jasmine.createSpyObj('MessageService', ['show_success', 'show_error']);
-  const auth_service = jasmine.createSpyObj('AuthService', ['check_auth', 'get_access_token', 'auth_state']);
-  const state_service = jasmine.createSpyObj('StateService', ['go']);
-
   beforeEach(async(() => {
-    auth_service.check_auth.and.returnValue(true);
+    const auth_service = jasmine.createSpyObj('AuthService', ['get_access_token']);
+    const message_service = jasmine.createSpyObj('MessageService', ['show_success', 'show_error']);
+    const local_storage_service = jasmine.createSpyObj('LocalStorageService', ['set', 'get']);
+
     auth_service.get_access_token.and.returnValue('test_token');
-    auth_service.auth_state.and.returnValue(of(true));
 
     TestBed.configureTestingModule({
       imports: [
-        HttpClientModule,
-        LocalStorageModule.forRoot({
-            prefix: environment.local_storage.prefix,
-            storageType: 'localStorage'
-        }),
-        AngularFireAuthModule,
-        AngularFireModule.initializeApp(environment.firebase),
+        HttpClientModule
       ],
       providers: [
         { provide: OrderService, useClass: MockOrderService },
         HttpErrorHandlerService,
-        { provide: MessageService, useValue: message_service },
         { provide: AuthService, useValue: auth_service },
-        { provide: StateService, useValue: state_service },
         { provide: CartService, useClass: MockCartService },
+        { provide: MessageService, useValue: message_service },
+        { provide: LocalStorageService, useValue: local_storage_service },
       ],
       declarations: [ OrderComponent ]
     })
@@ -67,37 +60,18 @@ describe('OrderComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('order state should display correctly after order created', () => {
-    order_service.create_order(cart_service.get_products()).subscribe(order => true);
+  it('order state and order number should display correctly after order created and finished', fakeAsync(() => {
+    order_service.create_order().subscribe();
     fixture.detectChanges();
-    expect(order_service.is_allow_to_order()).toBeTruthy('order created');
-
-    let order = order_service.get_order();
-    expect(order.id).toBe(1, '#get_order returned right id');
+    const order_number: HTMLElement = fixture.nativeElement.querySelector('h3');
+    expect(order_number.textContent).toMatch('ORD-2', 'order number displayed correctly after create');
 
     const order_status: HTMLElement = fixture.nativeElement.querySelector('.order__status');
-    expect(order_status.textContent).toMatch('COOKING', 'order state displayed correctly');
+    expect(order_status.textContent).toMatch('COOKING', 'order state displayed correctly after create');
 
-    order_service.clear_order();
+    tick(3000);
     fixture.detectChanges();
-  });
-
-  it('order state should display correctly after order finished', () => {
-    order_service.create_order(cart_service.get_products()).subscribe(order => true);
-    fixture.detectChanges();
-    const order = {
-      status_code: 'READY',
-      status_name: 'READY'
-    };
-    order_service.refresh_order_status(order);
-    fixture.detectChanges();
-    const order_status: HTMLElement = fixture.nativeElement.querySelector('.order__status');
-    expect(order_status.textContent).toMatch('READY', 'order state displayed correctly');
-
-    const clear_button: HTMLElement = fixture.nativeElement.querySelector('.order__clear-button');
-    expect(clear_button).not.toBe(null, 'clear button was dispayed after order status became ready');
-
-    order_service.clear_order();
-    fixture.detectChanges();
-  });
+    order_status: HTMLElement = fixture.nativeElement.querySelector('.order__status');
+    expect(order_status.textContent).toMatch('READY', 'order state displayed correctly after finish');
+  }));
 });

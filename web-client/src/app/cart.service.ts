@@ -1,23 +1,15 @@
 import { Injectable } from '@angular/core';
-import { AngularFireAuth } from  "@angular/fire/auth";
 import { Observable } from 'rxjs';
 import { map, catchError, tap } from 'rxjs/operators';
 import { LocalStorageService } from 'angular-2-local-storage';
 
 @Injectable()
 export class CartService {
-
   cart_products = [];
-  order_creating_started = false;
 
   constructor(
-    private afAuth: AngularFireAuth,
     private local_storage_service: LocalStorageService
-  ) {
-    if (this.local_storage_service.get('cart_products')) {
-      this.cart_products = this.local_storage_service.get('cart_products');
-    }
-  }
+  ) {}
 
   private comparing_addins(addins1, addins2) {
   	if (addins1.length !== addins2.length) {
@@ -31,7 +23,6 @@ export class CartService {
 
   public clear_cart() {
   	this.cart_products = [];
-
     this.local_storage_service.set('cart_products', this.cart_products);
   }
 
@@ -77,5 +68,11 @@ export class CartService {
     {
         return prev + cur.qty * cur.price;
     }, 0);
+  }
+
+  load_products_from_local_storage() {
+    if (this.local_storage_service.get('cart_products')) {
+      this.cart_products = this.local_storage_service.get('cart_products');
+    }
   }
 }

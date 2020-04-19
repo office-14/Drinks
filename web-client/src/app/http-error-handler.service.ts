@@ -37,6 +37,12 @@ export class HttpErrorHandlerService {
       else if(error.status == 404) {
         error_title = 'Сервер не нашёл данных ддя ответа';
       }
+      else if(error.status == 400) {
+        error_title = 'Неправильный запрос к серверу';
+      }
+      else if(error.status == 401) {
+        error_title = 'Отказано в доступе';
+      }
       else if(error.status == 500) {
         error_title = error.error.title;
       }

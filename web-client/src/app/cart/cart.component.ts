@@ -43,7 +43,7 @@ export class CartComponent implements OnInit {
 
   create_order() {
       if (this.auth_service.check_auth()) {
-        if (!this.order_service.is_allow_to_order()) {
+        if (this.order_service.is_allow_to_order()) {
           this.order_service.create_order().subscribe(
             resp => {
               this.state_service.go('order');
