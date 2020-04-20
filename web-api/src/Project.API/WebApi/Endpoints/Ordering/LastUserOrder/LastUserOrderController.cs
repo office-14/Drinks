@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Project.API.Ordering.Application.LastUserOrder;
 using Project.API.Ordering.Domain.Users;
-using Project.API.WebApi.Endpoints.Ordering.Shared;
 using Project.API.WebApi.Endpoints.Shared;
 using Project.API.WebApi.Swagger;
 
@@ -26,15 +25,15 @@ namespace Project.API.WebApi.Endpoints.Ordering.LastUserOrder
 
         [HttpGet("api/user/orders/last")]
         [Produces(MediaTypeNames.Application.Json)]
-        [ProducesResponseType(typeof(ResponseWrapper<SingleOrder>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ResponseWrapper<LastOrder>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
-        public async Task<ResponseWrapper<SingleOrder?>> GetLastOrder()
+        public async Task<ResponseWrapper<LastOrder?>> GetLastOrder()
         {
             var user = this.DomainUser();
             var lastOrder = await lastUserOrderProvider.LastUserOrder(user);
 
-            if (lastOrder == null) return ResponseWrapper<SingleOrder?>.From(null);
-            return ResponseWrapper<SingleOrder?>.From(SingleOrder.From(lastOrder));
+            if (lastOrder == null) return ResponseWrapper<LastOrder?>.From(null);
+            return ResponseWrapper<LastOrder?>.From(LastOrder.From(lastOrder));
         }
     }
 }

@@ -1,11 +1,10 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
 using Project.API.Ordering.Application.LastUserOrder;
-using Project.API.Ordering.Application.OrderDetails;
 
-namespace Project.API.WebApi.Endpoints.Ordering.Shared
+namespace Project.API.WebApi.Endpoints.Ordering.LastUserOrder
 {
-    public class SingleOrder
+    public class LastOrder
     {
         [JsonPropertyName("id")]
         [Required]
@@ -30,21 +29,9 @@ namespace Project.API.WebApi.Endpoints.Ordering.Shared
         [JsonPropertyName("comment")]
         public string? Comment { get; set; }
 
-        public static SingleOrder From(OrderDetails order)
+        public static LastOrder From(LastOrderDetails order)
         {
-            return new SingleOrder
-            {
-                Id = order.Id.Value,
-                StatusCode = order.Status.Code,
-                StatusName = order.Status.Name,
-                TotalPrice = order.TotalPrice.Amount,
-                OrderNumber = order.OrderNumber.Value
-            };
-        }
-
-        public static SingleOrder From(LastOrderDetails order)
-        {
-            return new SingleOrder
+            return new LastOrder
             {
                 Id = order.Id.Value,
                 StatusCode = order.Status.Code,

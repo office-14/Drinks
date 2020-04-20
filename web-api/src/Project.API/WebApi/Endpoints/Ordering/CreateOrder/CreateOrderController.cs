@@ -4,10 +4,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Project.API.Ordering.Application.OrderDetails;
+using Project.API.Ordering.Application.LastUserOrder;
 using Project.API.Ordering.Application.OrderService;
 using Project.API.Ordering.Domain.Users;
-using Project.API.WebApi.Endpoints.Ordering.Shared;
 using Project.API.WebApi.Endpoints.Shared;
 using Project.API.WebApi.Swagger;
 
@@ -18,15 +17,15 @@ namespace Project.API.WebApi.Endpoints.Ordering.CreateOrder
     public class CreateOrderController : ControllerBase
     {
         private readonly CreateOrderService orderService;
-        private readonly IOrderDetailsRepository orderDetailsRepository;
+        private readonly ILastUserOrderProvider lastUserOrders;
 
         public CreateOrderController(
             CreateOrderService orderService,
-            IOrderDetailsRepository orderDetailsRepository
+            ILastUserOrderProvider lastUserOrders
         )
         {
             this.orderService = orderService;
-            this.orderDetailsRepository = orderDetailsRepository;
+            this.lastUserOrders = lastUserOrders;
         }
 
         [HttpPost("api/orders")]
@@ -43,7 +42,7 @@ namespace Project.API.WebApi.Endpoints.Ordering.CreateOrder
                 this.DomainUser(),
                 orderDetails.AsClientOrder()
             );
-            var orderToReturn = (await orderDetailsRepository.OrderDetailsWithId(createdOrderId))!;
+            var orderToReturn = (await lastUserOrders.LastUserOrder(this.DomainUser()))!;
 
             return ResponseWrapper<CreatedOrder>.From(CreatedOrder.From(orderToReturn));
         }

@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 using System.Text.Json.Serialization;
-using Project.API.Ordering.Application.OrderDetails;
+using Project.API.Ordering.Application.LastUserOrder;
 
 namespace Project.API.WebApi.Endpoints.Ordering.CreateOrder
 {
@@ -26,7 +26,7 @@ namespace Project.API.WebApi.Endpoints.Ordering.CreateOrder
         [Required]
         public int TotalPrice { get; set; }
 
-        public static CreatedOrder From(OrderDetails order)
+        public static CreatedOrder From(LastOrderDetails order)
         {
             return new CreatedOrder
             {

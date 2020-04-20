@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Project.API.WebApi.Endpoints.Ordering.CreateOrder;
-using Project.API.WebApi.Endpoints.Ordering.Shared;
 using Project.API.WebApi.Endpoints.Shared;
 using Xunit;
 
@@ -98,10 +97,10 @@ namespace Project.IntegrationTests
                 });
         }
 
-        public static async Task<SingleOrder> MakeSimpleOrderAndGetDetails(this HttpClient client)
+        public static async Task<CreatedOrder> MakeSimpleOrderAndGetDetails(this HttpClient client)
         {
             var response = await client.MakeSimpleOrder();
-            return await response.ParseApiResponse<SingleOrder>();
+            return await response.ParseApiResponse<CreatedOrder>();
         }
     }
 }

@@ -5,7 +5,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Project.API.Ordering.Application.DrinkDetails;
-using Project.API.Ordering.Application.OrderDetails;
 using Project.API.Ordering.Application.OrderService;
 using Project.API.Ordering.Domain.Drinks;
 using Project.API.Ordering.Domain.Orders;
@@ -63,7 +62,6 @@ namespace Project.API.WebApi
             services.AddSingleton<IDrinkDetailsRepository>(provider => provider.GetRequiredService<InMemoryDrinksRepository>());
             services.AddSingleton<IAddInsRepository, InMemoryAddInsRepository>();
             services.AddSingleton<InMemoryOrdersRepository>();
-            services.AddSingleton<IOrderDetailsRepository>(provider => provider.GetRequiredService<InMemoryOrdersRepository>());
             services.AddSingleton<IOrdersRepository>(provider => provider.GetRequiredService<InMemoryOrdersRepository>());
             services.AddSingleton<IBookedOrdersRepository>(provider => provider.GetRequiredService<InMemoryOrdersRepository>());
             services.AddSingleton<ILastUserOrderProvider, InMemoryLastUserOrders>();

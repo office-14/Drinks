@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Project.API.Ordering.Application.OrderDetails;
 using Project.API.Ordering.Domain.Orders;
 using Project.API.Servicing.Application.BookedOrders;
 using Project.API.SharedKernel.Domain.Orders;
@@ -10,7 +9,7 @@ using Project.API.SharedKernel.Domain.Orders;
 namespace Project.API.Infrastructure.Repositories
 {
     public sealed class InMemoryOrdersRepository
-        : IOrderDetailsRepository, IOrdersRepository, IBookedOrdersRepository
+        : IOrdersRepository, IBookedOrdersRepository
     {
         private volatile int IdCounter = 0;
 
@@ -18,20 +17,6 @@ namespace Project.API.Infrastructure.Repositories
             new Dictionary<OrderId, Order>();
 
         private readonly object syncLock = new object();
-
-        public Task<OrderDetails?> OrderDetailsWithId(OrderId id, CancellationToken token = default)
-        {
-            Order? order;
-
-            lock (syncLock)
-            {
-                order = orders.GetValueOrDefault(id);
-            }
-
-            if (order == null) return Task.FromResult<OrderDetails?>(null);
-
-            return Task.FromResult<OrderDetails?>(ToOrderDetails(order));
-        }
 
         public Task<Order?> OrderWithId(OrderId id, CancellationToken token = default)
         {
@@ -112,14 +97,6 @@ namespace Project.API.Infrastructure.Repositories
                     .OrderBy(o => o.Id.Value));
             }
         }
-
-        private static OrderDetails ToOrderDetails(Order order) =>
-            OrderDetails.Available(
-                order.Id,
-                order.OrderNumber,
-                order.TotalPrice,
-                order.Status
-            );
 
         private static BookedOrder ToBookedOrder(Order order) =>
             BookedOrder.Available(

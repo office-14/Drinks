@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using Project.API.WebApi.Endpoints.Ordering.Shared;
+using Project.API.WebApi.Endpoints.Ordering.LastUserOrder;
 using Project.IntegrationTests.Configuration;
 using Xunit;
 
@@ -43,7 +43,7 @@ namespace Project.IntegrationTests.Orders
             var response = await client.GetAsync("/api/user/orders/last");
 
             response.EnsureSuccess();
-            var order = await response.ParseApiResponse<SingleOrder>();
+            var order = await response.ParseApiResponse<LastOrder>();
             Assert.Null(order);
         }
 
@@ -56,7 +56,7 @@ namespace Project.IntegrationTests.Orders
             var response = await client.GetAsync("api/user/orders/last");
 
             response.EnsureSuccess();
-            var lastOrder = await response.ParseApiResponse<SingleOrder>();
+            var lastOrder = await response.ParseApiResponse<LastOrder>();
             Assert.NotNull(order);
             Assert.Equal(order.Id, lastOrder.Id);
         }
@@ -73,7 +73,7 @@ namespace Project.IntegrationTests.Orders
             var response = await client.GetAsync("api/user/orders/last");
 
             response.EnsureSuccess();
-            var lastOrder = await response.ParseApiResponse<SingleOrder>();
+            var lastOrder = await response.ParseApiResponse<LastOrder>();
             Assert.Equal("READY", lastOrder.StatusCode);
         }
     }
