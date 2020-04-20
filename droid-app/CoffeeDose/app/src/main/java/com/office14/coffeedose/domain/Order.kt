@@ -7,7 +7,7 @@ data class Order (
     val orderNumber : String,
     val totalPrice : Int,
     val owner : String?,
-    val isFinished : Boolean
+    val isFinished : String
 
 )
 

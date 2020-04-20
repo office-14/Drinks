@@ -38,6 +38,7 @@ class OrderDetailAndDrinkAndSize (
         orderDetail.sizeId,
         orderDetail.orderId,
         orderDetail.count,
+        orderDetail.owner,
         addIns.map { it.toDomainModel() },
         drink.toDomainModel(),
         size.toDomainModel()

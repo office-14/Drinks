@@ -12,6 +12,8 @@ import com.office14.coffeedose.extensions.mutableLiveData
 import com.office14.coffeedose.network.HttpExceptionEx
 import com.office14.coffeedose.repository.AddinsRepository
 import com.office14.coffeedose.repository.OrderDetailsRepository
+import com.office14.coffeedose.repository.PreferencesRepository
+import com.office14.coffeedose.repository.PreferencesRepository.EMPTY_STRING
 import com.office14.coffeedose.repository.SizesRepository
 import com.squareup.inject.assisted.Assisted
 import com.squareup.inject.assisted.AssistedInject
@@ -138,12 +140,19 @@ class SelectDoseAndAddinsViewModel @AssistedInject constructor(application: Appl
         viewModelScope.launch {
             try {
 
+                var owner:String? = null
+                val email = PreferencesRepository.getUserEmail()!!
+                if (email != EMPTY_STRING){
+                    owner = email
+                }
+
                 orderDetailsRepository.insertNew( OrderDetail(
                     id = 0,
                     drinkId = drinkId,
                     sizeId = selectedSize.value!!.id,
                     addIns = addins.value?.filter { it.isSelected } ?: listOf(),
                     count = count.value!!,
+                    owner = owner,
                     orderId = null
                 ))
                 _navigateDrinks.value = true

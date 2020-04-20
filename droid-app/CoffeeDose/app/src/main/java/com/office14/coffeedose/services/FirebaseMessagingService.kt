@@ -21,9 +21,6 @@ import javax.inject.Inject
 
 class FirebaseMessagingService: FirebaseMessagingService() {
 
-    //@Inject
-    //private lateinit var coffeeApi : CoffeeApiService
-
     /**
      * Called when message is received.
      *

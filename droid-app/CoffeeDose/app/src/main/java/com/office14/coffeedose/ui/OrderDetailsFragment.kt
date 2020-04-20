@@ -66,6 +66,8 @@ class OrderDetailsFragment : DaggerFragment(), HasDefaultViewModelProviderFactor
 
         handleLoginRequired()
 
+        handleForceLongPolling()
+
         return binding.root
 
     }
@@ -168,9 +170,17 @@ class OrderDetailsFragment : DaggerFragment(), HasDefaultViewModelProviderFactor
             if (it){
                 (activity as CoffeeDoseActivity).signIn{
                     viewModel.confirmOrder()
-                    (activity as CoffeeDoseActivity).forceLongPolling()
                 }
                 viewModel.doneLogin()
+            }
+        })
+    }
+
+    private fun handleForceLongPolling(){
+        viewModel.forceLongPolling.observe(requireActivity(), Observer {
+            if (it){
+                (activity as CoffeeDoseActivity).forceLongPolling()
+                viewModel.doneForceLongPolling()
             }
         })
     }

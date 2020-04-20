@@ -243,7 +243,7 @@ class CoffeeDoseActivity : DaggerAppCompatActivity() {
     }
 
     fun forceLongPolling(){
-        menuInfoViewModel.longPollingOrder()
+        menuInfoViewModel.restartLongPolling()
     }
 
     fun isStarted() : Boolean = lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)

@@ -18,6 +18,8 @@ import javax.inject.Singleton
 @Singleton
 class OrdersRepository @Inject constructor(private  val ordersDao : OrderDao, private val coffeeApi : CoffeeApiService) {
 
+    private val allOrders = ordersDao.getAll()
+
     fun getCurrentQueueOrderNormal() : Order? {
         val list = ordersDao.getAll().value
         if (list.isNullOrEmpty()) return null
@@ -51,12 +53,21 @@ class OrdersRepository @Inject constructor(private  val ordersDao : OrderDao, pr
         return result
     }
 
-    /*fun getCurrentQueueOrderByUser(email:String) : LiveData<Order> = Transformations.map(ordersQueueDao.getAllForUser(email)){ itDbo ->
-        if (itDbo.size == 1){
-            return@map itDbo[0].toDomainModel()
+    suspend fun getCurrentNotFinishedOrderByUser(email: String) : Order? {
+
+        var result : Order? = null
+
+        withContext(Dispatchers.IO) {
+            val list = ordersDao.getAllForUserNotFinishedStraight(email)
+
+            if (list.size == 1){
+                result =  list[0].toDomainModel()
+            }
+
         }
-        return@map null
-    }*/
+        return result
+    }
+
 
     fun queueOrderStatus(email:LiveData<String>) : LiveData<OrderStatus> {
 
@@ -121,8 +132,9 @@ class OrdersRepository @Inject constructor(private  val ordersDao : OrderDao, pr
     suspend fun markAsFinishedForUser(email:String) {
         try {
             withContext(Dispatchers.IO) {
-                //val savedOrder = ordersQueueDao.getById(orderId).value?.get(0)
-                //savedOrder?.let { ordersQueueDao.delete(it) }
+                /*val list = ordersDao.getAllForUserNotFinishedStraight(email)
+                list.forEach { it.isFinished = true }
+                ordersDao.insertAllOrders(*list.toTypedArray())*/
                 ordersDao.markAsFinishedForUser(email)
             }
 
@@ -139,7 +151,9 @@ class OrdersRepository @Inject constructor(private  val ordersDao : OrderDao, pr
                 if (result.hasError())
                     throw HttpExceptionEx(result.getError())
                 else {
-                    ordersDao.insertAllOrders(result.payload!!.toDataBaseModel(email))
+                    val existing = ordersDao.getByIdStraight(result.payload!!.id)
+                    if (existing?.size == 0)
+                        ordersDao.insertAllOrders(result.payload!!.toDataBaseModel(email))
                 }
             }
 
@@ -149,16 +163,26 @@ class OrdersRepository @Inject constructor(private  val ordersDao : OrderDao, pr
         }
     }
 
-    fun updateFcmDeviceToken(deviceId : String, fcmToken:String , idToken : String){
-        with(Dispatchers.IO){
-            val body = PostFcmDeviceTokenBody(deviceId,fcmToken)
-            coffeeApi.updateFcmDeviceToken(body, idToken)
+    suspend fun updateFcmDeviceToken(deviceId : String, fcmToken:String , idToken : String){
+        try {
+            withContext(Dispatchers.IO){
+                val body = PostFcmDeviceTokenBody(deviceId,fcmToken)
+                coffeeApi.updateFcmDeviceToken(body, composeAuthHeader(idToken)).await()
+            }
+        }
+        catch (ex:Exception){
+            Log.d("OrdersRepository.clearQueueOrder", ex.message?:"")
         }
     }
 
-    fun deleteFcmDeviceTokenOnLogOut(deviceId : String, idToken : String){
-        with(Dispatchers.IO){
-            coffeeApi.deleteFcmDeviceToken(DeleteFcmDeviceTokenBody(deviceId), idToken)
+    suspend fun deleteFcmDeviceTokenOnLogOut(deviceId : String, idToken : String){
+        try {
+            withContext(Dispatchers.IO){
+                coffeeApi.deleteFcmDeviceToken(DeleteFcmDeviceTokenBody(deviceId), composeAuthHeader(idToken))
+            }
+        }
+        catch (ex:Exception){
+            Log.d("OrdersRepository.deleteFcmDeviceTokenOnLogOut", ex.message?:"")
         }
     }
 

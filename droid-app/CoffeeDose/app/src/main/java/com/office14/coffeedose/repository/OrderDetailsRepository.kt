@@ -19,6 +19,32 @@ class OrderDetailsRepository(private val orderDetailsDao : OrderDetailDao) {
         itDbo.map { it.toDomainModel() }
     }
 
+    suspend fun unattachedOrderDetailsForUser(email:String) : List<OrderDetailFull> {
+        val result : MutableList<OrderDetailFull> = mutableListOf()
+
+        withContext(Dispatchers.IO) {
+            val list = orderDetailsDao.getUnAttachedDetailsForUserStraight(email)
+            list.forEach {
+                result.add(it.toDomainModel())
+            }
+        }
+        return result
+    }
+
+    suspend fun unattachedOrderDetailsWithoutUser() : List<OrderDetailFull> {
+        val result : MutableList<OrderDetailFull> = mutableListOf()
+
+        withContext(Dispatchers.IO) {
+            val list = orderDetailsDao.getUnAttachedDetailsWithoutUserStraight()
+            list.forEach {
+                result.add(it.toDomainModel())
+            }
+        }
+        return result
+    }
+
+
+
     fun getOrderDetailsByOrderId(orderId:Int) = Transformations.map(orderDetailsDao.getDetailsByOrderId(orderId)){ itDbo ->
         itDbo.map { it.toDomainModel() }
     }
@@ -40,6 +66,19 @@ class OrderDetailsRepository(private val orderDetailsDao : OrderDetailDao) {
 
 
         return result
+    }
+
+    suspend fun unAttachedOrderDetailsStraight(email:String) : List<OrderDetailFull>{
+
+        val result : MutableList<OrderDetailFull> = mutableListOf()
+
+        withContext(Dispatchers.IO){
+            val list = if (email != EMPTY_STRING) orderDetailsDao.getUnAttachedDetailsForUserStraight(email) else orderDetailsDao.getUnAttachedDetailsWithoutUserStraight()
+            list.forEach { result.add(it.toDomainModel()) }
+        }
+
+        return result
+
     }
 
 
@@ -117,11 +156,22 @@ class OrderDetailsRepository(private val orderDetailsDao : OrderDetailDao) {
                 if (unattached?.value?.size != 0) {
                     orderDetailsDao.deleteByEmail(email)
                 }*/
-                orderDetailsDao.updateUnattachedOrderDetailsWithEmailQ(email)
+                orderDetailsDao.updateUnattachedOrderDetailsWithEmail(email)
             }
         }
         catch (ex:Exception){
             Log.d("OrderDetailsRepository.updateUnattachedOrderDetailsWithEmail", ex.message?:"")
+        }
+    }
+
+    suspend fun updateAttachedOrderDetailsWithOrderId(email:String, orderId:Int){
+        try {
+            withContext(Dispatchers.IO) {
+                orderDetailsDao.updateAttachedOrderDetailsWithOrderId(email,orderId)
+            }
+        }
+        catch (ex:Exception){
+            Log.d("OrderDetailsRepository.updateAttachedOrderDetailsWithOrderId", ex.message?:"")
         }
     }
 

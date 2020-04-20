@@ -61,7 +61,7 @@ data class OrderDetailDbo (
     )
 
     fun toDomainModel() = OrderDetail(
-        id,drinkId,sizeId,orderId,count, listOf()
+        id,drinkId,sizeId,orderId,count,owner,listOf()
     )
 }
 

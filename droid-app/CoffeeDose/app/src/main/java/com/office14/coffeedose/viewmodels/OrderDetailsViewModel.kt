@@ -26,6 +26,10 @@ class OrderDetailsViewModel @Inject constructor(application : Application, priva
     val navigateOrderAwaiting : LiveData<Boolean>
         get() = _navigateOrderAwaiting
 
+    private val _forceLongPolling = MutableLiveData<Boolean>()
+    val forceLongPolling : LiveData<Boolean>
+        get() = _forceLongPolling
+
     val unAttachedOrders = orderDetailsRepository.unAttachedOrderDetails(email)
 
     private val _errorMessage = MutableLiveData<String>()
@@ -54,37 +58,44 @@ class OrderDetailsViewModel @Inject constructor(application : Application, priva
         }
     }
 
-    fun confirmOrder(){
+    fun confirmOrder() : Boolean {
         email.value = PreferencesRepository.getUserEmail()
-
-        if (email.value != EMPTY_STRING && ordersRepository.getCurrentQueueOrderByUser(email).value != null){
-            _errorMessage.value = "Сначала закончите текущий заказ"
-            return
-        }
-
 
         viewModelScope.launch {
             try {
 
-                //if (email.value != EMPTY_STRING){
-
-                    val newOrderId = ordersRepository.createOrder(unAttachedOrders.value ?: listOf(),PreferencesRepository.getIdToken(),email.value!!)
-
-                    val orderDetails = mutableListOf<OrderDetail>()
-                    unAttachedOrders.value?.forEach {
-                        val orderDetail = OrderDetail(
-                            it.orderDetailInner.id,
-                            it.orderDetailInner.drinkId,
-                            it.orderDetailInner.sizeId,
-                            newOrderId,
-                            it.orderDetailInner.count,
-                            listOf()
-                        )
-                        orderDetails.add(orderDetail)
+                if (email.value != EMPTY_STRING){
+                    val order = ordersRepository.getCurrentNotFinishedOrderByUser(email.value!!)
+                    if ( order != null) {
+                        _errorMessage.value = "Сначала закончите текущий заказ"
+                        return@launch
                     }
-                    orderDetailsRepository.insertAll(orderDetails)
+                }
 
-                    _navigateOrderAwaiting.value = true
+                val ordersForAdd = orderDetailsRepository.unAttachedOrderDetailsStraight(email.value!!)
+
+                val newOrderId = ordersRepository.createOrder(ordersForAdd,PreferencesRepository.getIdToken(),email.value!!)
+
+               /* val orderDetails = mutableListOf<OrderDetail>()
+                ordersForAdd.forEach {
+                    val orderDetail = OrderDetail(
+                        it.orderDetailInner.id,
+                        it.orderDetailInner.drinkId,
+                        it.orderDetailInner.sizeId,
+                        newOrderId,
+                        it.orderDetailInner.count,
+                        it.orderDetailInner.owner,
+                        listOf()
+                    )
+                    orderDetails.add(orderDetail)
+                }
+                orderDetailsRepository.insertAll(orderDetails)*/
+
+                orderDetailsRepository.updateAttachedOrderDetailsWithOrderId(email.value!!,newOrderId)
+
+                _forceLongPolling.value = true
+
+                _navigateOrderAwaiting.value = true
                 //}
             }
             catch (responseEx: HttpExceptionEx) {
@@ -98,6 +109,7 @@ class OrderDetailsViewModel @Inject constructor(application : Application, priva
                     _errorMessage.value = "Ошибка получения данных"*/
             }
         }
+        return true
     }
 
     fun doneLogin(){
@@ -126,4 +138,7 @@ class OrderDetailsViewModel @Inject constructor(application : Application, priva
         _navigateOrderAwaiting.value = false
     }
 
+    fun doneForceLongPolling(){
+        _forceLongPolling.value = false
+    }
 }

@@ -22,6 +22,6 @@ data class OrderJso (
     val totalPrice : Int
 ){
     fun toDataBaseModel(owner:String) = OrderDbo(
-        id, statusCode,statusName,orderNumber,totalPrice,owner,false
+        id, statusCode,statusName,orderNumber,totalPrice,owner,"false"
     )
 }

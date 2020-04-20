@@ -6,6 +6,7 @@ data class OrderDetail(
     val sizeId:Int,
     val orderId:Int?,
     val count: Int,
+    val owner: String?,
     val addIns : List<Addin>
 )
 
@@ -16,6 +17,7 @@ class OrderDetailFull(
     val sizeId:Int,
     val orderId:Int?,
     val count: Int,
+    val owner: String?,
     val addIns : List<Addin>,
     val drink:Coffee,
     val size:CoffeeSize
@@ -24,7 +26,7 @@ class OrderDetailFull(
     var price: Int
 
     val orderDetailInner = OrderDetail(
-        id,drinkId,sizeId,orderId,count,addIns
+        id,drinkId,sizeId,orderId,count,owner,addIns
     )
 
     init {
