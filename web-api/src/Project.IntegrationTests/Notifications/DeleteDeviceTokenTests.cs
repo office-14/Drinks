@@ -20,8 +20,8 @@ namespace Project.IntegrationTests.Notifications
         {
             var client = factory.CreateAnonymous();
 
-            var response = await client.DeleteContentAsync<DeleteDeviceToken>(
-                "api/user/device-tokens",
+            var response = await client.PostContentAsync<DeleteDeviceToken>(
+                "api/user/device-tokens/delete",
                 new DeleteDeviceToken
                 {
                     DeviceId = "device-1",
@@ -36,8 +36,8 @@ namespace Project.IntegrationTests.Notifications
         {
             var admin = factory.CreateAdminUser();
 
-            var response = await admin.DeleteContentAsync<DeleteDeviceToken>(
-                "api/user/device-tokens",
+            var response = await admin.PostContentAsync<DeleteDeviceToken>(
+                "api/user/device-tokens/delete",
                 new DeleteDeviceToken
                 {
                     DeviceId = "device-1",
@@ -52,8 +52,8 @@ namespace Project.IntegrationTests.Notifications
         {
             var client = factory.CreateClientUser();
 
-            var response = await client.DeleteContentAsync<DeleteDeviceToken>(
-                "api/user/device-tokens",
+            var response = await client.PostContentAsync<DeleteDeviceToken>(
+                "api/user/device-tokens/delete",
                 new DeleteDeviceToken
                 {
                     DeviceId = "device-1",

@@ -22,7 +22,7 @@ namespace Project.API.WebApi.Endpoints.Infrastructure.DeviceTokens
             this.registry = registry;
         }
 
-        [HttpPost]
+        [HttpPost("update")]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -40,7 +40,7 @@ namespace Project.API.WebApi.Endpoints.Infrastructure.DeviceTokens
             return NoContent();
         }
 
-        [HttpDelete]
+        [HttpPost("delete")]
         [Consumes(MediaTypeNames.Application.Json)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]

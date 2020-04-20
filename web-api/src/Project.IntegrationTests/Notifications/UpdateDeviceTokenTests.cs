@@ -21,7 +21,7 @@ namespace Project.IntegrationTests.Notifications
             var client = factory.CreateAnonymous();
 
             var response = await client.PostContentAsync<UpdateDeviceToken>(
-                "api/user/device-tokens",
+                "api/user/device-tokens/update",
                 new UpdateDeviceToken
                 {
                     DeviceId = "device-1",
@@ -38,7 +38,7 @@ namespace Project.IntegrationTests.Notifications
             var admin = factory.CreateAdminUser();
 
             var response = await admin.PostContentAsync<UpdateDeviceToken>(
-                "api/user/device-tokens",
+                "api/user/device-tokens/update",
                 new UpdateDeviceToken
                 {
                     DeviceId = "device-1",
@@ -55,7 +55,7 @@ namespace Project.IntegrationTests.Notifications
             var client = factory.CreateClientUser();
 
             var response = await client.PostContentAsync<UpdateDeviceToken>(
-                "api/user/device-tokens",
+                "api/user/device-tokens/update",
                 new UpdateDeviceToken
                 {
                     DeviceId = "device-1",
