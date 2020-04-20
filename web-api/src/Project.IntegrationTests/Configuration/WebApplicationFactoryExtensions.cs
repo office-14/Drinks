@@ -1,13 +1,17 @@
-using System;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Text.Json;
+using System.Threading;
 using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace Project.IntegrationTests.Configuration
 {
     internal static class WebApplicationFactoryExtensions
     {
+        private static volatile int nextId = 0;
+
+        private static int NextId() => Interlocked.Increment(ref nextId);
+
         internal static HttpClient CreateAnonymous<T>(this WebApplicationFactory<T> factory) where T : class
             => factory.DefaultApiClient();
 
@@ -17,7 +21,7 @@ namespace Project.IntegrationTests.Configuration
 
             var jsonCredentials = JsonSerializer.Serialize(new TestAuthHandler.Credentials
             {
-                Id = Guid.NewGuid().ToString(),
+                Id = NextId().ToString(),
                 IsAdmin = false
             });
 
@@ -33,7 +37,7 @@ namespace Project.IntegrationTests.Configuration
 
             var jsonCredentials = JsonSerializer.Serialize(new TestAuthHandler.Credentials
             {
-                Id = Guid.NewGuid().ToString(),
+                Id = NextId().ToString(),
                 IsAdmin = true
             });
 
