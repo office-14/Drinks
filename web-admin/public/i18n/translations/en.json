@@ -17,7 +17,8 @@
     "actions": "Actions",
     "noRecordsToDisplay": "No records to display",
     "refreshData": "Refresh",
-    "finishOrder": "Finish order"
+    "finishOrder": "Finish order",
+    "comment": "Comment"
   },
   "settings": {
     "localizationTitle": "Localization settings",

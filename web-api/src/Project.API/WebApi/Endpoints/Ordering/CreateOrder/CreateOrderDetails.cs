@@ -13,6 +13,9 @@ namespace Project.API.WebApi.Endpoints.Ordering.CreateOrder
         [Required]
         public List<CreateOrderDrinksItem>? Drinks { get; set; }
 
+        [JsonPropertyName("comment")]
+        public string? Comment { get; set; }
+
         public ClientOrder AsClientOrder()
         {
             var clientOrder = new ClientOrder();
@@ -20,6 +23,8 @@ namespace Project.API.WebApi.Endpoints.Ordering.CreateOrder
             clientOrder.Drinks =
                 Drinks?.Select(item => item.AsClientOrderLine()).ToList() ??
                 new List<ClientOrder.OrderLine>();
+
+            clientOrder.Comment = Comment;
 
             return clientOrder;
         }

@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using Project.API.Ordering.Domain.Orders;
 using Project.API.Ordering.Domain.Users;
+using Project.API.SharedKernel.Domain.Orders;
 
 namespace Project.API.Ordering.Application.OrderService
 {
@@ -25,7 +26,8 @@ namespace Project.API.Ordering.Application.OrderService
                 orderNumberProvider.Generate(),
                 orderDraft.TotalPrice(),
                 orderDraft,
-                user.Id
+                user.Id,
+                Comment.From(clientOrder.Comment)
             );
         }
     }

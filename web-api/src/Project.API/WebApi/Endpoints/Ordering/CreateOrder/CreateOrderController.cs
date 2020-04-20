@@ -32,11 +32,11 @@ namespace Project.API.WebApi.Endpoints.Ordering.CreateOrder
         [HttpPost("api/orders")]
         [Consumes(MediaTypeNames.Application.Json)]
         [Produces(MediaTypeNames.Application.Json)]
-        [ProducesResponseType(typeof(ResponseWrapper<SingleOrder>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ResponseWrapper<CreatedOrder>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ProblemDetails), StatusCodes.Status500InternalServerError)]
 
-        public async Task<ResponseWrapper<SingleOrder>> createNewOrder(
+        public async Task<ResponseWrapper<CreatedOrder>> createNewOrder(
             [FromBody, BindRequired] CreateOrderDetails orderDetails)
         {
             var createdOrderId = await orderService.CreateNewOrder(
@@ -45,7 +45,7 @@ namespace Project.API.WebApi.Endpoints.Ordering.CreateOrder
             );
             var orderToReturn = (await orderDetailsRepository.OrderDetailsWithId(createdOrderId))!;
 
-            return ResponseWrapper<SingleOrder>.From(SingleOrder.From(orderToReturn));
+            return ResponseWrapper<CreatedOrder>.From(CreatedOrder.From(orderToReturn));
         }
     }
 }

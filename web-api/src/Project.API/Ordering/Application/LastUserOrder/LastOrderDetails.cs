@@ -10,10 +10,11 @@ namespace Project.API.Ordering.Application.LastUserOrder
             OrderId id,
             OrderNumber orderNumber,
             Roubles totalPrice,
-            Status status
+            Status status,
+            Comment comment
         ) =>
-            (Id, OrderNumber, TotalPrice, Status) =
-            (id, orderNumber, totalPrice, status);
+            (Id, OrderNumber, TotalPrice, Status, Comment) =
+            (id, orderNumber, totalPrice, status, comment);
 
         public OrderId Id { get; }
 
@@ -23,16 +24,20 @@ namespace Project.API.Ordering.Application.LastUserOrder
 
         public Status Status { get; }
 
+        public Comment Comment { get; }
+
         public static LastOrderDetails Available(
             OrderId id,
             OrderNumber orderNumber,
             Roubles totalPrice,
-            Status status
+            Status status,
+            Comment comment
         ) => new LastOrderDetails(
             id,
             orderNumber,
             totalPrice,
-            status
+            status,
+            comment
         );
     }
 }

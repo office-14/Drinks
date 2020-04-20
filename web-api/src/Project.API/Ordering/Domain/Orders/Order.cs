@@ -15,10 +15,11 @@ namespace Project.API.Ordering.Domain.Orders
             Roubles totalPrice,
             Status status,
             OrderDraft draft,
-            UserId clientId
+            UserId clientId,
+            Comment comment
         ) =>
-            (Id, OrderNumber, TotalPrice, Status, Draft, ClientId) =
-            (id, orderNumber, totalPrice, status, draft, clientId);
+            (Id, OrderNumber, TotalPrice, Status, Draft, ClientId, Comment) =
+            (id, orderNumber, totalPrice, status, draft, clientId, comment);
 
         public OrderId Id { get; private set; }
 
@@ -31,6 +32,8 @@ namespace Project.API.Ordering.Domain.Orders
         public OrderDraft Draft { get; private set; }
 
         public UserId ClientId { get; private set; }
+
+        public Comment Comment { get; private set; }
 
         public void Finish()
         {
@@ -58,14 +61,16 @@ namespace Project.API.Ordering.Domain.Orders
             OrderNumber orderNumber,
             Roubles totalPrice,
             OrderDraft draft,
-            UserId clientId
+            UserId clientId,
+            Comment comment
         ) => new Order(
             default,
             orderNumber,
             totalPrice,
             Status.Cooking,
             draft,
-            clientId
+            clientId,
+            comment
         );
 
         public static Order Existing(
@@ -74,16 +79,16 @@ namespace Project.API.Ordering.Domain.Orders
             Roubles totalPrice,
             Status status,
             OrderDraft draft,
-            UserId clientId
+            UserId clientId,
+            Comment comment
         ) => new Order(
             id,
             orderNumber,
             totalPrice,
             status,
             draft,
-            clientId
+            clientId,
+            comment
         );
-
-
     }
 }

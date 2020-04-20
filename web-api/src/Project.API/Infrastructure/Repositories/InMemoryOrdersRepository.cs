@@ -60,7 +60,8 @@ namespace Project.API.Infrastructure.Repositories
                 order.TotalPrice,
                 order.Status,
                 order.Draft,
-                order.ClientId
+                order.ClientId,
+                order.Comment
             );
 
             lock (syncLock)
@@ -74,7 +75,8 @@ namespace Project.API.Infrastructure.Repositories
                 newOrder.TotalPrice,
                 newOrder.Status,
                 newOrder.Draft,
-                newOrder.ClientId
+                newOrder.ClientId,
+                newOrder.Comment
             );
 
             return persistedOrder;
@@ -88,7 +90,8 @@ namespace Project.API.Infrastructure.Repositories
                 order.TotalPrice,
                 order.Status,
                 order.Draft,
-                order.ClientId
+                order.ClientId,
+                order.Comment
             );
 
             lock (syncLock)
@@ -123,6 +126,7 @@ namespace Project.API.Infrastructure.Repositories
                 order.Id,
                 order.OrderNumber,
                 order.TotalPrice,
+                order.Comment,
                 order.Draft.Items.Select(ToBookedItem).ToArray()
             );
 

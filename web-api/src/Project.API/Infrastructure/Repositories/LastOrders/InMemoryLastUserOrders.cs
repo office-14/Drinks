@@ -46,7 +46,8 @@ namespace Project.API.Infrastructure.Repositories.LastOrders
                 order.Id,
                 order.OrderNumber,
                 order.TotalPrice,
-                order.Status
+                order.Status,
+                order.Comment
             );
         }
 

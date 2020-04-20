@@ -19,6 +19,9 @@ namespace Project.API.WebApi.Endpoints.Servicing.BookedOrders
         [Required]
         public int TotalPrice { get; set; }
 
+        [JsonPropertyName("comment")]
+        public string? Comment { get; set; }
+
         [JsonPropertyName("items")]
         [Required]
         public BookedItem[] Items { get; set; } = Array.Empty<BookedItem>();
@@ -29,6 +32,7 @@ namespace Project.API.WebApi.Endpoints.Servicing.BookedOrders
                 Id = bookedOrder.Id.Value,
                 OrderNumber = bookedOrder.OrderNumber.Value,
                 TotalPrice = bookedOrder.TotalPrice.Amount,
+                Comment = bookedOrder.Comment.Value,
                 Items = bookedOrder.Items.Select(BookedItem.From).ToArray()
             };
     }

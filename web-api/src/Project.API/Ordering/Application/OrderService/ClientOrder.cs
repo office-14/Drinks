@@ -7,6 +7,8 @@ namespace Project.API.Ordering.Application.OrderService
     {
         public List<OrderLine> Drinks { get; set; } = new List<OrderLine>();
 
+        public string? Comment { get; set; }
+
         public sealed class OrderLine
         {
             public DrinkId DrinkId { get; set; }

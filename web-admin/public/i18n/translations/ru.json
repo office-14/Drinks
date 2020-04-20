@@ -17,7 +17,8 @@
     "actions": "Действия",
     "noRecordsToDisplay": "Нет активных заказов",
     "refreshData": "Обновить",
-    "finishOrder": "Завершить заказ"
+    "finishOrder": "Завершить заказ",
+    "comment": "Комментарий к заказу"
   },
   "settings": {
     "localizationTitle": "Настройки локализации",

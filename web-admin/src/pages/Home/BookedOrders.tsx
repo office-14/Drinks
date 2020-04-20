@@ -113,6 +113,11 @@ function BookedOrders() {
           field: 'items',
           render: (row) => renderOrderDetails(row.items),
         },
+        {
+          title: t('bookedOrdersTable.comment'),
+          field: 'comment',
+          width: 250,
+        },
       ]}
       data={handleDataUpdate}
       actions={[
