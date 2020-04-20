@@ -12,7 +12,7 @@ namespace Project.API.Infrastructure.Repositories
     public sealed class InMemoryOrdersRepository
         : IOrderDetailsRepository, IOrdersRepository, IBookedOrdersRepository
     {
-        private int IdCounter = 0;
+        private volatile int IdCounter = 0;
 
         private readonly Dictionary<OrderId, Order> orders =
             new Dictionary<OrderId, Order>();
@@ -65,7 +65,7 @@ namespace Project.API.Infrastructure.Repositories
 
             lock (syncLock)
             {
-                orders.Add(nextId, newOrder);
+                orders[nextId] = newOrder;
             }
 
             var persistedOrder = Order.Existing(

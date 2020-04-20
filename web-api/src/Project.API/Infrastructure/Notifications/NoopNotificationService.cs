@@ -5,7 +5,7 @@ using Project.API.Servicing.Events;
 
 namespace Project.API.Infrastructure.Notifications
 {
-    internal sealed class NoopNotificationService : INotificationService
+    public sealed class NoopNotificationService : INotificationService
     {
         private readonly ILogger<NoopNotificationService> logger;
 
