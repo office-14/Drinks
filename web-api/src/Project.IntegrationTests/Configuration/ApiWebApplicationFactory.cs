@@ -15,7 +15,7 @@ namespace Project.IntegrationTests.Configuration
         {
             builder.ConfigureLogging((host, logging) =>
             {
-                logging.ClearProviders();
+                // logging.ClearProviders();
             });
 
             builder.ConfigureTestServices(services =>
