@@ -111,7 +111,8 @@ namespace Project.API.Infrastructure.Repositories
             BookedItem.Ordered(
                 item.Drink.Name,
                 item.Size.Volume,
-                item.AddIns.Select(a => a.Name).ToArray()
+                item.AddIns.Select(a => a.Name).ToArray(),
+                item.Count
             );
     }
 }

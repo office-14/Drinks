@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
@@ -47,7 +49,23 @@ namespace Project.API.Infrastructure.Repositories.LastOrders
                 order.OrderNumber,
                 order.TotalPrice,
                 order.Status,
-                order.Comment
+                order.Comment,
+                ToLastOrderDrinks(order.Draft.Items)
+            );
+        }
+
+        private List<LastOrderDrink> ToLastOrderDrinks(IEnumerable<OrderItem> items)
+        {
+            return items.Select(ToLastOrderDrink).ToList();
+        }
+
+        private LastOrderDrink ToLastOrderDrink(OrderItem item)
+        {
+            return LastOrderDrink.Available(
+                item.Drink.Id,
+                item.Size.Id,
+                item.AddIns.Select(a => a.Id).ToList(),
+                item.Count
             );
         }
 

@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Linq;
 using System.Text.Json.Serialization;
 using Project.API.Ordering.Application.LastUserOrder;
 
@@ -29,6 +31,10 @@ namespace Project.API.WebApi.Endpoints.Ordering.LastUserOrder
         [JsonPropertyName("comment")]
         public string? Comment { get; set; }
 
+        [JsonPropertyName("drinks")]
+        [Required]
+        public IEnumerable<LastDrinkItem> Drinks { get; set; } = Enumerable.Empty<LastDrinkItem>();
+
         public static LastOrder From(LastOrderDetails order)
         {
             return new LastOrder
@@ -38,7 +44,8 @@ namespace Project.API.WebApi.Endpoints.Ordering.LastUserOrder
                 StatusName = order.Status.Name,
                 TotalPrice = order.TotalPrice.Amount,
                 OrderNumber = order.OrderNumber.Value,
-                Comment = order.Comment.Value
+                Comment = order.Comment.Value,
+                Drinks = order.Drinks.Select(LastDrinkItem.From)
             };
         }
     }

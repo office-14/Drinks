@@ -13,10 +13,10 @@ function renderOrderDetails(items: any[]) {
 }
 
 function renderOrderItem(
-  { drink_name, drink_volume, 'add-ins': addIns }: any,
+  { drink_name, drink_volume, 'add-ins': addIns, count }: any,
   idx: number
 ) {
-  let formattedItem = `${drink_name} (${drink_volume})`
+  let formattedItem = `${count} x ${drink_name} (${drink_volume})`
   if (addIns.length > 0) {
     formattedItem += ` (+ ${addIns.toString()})`
   }

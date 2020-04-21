@@ -91,7 +91,8 @@ namespace Project.IntegrationTests
                         new CreateOrderDrinksItem {
                             DrinkId = 1,
                             SizeId = 7,
-                            AddIns = new List<int> { 4 }
+                            AddIns = new List<int> { 4 },
+                            Count = 1
                         }
                     }
                 });

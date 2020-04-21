@@ -12,6 +12,8 @@ namespace Project.API.SharedKernel.Domain.Core
 
         public Roubles Add(Roubles other) => From(Amount + other.Amount);
 
+        public Roubles Times(Quantity count) => From(Amount * count.Value);
+
         public static Roubles From(int amount)
         {
             if (amount < 0) throw new ArgumentOutOfRangeException(nameof(amount),

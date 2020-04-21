@@ -16,6 +16,8 @@ namespace Project.API.Ordering.Application.OrderService
             public DrinkSizeId DrinkSizeId { get; set; }
 
             public List<AddInId>? AddInIds { get; set; }
+
+            public int Count { get; set; }
         }
     }
 }

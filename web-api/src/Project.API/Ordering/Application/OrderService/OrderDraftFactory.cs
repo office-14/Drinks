@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using Project.API.Ordering.Application.OrderService.Exceptions;
 using Project.API.Ordering.Domain.Drinks;
+using Project.API.SharedKernel.Domain.Core;
 using Project.API.SharedKernel.Domain.Orders;
 
 namespace Project.API.Ordering.Application.OrderService
@@ -31,7 +32,8 @@ namespace Project.API.Ordering.Application.OrderService
             {
                 var draftItem = OrderItem.New(
                     await EnsureDrinkExists(orderItem.DrinkId),
-                    await EnsureDrinkSizeExists(orderItem.DrinkId, orderItem.DrinkSizeId)
+                    await EnsureDrinkSizeExists(orderItem.DrinkId, orderItem.DrinkSizeId),
+                    Quantity.From(orderItem.Count)
                 );
 
                 if (orderItem.AddInIds != null)

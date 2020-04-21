@@ -9,12 +9,14 @@ namespace Project.API.SharedKernel.Domain.Orders
     {
         private readonly List<AddIn> addIns = new List<AddIn>();
 
-        private OrderItem(Drink drink, DrinkSize drinkSize) =>
-            (Drink, Size) = (drink, drinkSize);
+        private OrderItem(Drink drink, DrinkSize drinkSize, Quantity count) =>
+            (Drink, Size, Count) = (drink, drinkSize, count);
 
         public Drink Drink { get; }
 
         public DrinkSize Size { get; }
+
+        public Quantity Count { get; }
 
         public IReadOnlyCollection<AddIn> AddIns
         {
@@ -38,12 +40,14 @@ namespace Project.API.SharedKernel.Domain.Orders
                 drinkPrice = drinkPrice.Add(addIn.Price);
             }
 
+            drinkPrice = drinkPrice.Times(Count);
+
             return drinkPrice;
         }
 
-        public static OrderItem New(Drink drink, DrinkSize size)
+        public static OrderItem New(Drink drink, DrinkSize size, Quantity count)
         {
-            return new OrderItem(drink, size);
+            return new OrderItem(drink, size, count);
         }
     }
 }

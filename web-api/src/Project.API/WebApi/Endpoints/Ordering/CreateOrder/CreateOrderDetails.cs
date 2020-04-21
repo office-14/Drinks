@@ -43,6 +43,10 @@ namespace Project.API.WebApi.Endpoints.Ordering.CreateOrder
         [JsonPropertyName("add-ins")]
         public List<int>? AddIns { get; set; }
 
+        [JsonPropertyName("count")]
+        [Required]
+        public int Count { get; set; }
+
         public ClientOrder.OrderLine AsClientOrderLine()
         {
             var line = new ClientOrder.OrderLine();
@@ -50,6 +54,7 @@ namespace Project.API.WebApi.Endpoints.Ordering.CreateOrder
             line.DrinkId = API.Ordering.Domain.Drinks.DrinkId.From(DrinkId);
             line.DrinkSizeId = API.Ordering.Domain.Drinks.DrinkSizeId.From(SizeId);
             line.AddInIds = AddIns?.Select(AddInId.From).ToList() ?? new List<AddInId>();
+            line.Count = Count;
 
             return line;
         }

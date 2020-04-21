@@ -5,7 +5,7 @@ namespace Project.API.Ordering.Application.OrderService
 {
     public sealed class OrderNumberProvider
     {
-        private int nextId = 0;
+        private volatile int nextId = 0;
 
         public OrderNumber Generate()
         {
