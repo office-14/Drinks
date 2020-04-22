@@ -2,7 +2,6 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Project.API.Ordering.Application.DrinkDetails;
 using Project.API.Ordering.Application.OrderService;
@@ -19,17 +18,19 @@ using Project.API.Ordering.Application.LastUserOrder;
 using Project.API.Infrastructure.Repositories.LastOrders;
 using Project.API.WebApi.Authentication;
 using Project.API.Infrastructure.Notifications;
+using Project.API.WebApi.Cors;
 
 [assembly: ApiController]
 namespace Project.API.WebApi
 {
     public class Startup
     {
-        private static readonly string CorsAllowAllPolicy = "AllowAll";
-
-        public Startup(IConfiguration config) => Configuration = config;
+        public Startup(IConfiguration config, IWebHostEnvironment env) =>
+            (Configuration, Environment) = (config, env);
 
         public IConfiguration Configuration { get; }
+
+        public IWebHostEnvironment Environment { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
@@ -38,16 +39,7 @@ namespace Project.API.WebApi
             services.AddMvcCore()
                 .AddApiExplorer();
 
-            services.AddCors(options =>
-            {
-                options.AddPolicy(CorsAllowAllPolicy, builder =>
-                {
-                    builder
-                        .AllowAnyOrigin()
-                        .AllowAnyHeader()
-                        .AllowAnyMethod();
-                });
-            });
+            services.AddCustomCors(Configuration);
 
             services.AddFirebaseAuthentication(Configuration);
 
@@ -76,33 +68,18 @@ namespace Project.API.WebApi
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(
-            IApplicationBuilder app,
-            IWebHostEnvironment env,
-            ILogger<Startup> logger
-        )
+        public void Configure(IApplicationBuilder app, ILogger<Startup> logger)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseExceptionHandler("/error-dev");
-            }
+            app.UseExceptionHandler("/error");
 
             app.UseRouting();
+
+            app.UseCustomCors(Environment, logger);
 
             app.UseAuthentication();
             app.UseAuthorization();
 
-            if (env.IsDevelopment())
-            {
-                logger.LogInformation("CORS: allowing all requests");
-                app.UseCors(CorsAllowAllPolicy);
-            }
-            else
-            {
-                app.UseCors();
-            }
-
-            app.UseCustomSwagger();
+            app.UseCustomSwagger(Environment);
 
             app.UseEndpoints(endpoints =>
             {

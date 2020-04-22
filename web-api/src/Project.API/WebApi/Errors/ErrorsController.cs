@@ -11,15 +11,9 @@ namespace Project.API.WebApi.Errors
     [ApiExplorerSettings(IgnoreApi = true)]
     public class ErrorsController : ControllerBase
     {
-        [Route("/error-dev")]
-        public IActionResult ErrorLocalDevelopment([FromServices] IWebHostEnvironment webHostEnvironment)
+        [Route("/error")]
+        public IActionResult ErrorHandler([FromServices] IWebHostEnvironment environment)
         {
-            if (!webHostEnvironment.IsDevelopment())
-            {
-                throw new InvalidOperationException(
-                    "This shouldn't be invoked in non-development environments.");
-            }
-
             var context = HttpContext.Features.Get<IExceptionHandlerFeature>();
 
             if (context.Error is ArgumentException)
@@ -27,7 +21,7 @@ namespace Project.API.WebApi.Errors
                 return Problem(
                     statusCode: StatusCodes.Status400BadRequest,
                     title: context.Error.Message,
-                    detail: context.Error.StackTrace
+                    detail: environment.IsDevelopment() ? context.Error.StackTrace : null
                 );
             }
             else if (context.Error is DrinksDomainException)
@@ -35,7 +29,7 @@ namespace Project.API.WebApi.Errors
                 return Problem(
                     statusCode: StatusCodes.Status400BadRequest,
                     title: context.Error.Message,
-                    detail: context.Error.StackTrace
+                    detail: environment.IsDevelopment() ? context.Error.StackTrace : null
                 );
             }
 

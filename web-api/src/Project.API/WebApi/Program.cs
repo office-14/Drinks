@@ -15,11 +15,10 @@ namespace Project.API.WebApi
             Host.CreateDefaultBuilder(args)
                 .ConfigureLogging((host, logging) =>
                 {
-                    if (host.HostingEnvironment.IsDevelopment())
-                    {
-                        logging.ClearProviders();
-                        logging.AddConsole();
-                    }
+                    // TODO: decided to use only console logging
+                    // for all environments (development and production)
+                    logging.ClearProviders();
+                    logging.AddConsole();
                 })
                 .ConfigureWebHostDefaults(webBuilder =>
                 {

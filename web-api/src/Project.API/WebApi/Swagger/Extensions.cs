@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 
 namespace Project.API.WebApi.Swagger
@@ -36,19 +38,27 @@ namespace Project.API.WebApi.Swagger
             return services;
         }
 
-        public static IApplicationBuilder UseCustomSwagger(this IApplicationBuilder app)
+        public static IApplicationBuilder UseCustomSwagger(
+            this IApplicationBuilder app,
+            IWebHostEnvironment environment
+        )
         {
             app.UseSwagger(c =>
             {
                 c.PreSerializeFilters.Add((swagger, httpReq) =>
                 {
-                    swagger.Servers = new List<OpenApiServer> {
-                        // TODO: Had to manually add both HTTP and HTTPS schemes
-                        // because Cloud Run serves HTTPS but requires HTTP.
-                        // May be solved by introducing additional "Local" environment.
-                        new OpenApiServer { Url = $"https://{httpReq.Host.Value}" },
-                        new OpenApiServer { Url = $"http://{httpReq.Host.Value}" }
-                    };
+                    var servers = new List<OpenApiServer>();
+
+                    if (environment.IsDevelopment())
+                    {
+                        servers.Add(new OpenApiServer { Url = $"http://{httpReq.Host.Value}" });
+                    }
+                    else
+                    {
+                        servers.Add(new OpenApiServer { Url = $"https://{httpReq.Host.Value}" });
+                    }
+
+                    swagger.Servers = servers;
                 });
             });
             app.UseSwaggerUI(c =>
