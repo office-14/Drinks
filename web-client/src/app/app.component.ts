@@ -11,7 +11,7 @@ import { MessageService } from './message.service';
   styleUrls: ['./app.component.css']
 })
 export class AppComponent implements OnInit {
-  title = 'angular-app';
+  user = null;
 
   constructor(
   	private cart_service: CartService,
@@ -24,6 +24,7 @@ export class AppComponent implements OnInit {
   ngOnInit(): void {
     this.auth_service.auth_state().subscribe(user => {
       if (user) {
+        this.user = user;
         this.order_service.load_last_order().subscribe(
             last_order => {
               if (this.order_service.order_creating_started) {
@@ -41,7 +42,9 @@ export class AppComponent implements OnInit {
             }
         );
       } else {
+        this.user = null;
         this.order_service.remove_order();
+        this.state_service.go('drinks');
       }
     });
     this.cart_service.load_products_from_local_storage();
@@ -66,4 +69,17 @@ export class AppComponent implements OnInit {
   public sign_in() {
     this.state_service.go('signin');
   }
+  
+  public isset_cooking_order() {
+    if (this.order_service.is_last_order_exist()) {
+      return this.order_service.is_order_status_cooking();
+    }
+    return false;
+  }
+  
+  public is_order_status_cooking() {
+    return this.order_service.is_order_status_cooking();
+  }
+
+  
 }

@@ -27,6 +27,7 @@
     "@uirouter/rx": "^0.6.5",
     "angular-2-local-storage": "^3.0.2",
     "firebase": "^7.10.0",
+    "mdbootstrap": "^4.16.0",
     "rxjs": "~6.5.4",
     "tslib": "^1.10.0",
     "zone.js": "~0.10.2"

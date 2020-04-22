@@ -71,4 +71,10 @@ export class CartComponent implements OnInit {
     return this.cart_service.get_products_qty();
   }
 
+  minus_product_qty(product) {
+    if (product.qty > 1) {
+      product.qty -= 1;
+    }
+  }
+
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { DrinksService }  from '../drinks.service';
 
 import { Transition } from "@uirouter/core";
@@ -8,6 +8,7 @@ import { Observable } from 'rxjs';
 
 import { CartService } from '../../cart.service';
 import { MessageService } from '../../message.service';
+// MDB Angular Pro
 
 @Component({
   selector: 'app-drink-detail',
@@ -38,6 +39,10 @@ export class DrinkDetailComponent implements OnInit {
     return this.drinks_service.getDraftCartProduct();
   }
 
+  set_draft_cart_product_qty(qty) {
+    this.drinks_service.set_draft_cart_product_qty(qty);
+  }
+
   getDrink() {
   	this.drink = this.drinks_service.getDrink(this.getCurrent_drinkId());
     this.drinks_service.getSizes(this.drink.id).subscribe(size => {
@@ -61,7 +66,9 @@ export class DrinkDetailComponent implements OnInit {
     }
   }
 
-  public change_draft_cart_product_qty() {
+  public add_
+
+  public limit_draft_cart_product_qty() {
     let draft_cart_product = this.drinks_service.getDraftCartProduct();
   	if (draft_cart_product.qty < 1) {
   		draft_cart_product.qty = 1;

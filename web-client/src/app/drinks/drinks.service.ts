@@ -56,6 +56,10 @@ export class DrinksService {
     return this.draft_cart_product;
   }
 
+  set_draft_cart_product_qty(qty) {
+    this.draft_cart_product.qty = qty;
+  }
+
   getSizes (drink_id: number | string):Observable<Size[]> {
     return this.http.get<AjaxResponse<Size[]>>(this.get_sizes_url.replace(/\{drink_id\}/gi, drink_id.toString()))
     .pipe(

@@ -1,65 +1,101 @@
-<br>
-<article class="grid-container" *ngIf="drink">
-  <div class="grid-x cell">
-    <nav aria-label="You are here:" role="navigation">
-      <ul class="breadcrumbs">
-        <li><a ui-sref="drinks">Меню</a></li>
-        <li>
-          <span class="show-for-sr">Страница: </span> {{drink.name}}
-        </li>
-      </ul>
-    </nav>
-  </div>
-  <div class="grid-x grid-margin-x">
-    <div class="medium-6 cell">
-      <img class="thumbnail" src="{{drink.photo_url}}">
-    </div>
-    <div class="medium-6 large-5 cell large-offset-1">
-      <h3>{{drink.name}}</h3>
-      <p>{{drink.description}}</p>
-      <div *ngIf="drink.sizes">
-        <h5>Размер</h5>
-        <label class="sizes__wrapper">
-	        <select [(ngModel)]="getDraftCartProduct().size" class="sizes-select">
-		        <option [value]="" disabled>Выберите размер</option>
-		        <option *ngFor="let size of drink.sizes" [ngValue]="size" class="size-item__option">
-		          {{ size.name + ' - ' + size.volume }}
-		        </option>
-		      </select>
-        </label>
+<!--Main layout-->
+<main class="mt-5 pt-4">
+  <div class="container">
+    <section class="mb-5 drink-detail__section">
+      <div class="row">
+        <div class="col-md-6 mb-4 mb-md-0">
 
-        <div class="grid-x">
-          <h5>Добавки</h5>
-        </div>
-        <div class="grid-x addins-item" *ngFor="let addin of getDraftCartProduct().addins">
-          <div class="small-1 cell">
-          	<input type="checkbox" [(ngModel)]="addin.selected" [attr.id]="'addin-' + addin.id" [value]="addin.id" [checked]="addin.selected" style="margin-top: 1.5rem;">
-          </div>
-          <div class="small-5 cell">
-            <label [attr.for]="'addin-' + addin.id" class="middle">
-              <img src="{{addin.photo_url}}" width="50"/>
-              <span style="margin-left: 10px;" class="addins-item__name">{{addin.name}}</span>
-            </label>
-            
-          </div>
-          <div class="small-4 cell">
-            <label [attr.for]="'addin-' + addin.id" style="margin-top: 1.3rem;">{{addin.price}} ₽</label>
-          </div>
-        </div>
-        <div class="grid-x">
-          <div class="small-4 cell">
-            <h5>Количество</h5>
-          </div>
-          <div class="small-2 cell">
-            <input name="qty" type="number" placeholder="Укажите кол-во напитков" [(ngModel)]="getDraftCartProduct().qty" min="1" class="drinks__qty-input" (change)="change_draft_cart_product_qty()">
-          </div>
-        </div>
-        <div class="grid-x">
-          <h3 class="price">Цена: <span class="price__value">{{get_selected_price()*getDraftCartProduct().qty}}</span> ₽</h3>
-        </div>
+          <div id="mdb-lightbox-ui"></div>
 
-        <a href="#" class="button large expanded add-to-cart-button" (click)="addToCart($event)">В корзину</a>
+          <div class="mdb-lightbox" data-pswp-uid="1">
+
+            <div class="row product-gallery mx-1">
+
+              <div class="col-12 mb-0">
+                <img src="{{drink.photo_url}}" class="img-fluid" alt="">
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+        <div class="col-md-6">
+          <h5>{{drink.name}}</h5>
+          <p class="pt-1">{{drink.description}}</p>
+          <div class="table-responsive">
+            <div class="pb-0">Добавки</div>
+            <table class="table table-sm table-borderless mb-0">
+              <tbody>
+                <tr *ngFor="let addin of getDraftCartProduct().addins">
+                  <th class="pl-0 w-25" scope="row">
+                    <div class="custom-control custom-checkbox drink-detail-addin-name__wrapper">
+                      <input type="checkbox" class="custom-control-input" [(ngModel)]="addin.selected" [attr.id]="'addin-' + addin.id" [value]="addin.id" [checked]="addin.selected" tabindex="0">
+                      <label [attr.for]="'addin-' + addin.id" class="custom-control-label addins-item__name">{{addin.name}}</label>
+                    </div>
+                  </th>
+                  <td>
+                    <label [attr.for]="'addin-' + addin.id" class="middle drink-detail-addin-label">
+                      <div class="view rounded mb-3 mb-md-0 drink-detail-addin-img__wrapper">
+                        <img class="img-fluid w-100" src="{{addin.photo_url}}"/>
+                      </div>
+                      <div class="drink-detail-addin-price">{{addin.price}} ₽</div>
+                    </label>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="table-responsive mb-2">
+            <table class="table table-sm table-borderless">
+              <tbody>
+                <tr>
+                  <td class="pl-0 pb-0 w-25">Количество</td>
+                  <td class="pb-0">Размер</td>
+                </tr>
+                <tr>
+                  <td class="pl-0">
+                    <div class="def-number-input number-input safari_only mb-0">
+                      <button (click)="set_draft_cart_product_qty(getDraftCartProduct().qty - 1)" class="minus"></button>
+                      <input class="quantity" min="1" name="quantity" [(ngModel)]="getDraftCartProduct().qty" type="number" (change)="limit_draft_cart_product_qty()">
+                      <button (click)="set_draft_cart_product_qty(getDraftCartProduct().qty + 1)" class="plus"></button>
+                    </div>
+                  </td>
+                  <td>
+                    <div class="mb-0">
+                      <select class="browser-default custom-select" [(ngModel)]="getDraftCartProduct().size">
+                        <option [value]="" disabled>Выберите размер</option>
+                        <option *ngFor="let size of drink.sizes" [ngValue]="size" class="size-item__option">
+                {{ size.name + ' - ' + size.volume }}
+              </option>
+                      </select>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          
+          <hr>
+          <div class="row">
+            <div class="col-sm-4">
+              <button type="button" class="btn btn-primary btn-md mr-1 mb-2 waves-effect waves-light" (click)="addToCart($event)"><i class="fas fa-shopping-cart pr-2"></i>В корзину</button>
+            </div>
+            <div class="col-sm-3">
+              <div class="d-flex justify-content-between align-items-center  border-0 px-0 mb-3">
+                <div>
+                  <strong>Итого:</strong>
+                </div>
+                <span><strong>{{get_selected_price()*getDraftCartProduct().qty}} ₽</strong></span>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
+
+    </section>
+
+    
+
   </div>
-</article>
+</main>
+<!--Main layout-->

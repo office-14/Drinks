@@ -1,0 +1,40 @@
+.drinks__qty-input {
+	width: 4rem;
+}
+
+.drink-detail-addin-img__wrapper {
+	width: 3rem;
+	display: inline-block;
+	vertical-align: top;
+	cursor: pointer;
+}
+
+.drink-detail-addin-price {
+	display: inline-block;
+    vertical-align: top;
+    margin-top: 0.6rem;
+    margin-left: 2rem;
+    font-size: 1em;
+    font-weight: 400;
+}
+
+.drink-detail-addin-name__wrapper {
+    margin-top: 0.6rem;
+	cursor: pointer;
+}
+
+.drink-detail-addin-name__wrapper .custom-control-input {
+	cursor: pointer;
+}
+
+.drink-detail-addin-name__wrapper .addins-item__name {
+	cursor: pointer;
+}
+
+.drink-detail__section {
+	margin-top: 67px;
+}
+
+.drink-detail-addin-label {
+	cursor: pointer;
+}

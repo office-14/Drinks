@@ -1,16 +1,49 @@
+<!--Main layout-->
+<main>
+  <div class="container">
+    <section id="ecommerce" class="text-center drink-list__title-section">
+      <!--Section heading-->
+      <h1 class="section-heading mb-5  h1 mt-0 drink-list__title">Меню</h1>
+      <!--Grid row-->
+      <div class="row mb-5">
 
-<div class="text-center">
-  <h2>Напитки</h2>
-  <hr>
-</div>
+          <!--Grid column-->
+          <div class="col-lg-3 col-md-6 mb-4" *ngFor="let drink of getDrinks()">
 
-<article class="grid-container">
-  <div class="grid-x grid-margin-x small-up-2 medium-up-2 large-up-4">
-    <div class="cell" *ngFor="let drink of getDrinks() ">
-      <a uiSref="drink" [uiParams]="{ drink_id: drink.id }"><img class="thumbnail" src="{{drink.photo_url}}"></a>
-      <a uiSref="drink" [uiParams]="{ drink_id: drink.id }"><h5>{{drink.name}}</h5></a>
-      <p>{{drink.smallest_size_price}} ₽</p>
-      <a  uiSref="drink" [uiParams]="{ drink_id: drink.id }" class="button expanded">Подробнее</a>
-    </div>
+              <!--Card-->
+              <div class="card align-items-center">
+                  <!--Card image-->
+                  <div class="view overlay">
+                      <img src="{{drink.photo_url}}" class="img-fluid" alt="">
+                      <a uiSref="drink" [uiParams]="{ drink_id: drink.id }">
+                          <div class="mask rgba-white-slight waves-effect waves-light"></div>
+                      </a>
+                  </div>
+                  <!--Card image-->
+
+                  <!--Card content-->
+                  <div class="card-body text-center">
+                      <h5>
+                          <strong>
+                              <a uiSref="drink" [uiParams]="{ drink_id: drink.id }" class="dark-grey-text">{{drink.name}}
+                                  
+                              </a>
+                          </strong>
+                      </h5>
+                      <hr>
+                      <p><span class="mr-1"><strong>{{drink.smallest_size_price}} ₽</strong></span></p>
+
+                  </div>
+                  <!--Card content-->
+
+              </div>
+              <!--Card-->
+
+          </div>
+          <!--Grid column-->
+
+      </div>
+      <!--Grid row-->
+    </section>
   </div>
-</article>
+</main>

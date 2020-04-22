@@ -23,4 +23,8 @@ export class OrderComponent implements OnInit {
     return this.order_service.get_order();
   }
 
+  is_order_status_cooking() {
+    return this.order_service.is_order_status_cooking();
+  }
+
 }

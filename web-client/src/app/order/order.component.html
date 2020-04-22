@@ -1,36 +1,58 @@
-<br>
-<article class="grid-container">
-  <div class="grid-x cell">
-    <nav aria-label="You are here:" role="navigation">
-      <ul class="breadcrumbs">
-        <li><a ui-sref="drinks">Меню</a></li>
-        <li>
-          Заказ
-        </li>
-      </ul>
-    </nav>
-  </div>
-  <div class="grid-x">
-    <div>
-      <h1>Заказ</h1>
-      <div *ngIf="!is_last_order_exist()">Нет заказов</div>
-      <div *ngIf="is_last_order_exist()">
-        <h3>Заказ № {{get_order().order_number}}</h3>
-        <div class="media-object stack-for-small" *ngFor="let product of get_order().products">
-          <div class="media-object-section">
-            <img class="thumbnail" src="{{product.drink_image}}" width="200">
+<main class="mt-5 pt-4">
+  <div class="container">
+    <section class="mt-5 mb-4">
+      <!--Grid row-->
+      <div class="row">
+
+        <!--Grid column-->
+        <div class="col-lg-12">
+
+          <!-- Card -->
+          <div class="card wish-list mb-4" *ngIf="is_last_order_exist()">
+            <div class="card-body">
+
+              <h4 class="mb-4">Заказ {{get_order().order_number}}</h4>
+              <div *ngFor="let product of get_order().products">
+                <div class="row mb-4">
+                  <div class="col-md-5 col-lg-3 col-xl-3">
+                    <div class="view zoom overlay z-depth-1 rounded mb-3 mb-md-0">
+                      <img class="img-fluid w-100 product-item__image" src="{{product.drink_image}}" alt="Sample">
+                      <a uiSref="drink" [uiParams]="{ drink_id: product.drink_id }">
+                        <div class="mask waves-effect waves-light">
+                          <img class="img-fluid w-100" src="{{product.drink_image}}">
+                          <div class="mask rgba-black-slight waves-effect waves-light"></div>
+                        </div>
+                      </a>
+                    </div>
+                  </div>
+                  <div class="col-md-7 col-lg-9 col-xl-9">
+                    <div>
+                      <div class="d-flex justify-content-between">
+                        <div>
+                          <h5>{{product.drink_name}}</h5>
+                          <p class="mb-2 text-muted text-uppercase small">Добавки: <span *ngFor="let addin of product.addins" class="product-item-addins__name">{{addin.name}}</span></p>
+                          <p class="mb-3 text-muted text-uppercase small product-item__size-volume">Размер: {{product.size_volume}}</p>
+                          <p class="mb-3 text-muted text-uppercase small"> Количество: {{product.qty}}</p>
+                        </div>
+                      </div>
+                      <div class="d-flex justify-content-between align-items-center">
+                        <p class="mb-0"><span><strong class="product-item__price">{{product.price * product.qty}} ₽</strong></span></p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <hr class="mb-4">
+              </div>
+              <h5>Сумма заказа: {{get_order().total_price}} ₽</h5>
+              <p class="order__status">Статус: <span *ngIf="is_order_status_cooking()" class="badge badge-warning order__status">Заказ готовится</span><span *ngIf="!is_order_status_cooking()" class="badge badge-success order__status">Заказ готов</span></p>
+            </div>
           </div>
-          <div class="media-object-section">
-            <h5>{{product.drink_name}}</h5>
-            <p>Размер: {{product.size_volume}}</p>
-            <p>Добавки: <span *ngFor="let addin of product.addins">{{addin.name}}</span></p>
-            <p>Количество: {{product.qty}}</p>
-            <p>Цена: {{product.price * product.qty}} ₽</p>
-          </div>
+          <!-- Card -->
         </div>
-        <h4>Сумма заказа: {{get_order().total_price}} ₽</h4>
-        <p class="order__status">Статус: {{get_order().status_name}}</p>
+        <!--Grid column-->
       </div>
-    </div>
+      <!--Grid row-->
+
+    </section>
   </div>
-</article>
+</main>
