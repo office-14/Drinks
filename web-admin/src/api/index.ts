@@ -1,3 +1,9 @@
-import * as endpoints from './endpoints'
+import {
+  BookedOrder,
+  BookedOrderItem,
+  bookedOrders,
+  finishOrder,
+} from './endpoints'
 
-export { endpoints }
+export type { BookedOrder, BookedOrderItem }
+export { bookedOrders, finishOrder }

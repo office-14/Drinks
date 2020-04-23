@@ -16,8 +16,13 @@ function useAuthProvider(): AuthProviderInfo {
   const isLoggedIn = !isAuthenticating && user !== null
 
   React.useEffect(() => {
-    const unsubscribe = onUserChanged(firebaseUser => {
+    const unsubscribe = onUserChanged(async (firebaseUser) => {
       setUser(firebaseUser)
+
+      if (firebaseUser !== null) {
+        await firebaseUser.getIdToken()
+      }
+
       setIsAuthenticating(false)
     })
 
@@ -28,9 +33,9 @@ function useAuthProvider(): AuthProviderInfo {
     value: {
       user,
       isLoggedIn,
-      signOut
+      signOut,
     },
-    isAuthenticating
+    isAuthenticating,
   }
 }
 

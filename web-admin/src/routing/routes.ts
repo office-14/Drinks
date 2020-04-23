@@ -1,5 +1,5 @@
 export const HOME = '/'
 export const LOGIN = '/login'
 export const LOGOUT = '/logout'
-export const BOOKED_ORDERS = '/booked'
+export const BOOKED_ORDERS = '/booked-orders'
 export const SETTINGS = '/settings'

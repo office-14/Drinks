@@ -7,7 +7,7 @@ import {
   FormLabel,
   RadioGroup,
   FormControlLabel,
-  Radio
+  Radio,
 } from '@material-ui/core'
 
 import { useLanguages, useTranslation } from 'localization'
@@ -39,7 +39,7 @@ function ChangeLocale() {
             value={current}
             onChange={handleChange}
           >
-            {available.map(l => (
+            {available.map((l) => (
               <FormControlLabel
                 key={l.code}
                 value={l.code}

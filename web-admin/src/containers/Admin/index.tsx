@@ -2,7 +2,7 @@ import React from 'react'
 import { Switch, Route } from 'react-router-dom'
 
 import { routes } from 'routing'
-import Home from 'pages/Home'
+import BookedOrders from 'pages/BookedOrders'
 import Settings from 'pages/Settings'
 import NotFound from 'pages/NotFound'
 
@@ -12,8 +12,8 @@ function Admin() {
   return (
     <AdminPage>
       <Switch>
-        <Route exact path={routes.HOME} component={Home} />
-        <Route path={routes.BOOKED_ORDERS} component={Home} />
+        <Route exact path={routes.HOME} component={BookedOrders} />
+        <Route path={routes.BOOKED_ORDERS} component={BookedOrders} />
         <Route path={routes.SETTINGS} component={Settings} />
         <Route component={NotFound} />
       </Switch>
