@@ -20,8 +20,12 @@ describe('AuthProvider', () => {
   })
 
   it('displays children when user loading information is finished', () => {
-    mockedOnUserChanged.mockImplementationOnce(cb => {
-      ;(cb as (a: any) => any)({})
+    mockedOnUserChanged.mockImplementationOnce((cb) => {
+      ;(cb as (a: any) => any)({
+        getIdToken() {
+          return Promise.resolve('token')
+        },
+      })
       return () => {}
     })
 
