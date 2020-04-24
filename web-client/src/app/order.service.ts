@@ -48,6 +48,7 @@ export class OrderService {
   protected api_get_last_order_status(): Observable<any> {
     const http_options = {
       headers: new HttpHeaders({
+        'ignoreLoadingBar': '',
         'Content-Type':  'application/json',
         'Authorization': 'Bearer ' + this.auth_service.get_access_token()
       })

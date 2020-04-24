@@ -24,6 +24,8 @@ import { environment } from '../environments/environment';
 
 import { LocalStorageModule } from 'angular-2-local-storage';
 
+import { LoadingBarHttpClientModule } from '@ngx-loading-bar/http-client';
+
 
 @NgModule({
   declarations: [
@@ -42,7 +44,8 @@ import { LocalStorageModule } from 'angular-2-local-storage';
     LocalStorageModule.forRoot({
         prefix: environment.local_storage.prefix,
         storageType: 'localStorage'
-    })
+    }),
+    LoadingBarHttpClientModule,
   ],
   providers: [
   	HttpErrorHandlerService,
