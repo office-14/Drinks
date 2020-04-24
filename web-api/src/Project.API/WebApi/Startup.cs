@@ -19,6 +19,7 @@ using Project.API.Infrastructure.Repositories.LastOrders;
 using Project.API.WebApi.Authentication;
 using Project.API.Infrastructure.Notifications;
 using Project.API.WebApi.Cors;
+using Project.API.Ordering.Application.LastUserOrderStatus;
 
 [assembly: ApiController]
 namespace Project.API.WebApi
@@ -56,7 +57,9 @@ namespace Project.API.WebApi
             services.AddSingleton<InMemoryOrdersRepository>();
             services.AddSingleton<IOrdersRepository>(provider => provider.GetRequiredService<InMemoryOrdersRepository>());
             services.AddSingleton<IBookedOrdersRepository>(provider => provider.GetRequiredService<InMemoryOrdersRepository>());
-            services.AddSingleton<ILastUserOrderProvider, InMemoryLastUserOrders>();
+            services.AddSingleton<InMemoryLastUserOrders>();
+            services.AddSingleton<ILastUserOrderProvider>(provider => provider.GetRequiredService<InMemoryLastUserOrders>());
+            services.AddSingleton<ILastUserOrderStatusProvider>(provider => provider.GetRequiredService<InMemoryLastUserOrders>());
             services.AddSingleton<LastUserOrders>();
             services.AddSingleton<CreateOrderService>();
             services.AddSingleton<OrderNumberProvider>();

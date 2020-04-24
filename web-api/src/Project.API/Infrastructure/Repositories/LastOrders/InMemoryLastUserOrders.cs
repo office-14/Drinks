@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Project.API.Ordering.Application.LastUserOrder;
+using Project.API.Ordering.Application.LastUserOrderStatus;
 using Project.API.Ordering.Domain.Orders;
 using Project.API.Ordering.Domain.Users;
 using Project.API.Ordering.Events;
@@ -13,6 +14,7 @@ namespace Project.API.Infrastructure.Repositories.LastOrders
 {
     internal sealed class InMemoryLastUserOrders :
         ILastUserOrderProvider,
+        ILastUserOrderStatusProvider,
         INotificationHandler<OrderIsCreated>
     {
         private readonly LastUserOrders orders;
@@ -91,6 +93,15 @@ namespace Project.API.Infrastructure.Repositories.LastOrders
             if (!valueExists) return null;
 
             return await ordersRepository.OrderWithId(orderId);
+        }
+
+        public async Task<LastOrderStatusDetails?> StatusOfLastOrder(User user, CancellationToken token = default)
+        {
+            var order = await LastDomainOrderOfUser(user);
+
+            if (order == null) return null;
+
+            return LastOrderStatusDetails.Current(order.Id, order.Status);
         }
     }
 }
