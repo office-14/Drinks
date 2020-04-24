@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using Project.API.Ordering.Domain.Drinks;
 using Project.API.SharedKernel.Domain.Core;
 
 namespace Project.API.Ordering.Application.LastUserOrder
@@ -7,36 +6,42 @@ namespace Project.API.Ordering.Application.LastUserOrder
     public readonly struct LastOrderDrink
     {
         private LastOrderDrink(
-            DrinkId drinkId,
-            DrinkSizeId drinkSizeId,
-            List<AddInId> addIns,
-            Quantity count
+            DrinkDetails drink,
+            DrinkSizeDetails drinkSize,
+            List<AddInDetails> addIns,
+            Quantity count,
+            Roubles price
         )
         {
-            DrinkId = drinkId;
-            DrinkSizeId = drinkSizeId;
+            Drink = drink;
+            DrinkSize = drinkSize;
             AddIns = addIns;
             Count = count;
+            Price = price;
         }
 
-        public DrinkId DrinkId { get; }
+        public DrinkDetails Drink { get; }
 
-        public DrinkSizeId DrinkSizeId { get; }
+        public DrinkSizeDetails DrinkSize { get; }
 
-        public List<AddInId> AddIns { get; }
+        public List<AddInDetails> AddIns { get; }
 
         public Quantity Count { get; }
 
+        public Roubles Price { get; }
+
         public static LastOrderDrink Available(
-            DrinkId drinkId,
-            DrinkSizeId drinkSizeId,
-            List<AddInId> addIns,
-            Quantity count
+            DrinkDetails drink,
+            DrinkSizeDetails drinkSize,
+            List<AddInDetails> addIns,
+            Quantity count,
+            Roubles price
         ) => new LastOrderDrink(
-            drinkId,
-            drinkSizeId,
+            drink,
+            drinkSize,
             addIns,
-            count
+            count,
+            price
         );
     }
 }

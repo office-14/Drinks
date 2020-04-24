@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Project.API.Ordering.Application.LastUserOrder;
 using Project.API.Ordering.Application.LastUserOrderStatus;
+using Project.API.Ordering.Domain.Drinks;
 using Project.API.Ordering.Domain.Orders;
 using Project.API.Ordering.Domain.Users;
 using Project.API.Ordering.Events;
@@ -64,11 +65,27 @@ namespace Project.API.Infrastructure.Repositories.LastOrders
         private LastOrderDrink ToLastOrderDrink(OrderItem item)
         {
             return LastOrderDrink.Available(
-                item.Drink.Id,
-                item.Size.Id,
-                item.AddIns.Select(a => a.Id).ToList(),
-                item.Count
+                ToLastDrinkDetails(item.Drink),
+                ToLastDrinkSizeDetails(item.Size),
+                item.AddIns.Select(ToLastDrinkAddInDetails).ToList(),
+                item.Count,
+                item.TotalPrice()
             );
+        }
+
+        private DrinkDetails ToLastDrinkDetails(Drink drink)
+        {
+            return DrinkDetails.Ordered(drink.Id, drink.Name, drink.PhotoUrl);
+        }
+
+        private DrinkSizeDetails ToLastDrinkSizeDetails(DrinkSize size)
+        {
+            return DrinkSizeDetails.Ordered(size.Id, size.Volume, size.Name);
+        }
+
+        private AddInDetails ToLastDrinkAddInDetails(AddIn addIn)
+        {
+            return AddInDetails.Ordered(addIn.Id, addIn.Name);
         }
 
         public async Task<bool> UserHasUnfinishedOrder(User user, CancellationToken token = default)
