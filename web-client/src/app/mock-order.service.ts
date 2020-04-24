@@ -32,12 +32,16 @@ export class MockOrderService extends OrderService{
 
   private last_order_counter = 0;
 
-  api_get_last_order() {
+  api_get_last_order_status() {
     this.last_order_counter += 1;
     if (this.last_order_counter > 1) {
       return of(this.mock_new_order_finished);
     }
 
+    return of(this.mock_new_order);    
+  }
+
+  api_get_last_order() {
     return of(this.mock_new_order);    
   }
 

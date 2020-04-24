@@ -75,7 +75,7 @@ describe('CartComponent', () => {
 
   it('should diplay correct products info', () => {
     const products = cart_service.get_products();
-    const product_name_tags: HTMLElement = fixture.nativeElement.querySelectorAll('h5');
+    const product_name_tags: HTMLElement = fixture.nativeElement.querySelectorAll('h5.cart-product-name');
     expect(product_name_tags[0].textContent).toMatch(products[0].drink_name, 'first product name displayed correctly');
     expect(product_name_tags[1].textContent).toMatch(products[1].drink_name, 'second product name displayed correctly');
 

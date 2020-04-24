@@ -125,7 +125,7 @@ describe('DrinkDetailComponent', () => {
     addin_items[1].querySelector('.addins-item__name').click();
     fixture.detectChanges();
     const price_span: HTMLElement = fixture.nativeElement.querySelector('.price__value');
-    expect(price_span.textContent).toBe('30', 'total price calculated right');
+    expect(price_span.textContent).toMatch('30', 'total price calculated right');
 
     const add_to_cart_button: HTMLElement = fixture.nativeElement.querySelector('.add-to-cart-button');
     add_to_cart_button.click();

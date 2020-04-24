@@ -22,7 +22,7 @@
               <tbody>
                 <tr *ngFor="let addin of getDraftCartProduct().addins">
                   <th class="pl-0 w-25" scope="row">
-                    <div class="custom-control custom-checkbox drink-detail-addin-name__wrapper">
+                    <div class="custom-control custom-checkbox drink-detail-addin-name__wrapper addins-item">
                       <input type="checkbox" class="custom-control-input" [(ngModel)]="addin.selected" [attr.id]="'addin-' + addin.id" [value]="addin.id" [checked]="addin.selected" tabindex="0">
                       <label [attr.for]="'addin-' + addin.id" class="custom-control-label addins-item__name">{{addin.name}}</label>
                     </div>
@@ -50,13 +50,13 @@
                   <td class="pl-0">
                     <div class="def-number-input number-input safari_only mb-0">
                       <button (click)="set_draft_cart_product_qty(getDraftCartProduct().qty - 1)" class="minus"></button>
-                      <input class="quantity" min="1" name="quantity" [(ngModel)]="getDraftCartProduct().qty" type="number" (change)="limit_draft_cart_product_qty()">
+                      <input class="quantity drinks__qty-input" min="1" name="quantity" [(ngModel)]="getDraftCartProduct().qty" type="number" (change)="limit_draft_cart_product_qty()">
                       <button (click)="set_draft_cart_product_qty(getDraftCartProduct().qty + 1)" class="plus"></button>
                     </div>
                   </td>
                   <td>
                     <div class="mb-0">
-                      <select class="browser-default custom-select" [(ngModel)]="getDraftCartProduct().size">
+                      <select class="browser-default custom-select sizes-select" [(ngModel)]="getDraftCartProduct().size">
                         <option [value]="" disabled>Выберите размер</option>
                         <option *ngFor="let size of drink.sizes" [ngValue]="size" class="size-item__option">
                 {{ size.name + ' - ' + size.volume }}
@@ -72,14 +72,14 @@
           <hr>
           <div class="row">
             <div class="col-sm-4">
-              <button type="button" class="btn btn-primary btn-md mr-1 mb-2 waves-effect waves-light" (click)="addToCart($event)"><i class="fas fa-shopping-cart pr-2"></i>В корзину</button>
+              <button type="button" class="btn btn-primary btn-md mr-1 mb-2 waves-effect waves-light add-to-cart-button" (click)="addToCart($event)"><i class="fas fa-shopping-cart pr-2"></i>В корзину</button>
             </div>
             <div class="col-sm-3">
               <div class="d-flex justify-content-between align-items-center  border-0 px-0 mb-3">
                 <div>
                   <strong>Итого:</strong>
                 </div>
-                <span><strong>{{get_selected_price()*getDraftCartProduct().qty}} ₽</strong></span>
+                <span><strong class="price__value">{{get_selected_price()*getDraftCartProduct().qty}} ₽</strong></span>
               </div>
             </div>
           </div>

@@ -63,15 +63,15 @@ describe('OrderComponent', () => {
   it('order state and order number should display correctly after order created and finished', fakeAsync(() => {
     order_service.create_order().subscribe();
     fixture.detectChanges();
-    const order_number: HTMLElement = fixture.nativeElement.querySelector('h3');
+    const order_number: HTMLElement = fixture.nativeElement.querySelector('h4');
     expect(order_number.textContent).toMatch('ORD-2', 'order number displayed correctly after create');
 
     const order_status: HTMLElement = fixture.nativeElement.querySelector('.order__status');
-    expect(order_status.textContent).toMatch('COOKING', 'order state displayed correctly after create');
+    expect(order_status.textContent).toMatch('готовится', 'order state displayed correctly after create');
 
     tick(3000);
     fixture.detectChanges();
     order_status: HTMLElement = fixture.nativeElement.querySelector('.order__status');
-    expect(order_status.textContent).toMatch('READY', 'order state displayed correctly after finish');
+    expect(order_status.textContent).toMatch('готов', 'order state displayed correctly after finish');
   }));
 });

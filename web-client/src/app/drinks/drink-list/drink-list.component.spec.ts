@@ -46,15 +46,15 @@ describe('DrinkListComponent', () => {
   });
 
   it('should have three <div>s with drinks info', () => {
-    const drink_items: HTMLElement = fixture.nativeElement.querySelectorAll('div.cell');
+    const drink_items: HTMLElement = fixture.nativeElement.querySelectorAll('.drink-list-item');
 
-    expect(drink_items[0].querySelector('h5').textContent).toEqual('Drink 1', 'drink 1 name detected');
-    expect(drink_items[1].querySelector('h5').textContent).toEqual('Drink 2', 'drink 2 name detected');
-    expect(drink_items[2].querySelector('h5').textContent).toEqual('Drink 3', 'drink 3 name detected');
+    expect(drink_items[0].querySelector('.drink-list-item__name').textContent).toMatch('Drink 1', 'drink 1 name detected');
+    expect(drink_items[1].querySelector('.drink-list-item__name').textContent).toMatch('Drink 2', 'drink 2 name detected');
+    expect(drink_items[2].querySelector('.drink-list-item__name').textContent).toMatch('Drink 3', 'drink 3 name detected');
 
-    expect(drink_items[0].querySelector('p').textContent).toMatch('100', 'drink 1 price detected');
-    expect(drink_items[1].querySelector('p').textContent).toMatch('120', 'drink 2 price detected');
-    expect(drink_items[2].querySelector('p').textContent).toMatch('130', 'drink 3 price detected');
+    expect(drink_items[0].querySelector('.drink-list-item__price').textContent).toMatch('100', 'drink 1 price detected');
+    expect(drink_items[1].querySelector('.drink-list-item__price').textContent).toMatch('120', 'drink 2 price detected');
+    expect(drink_items[2].querySelector('.drink-list-item__price').textContent).toMatch('130', 'drink 3 price detected');
 
     expect(drink_items[0].querySelector('img').getAttribute('src')).toEqual('https://globalassets.starbucks.com/assets/f12bc8af498d45ed92c5d6f1dac64062.jpg?impolicy=1by1_wide_1242', 'drink 1 img detected');
     expect(drink_items[1].querySelector('img').getAttribute('src')).toEqual('https://globalassets.starbucks.com/assets/5c515339667943ce84dc56effdf5fc1b.jpg?impolicy=1by1_wide_1242', 'drink 2 img detected');

@@ -8,7 +8,7 @@
       <div class="row mb-5">
 
           <!--Grid column-->
-          <div class="col-lg-3 col-md-6 mb-4" *ngFor="let drink of getDrinks()">
+          <div class="col-lg-3 col-md-6 mb-4 drink-list-item" *ngFor="let drink of getDrinks()">
 
               <!--Card-->
               <div class="card align-items-center">
@@ -25,13 +25,13 @@
                   <div class="card-body text-center">
                       <h5>
                           <strong>
-                              <a uiSref="drink" [uiParams]="{ drink_id: drink.id }" class="dark-grey-text">{{drink.name}}
-                                  
+                              <a uiSref="drink" [uiParams]="{ drink_id: drink.id }" class="dark-grey-text drink-list-item__name">
+                                {{drink.name}}                                  
                               </a>
                           </strong>
                       </h5>
                       <hr>
-                      <p><span class="mr-1"><strong>{{drink.smallest_size_price}} ₽</strong></span></p>
+                      <p><span class="mr-1"><strong class="drink-list-item__price">{{drink.smallest_size_price}} ₽</strong></span></p>
 
                   </div>
                   <!--Card content-->

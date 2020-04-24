@@ -12,11 +12,13 @@ import { AngularFireAuthModule } from '@angular/fire/auth';
 import { AngularFireModule } from '@angular/fire';
 import { environment } from '../environments/environment';
 import { LocalStorageModule } from 'angular-2-local-storage';
+import { of } from 'rxjs';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
     const auth_service = jasmine.createSpyObj('AuthService', ['check_auth', 'sign_out', 'auth_state']);
-    auth_service.check_auth.and.returnValue(true);
+    auth_service.check_auth.and.returnValue(false);
+    auth_service.auth_state.and.returnValue(of(false));
     const cart_service = jasmine.createSpyObj('AuthService', ['load_products_from_local_storage', 'get_products_qty']);
     TestBed.configureTestingModule({
       imports: [
