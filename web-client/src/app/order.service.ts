@@ -44,7 +44,7 @@ export class OrderService {
     )
   }
 
-  protected api_create_order(order_products): Observable<any> {
+  protected api_create_order(order_data): Observable<any> {
     const http_options = {
       headers: new HttpHeaders({
         'Content-Type':  'application/json',
@@ -52,13 +52,16 @@ export class OrderService {
       })
     };
 
-    return this.http.post<AjaxResponse<any>>(this.post_orders_url, { drinks: order_products }, http_options).pipe(
+    return this.http.post<AjaxResponse<any>>(this.post_orders_url, order_data, http_options).pipe(
       catchError(this.handleError('create_order')),
       map((ajax_response: AjaxResponse<any>) => ajax_response.payload)
     );
   }
 
   protected refresh_order_status(status_code, status_name) {
+    if (this.last_order.status_code == this._COOKING_STATUS_ && status_code == this._READY_STATUS_) {
+      this.last_order.became_ready = true;
+    }
     this.last_order.status_code = status_code;
     this.last_order.status_name = status_name;
   }
@@ -88,7 +91,6 @@ export class OrderService {
       .pipe(
         tap(order => {
           if (order !== null) {
-            order['products'] = [];
             this.set_order(order);
           }
         })
@@ -97,6 +99,7 @@ export class OrderService {
 
   create_order(): Observable<any> {
     let cart_products = this.cart_service.get_products();
+    let comment = this.cart_service.get_comment();
     if (cart_products.length == 0) {
       const base_error: BaseError = {
         'error_type': 'other',
@@ -104,20 +107,25 @@ export class OrderService {
       };
       return throwError(base_error);
     }
-    let order_products = [];
+
+    let drinks = [];
     for (let product of cart_products) {
-      for (let i = product.qty; i > 0; i--) {
-        order_products.push({
-          "drink_id": product.drink_id,
-          "size_id": product.size_id,
-          "add-ins": product.addins.map(addin => addin.id)
-        });
-      }
+      drinks.push({
+        "drink_id": product.drink_id,
+        "size_id": product.size_id,
+        "add-ins": product.addins.map(addin => addin.id),
+        "count": product.qty
+      });
+    }
+    let order_data = {
+      "drinks": drinks,
+      "comment": comment
     }
 
-    return this.api_create_order(order_products).pipe(
+    return this.api_create_order(order_data).pipe(
       tap(order => {
-          order['products'] = cart_products;
+          order['drinks'] = drinks;
+          order['comment'] = comment;
           this.set_order(order);
       }),
       tap(resp => this.cart_service.clear_cart())
@@ -152,5 +160,9 @@ export class OrderService {
 
   remove_order() {
   	this.last_order = null;
+  }
+
+  is_order_became_ready() {
+    return this.last_order.became_ready;
   }
 }

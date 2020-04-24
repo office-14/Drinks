@@ -4,5 +4,7 @@ export interface Order {
     "status_name": string,
     "order_number": string,
     "total_price": number,
-	products: Array<object>
+    "comment": string,
+	"drinks": Array<object>
+    "became_ready"?: boolean
 }

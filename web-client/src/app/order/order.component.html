@@ -10,9 +10,8 @@
           <!-- Card -->
           <div class="card wish-list mb-4" *ngIf="is_last_order_exist()">
             <div class="card-body">
-
               <h4 class="mb-4">Заказ {{get_order().order_number}}</h4>
-              <div *ngFor="let product of get_order().products">
+              <div *ngFor="let product of get_order().drinks">
                 <div class="row mb-4">
                   <div class="col-md-5 col-lg-3 col-xl-3">
                     <div class="view zoom overlay z-depth-1 rounded mb-3 mb-md-0">
@@ -31,12 +30,12 @@
                         <div>
                           <h5>{{product.drink_name}}</h5>
                           <p class="mb-2 text-muted text-uppercase small">Добавки: <span *ngFor="let addin of product.addins" class="product-item-addins__name">{{addin.name}}</span></p>
-                          <p class="mb-3 text-muted text-uppercase small product-item__size-volume">Размер: {{product.size_volume}}</p>
-                          <p class="mb-3 text-muted text-uppercase small"> Количество: {{product.qty}}</p>
+                          <!-- <p class="mb-3 text-muted text-uppercase small product-item__size-volume">Размер: {{product.size_volume}}</p> -->
+                          <p class="mb-3 text-muted text-uppercase small"> Количество: {{product.count}}</p>
                         </div>
                       </div>
                       <div class="d-flex justify-content-between align-items-center">
-                        <p class="mb-0"><span><strong class="product-item__price">{{product.price * product.qty}} ₽</strong></span></p>
+                        <!-- <p class="mb-0"><span><strong class="product-item__price">{{product.price * product.count}} ₽</strong></span></p> -->
                       </div>
                     </div>
                   </div>
@@ -44,6 +43,7 @@
                 <hr class="mb-4">
               </div>
               <h5>Сумма заказа: {{get_order().total_price}} ₽</h5>
+              <p class="order__comment">Комментарий к заказу: {{get_order().comment}}</p>
               <p class="order__status">Статус: <span *ngIf="is_order_status_cooking()" class="badge badge-warning order__status">Заказ готовится</span><span *ngIf="!is_order_status_cooking()" class="badge badge-success order__status">Заказ готов</span></p>
             </div>
           </div>

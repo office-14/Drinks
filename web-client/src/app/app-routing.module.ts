@@ -6,7 +6,7 @@ import { SigninComponent }   from './signin/signin.component';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
-const cart_state = { name: "cart", url: "/cart", component: CartComponent };
+const cart_state = { name: "cart", component: CartComponent };
 const order_state = { name: "order", component: OrderComponent};
 const signin_state = { name: "signin", url: "/signin", params: {order_creating_started: false}, component: SigninComponent };
 

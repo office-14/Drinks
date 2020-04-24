@@ -11,6 +11,8 @@ import { StateService } from "@uirouter/core";
   styleUrls: ['./cart.component.css']
 })
 export class CartComponent implements OnInit {
+  comment = '';
+
   constructor(
   	private cart_service: CartService,
   	private order_service: OrderService,
@@ -61,6 +63,10 @@ export class CartComponent implements OnInit {
       } else {
         this.state_service.go('signin', {order_creating_started: true});
       }
+  }
+
+  get_cart() {
+    return this.cart_service.get_cart();
   }
 
   get_products() {

@@ -80,6 +80,13 @@ export class AppComponent implements OnInit {
   public is_order_status_cooking() {
     return this.order_service.is_order_status_cooking();
   }
+  
+  public is_order_became_ready() {
+    if (this.order_service.is_last_order_exist()) {
+      return this.order_service.is_order_became_ready();
+    }
+    return false;
+  }
 
   
 }
