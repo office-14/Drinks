@@ -58,6 +58,7 @@ export class DrinkDetailComponent implements OnInit {
   		drink_image: this.drink.photo_url,
   		size_id: draft_cart_product.size.id,
   		size_volume: draft_cart_product.size.volume,
+      size_name: draft_cart_product.size.name,
   		addins: draft_cart_product.addins.filter(addin => addin.selected == true),
   		price: this.get_selected_price(),
   		qty: draft_cart_product.qty

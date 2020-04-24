@@ -15,10 +15,10 @@
                 <div class="row mb-4">
                   <div class="col-md-5 col-lg-3 col-xl-3">
                     <div class="view zoom overlay z-depth-1 rounded mb-3 mb-md-0">
-                      <img class="img-fluid w-100 product-item__image" src="{{product.drink_image}}" alt="Sample">
-                      <a uiSref="drink" [uiParams]="{ drink_id: product.drink_id }">
+                      <img class="img-fluid w-100 product-item__image" src="{{product.drink.photo_url}}" alt="Sample">
+                      <a uiSref="drink" [uiParams]="{ drink_id: product.drink.id }">
                         <div class="mask waves-effect waves-light">
-                          <img class="img-fluid w-100" src="{{product.drink_image}}">
+                          <img class="img-fluid w-100" src="{{product.drink.photo_url}}">
                           <div class="mask rgba-black-slight waves-effect waves-light"></div>
                         </div>
                       </a>
@@ -28,14 +28,14 @@
                     <div>
                       <div class="d-flex justify-content-between">
                         <div>
-                          <h5>{{product.drink_name}}</h5>
-                          <p class="mb-2 text-muted text-uppercase small">Добавки: <span *ngFor="let addin of product.addins" class="product-item-addins__name">{{addin.name}}</span></p>
-                          <!-- <p class="mb-3 text-muted text-uppercase small product-item__size-volume">Размер: {{product.size_volume}}</p> -->
-                          <p class="mb-3 text-muted text-uppercase small"> Количество: {{product.count}}</p>
+                          <h5>{{product.drink.name}}</h5>
+                          <p class="mb-2" *ngIf="product['add-ins'].length > 0"><strong>Добавки:</strong> <span *ngFor="let addin of product['add-ins']" class="product-item-addins__name small">{{addin.name}}</span></p>
+                          <p class="mb-2 product-item__size-volume"><strong>Размер: </strong> <span class="small">{{product.drink_size.name}} - {{product.drink_size.volume}}</span></p>
+                          <p class="mb-3"><strong>Количество: </strong> <span class="small">{{product.count}}</span></p>
                         </div>
                       </div>
                       <div class="d-flex justify-content-between align-items-center">
-                        <!-- <p class="mb-0"><span><strong class="product-item__price">{{product.price * product.count}} ₽</strong></span></p> -->
+                        <p class="mb-0 product-item__price"><strong>Стоимость: {{product.price}}₽</strong></p>
                       </div>
                     </div>
                   </div>
@@ -43,8 +43,8 @@
                 <hr class="mb-4">
               </div>
               <h5>Сумма заказа: {{get_order().total_price}} ₽</h5>
-              <p class="order__comment">Комментарий к заказу: {{get_order().comment}}</p>
-              <p class="order__status">Статус: <span *ngIf="is_order_status_cooking()" class="badge badge-warning order__status">Заказ готовится</span><span *ngIf="!is_order_status_cooking()" class="badge badge-success order__status">Заказ готов</span></p>
+              <p class="order__comment" *ngIf="get_order().comment.length > 0"><strong>Комментарий к заказу</strong> {{get_order().comment}}</p>
+              <p class="order__status"><strong>Статус </strong> <span *ngIf="is_order_status_cooking()" class="badge badge-warning order__status">Заказ готовится</span><span *ngIf="!is_order_status_cooking()" class="badge badge-success order__status">Заказ готов</span></p>
             </div>
           </div>
           <!-- Card -->

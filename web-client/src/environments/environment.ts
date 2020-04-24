@@ -25,6 +25,7 @@ export const environment = {
     post_orders: 'http://localhost:5000/api/orders',
     get_order: 'http://localhost:5000/api/orders/{order_id}',
     get_last_order_url: 'http://localhost:5000/api/user/orders/last',
+    get_last_order_status_url: 'http://localhost:5000/api/user/orders/last/status',
   }
 };
 

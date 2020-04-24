@@ -21,6 +21,7 @@ export class OrderService {
   private post_orders_url = environment.api_urls.post_orders;
   private get_order_url = environment.api_urls.get_order;
   private get_last_order_url = environment.api_urls.get_last_order_url;
+  private get_last_order_status_url = environment.api_urls.get_last_order_status_url;
 
   constructor(
     protected http: HttpClient,
@@ -40,6 +41,19 @@ export class OrderService {
     };
     return this.http.get<AjaxResponse<Order>>(this.get_last_order_url, http_options).pipe(
       catchError(this.handleError('get_last_order')),
+      map((ajax_response: AjaxResponse<Order>) => ajax_response.payload)
+    )
+  }
+
+  protected api_get_last_order_status(): Observable<any> {
+    const http_options = {
+      headers: new HttpHeaders({
+        'Content-Type':  'application/json',
+        'Authorization': 'Bearer ' + this.auth_service.get_access_token()
+      })
+    };
+    return this.http.get<AjaxResponse<Order>>(this.get_last_order_status_url, http_options).pipe(
+      catchError(this.handleError('api_get_last_order_status', false)),
       map((ajax_response: AjaxResponse<Order>) => ajax_response.payload)
     )
   }
@@ -68,7 +82,7 @@ export class OrderService {
 
   protected check_order_finishing() {
     if (this.is_last_order_exist() && this.is_order_status_cooking()) {
-      this.api_get_last_order()
+      this.api_get_last_order_status()
       .subscribe(order => {
         if (order.status_code == this._READY_STATUS_) {
           this.refresh_order_status(order.status_code, order.status_name);
@@ -124,7 +138,28 @@ export class OrderService {
 
     return this.api_create_order(order_data).pipe(
       tap(order => {
-          order['drinks'] = drinks;
+          order['drinks'] = cart_products.map((product) => {
+            return {
+              "drink": {
+                "id": product.drink_id,
+                "name": product.drink_name,
+                "photo_url": product.drink_image
+              },
+              "drink_size": {
+                "id": product.size_id,
+                "name": product.size_name,
+                "volume": product.size_volume
+              },
+              "add-ins": product.addins.map((addin) => {
+                  return {
+                    id: addin.id,
+                    name: addin.name
+                  };
+              }),
+              "count": product.qty,
+              "price": product.price * product.qty
+            };
+          });
           order['comment'] = comment;
           this.set_order(order);
       }),
