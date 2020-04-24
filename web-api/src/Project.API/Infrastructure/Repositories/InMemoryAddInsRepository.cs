@@ -17,14 +17,14 @@ namespace Project.API.Infrastructure.Repositories
                 AddInId.From(4),
                 Name.From("Ice Cream"),
                 Description.From("An affogato is a scoop of vanilla ice cream with a shot of espresso poured over top. The standard variety takes about two minutes to prepare and even less time to guzzle down."),
-                new Uri("https://www.tasteofhome.com/wp-content/uploads/2018/08/shutterstock_413974858.jpg"),
+                new Uri("https://storage.googleapis.com/images.office-14.com/add-ins/ice-cream.jpg"),
                 Roubles.From(30)
             ),
             AddIn.Available(
                 AddInId.From(7),
                 Name.From("Vanilla"),
                 Description.From("Treat yourself to some rich vanilla extract now and then. Adding this to your coffee will take it to a whole new level (and you may never want to go back!)."),
-                new Uri("https://www.tasteofhome.com/wp-content/uploads/2018/10/vanilla-extract.jpg"),
+                new Uri("https://storage.googleapis.com/images.office-14.com/add-ins/vanilla.jpg"),
                 Roubles.From(25)
             )
         };
