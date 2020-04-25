@@ -13,6 +13,7 @@ import { AngularFireModule } from '@angular/fire';
 import { environment } from '../environments/environment';
 import { LocalStorageModule } from 'angular-2-local-storage';
 import { of } from 'rxjs';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 
 describe('AppComponent', () => {
   beforeEach(async(() => {
@@ -39,6 +40,7 @@ describe('AppComponent', () => {
         { provide: CartService, useValue: cart_service },
         HttpErrorHandlerService
       ],
+      schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
       declarations: [
         AppComponent
       ],

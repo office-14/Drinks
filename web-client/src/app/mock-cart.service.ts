@@ -43,7 +43,7 @@ export class MockCartService extends CartService{
         "qty": 2
       }
     ],
-    comment: ''
+    comment: 'Test comment'
   };
   
 };

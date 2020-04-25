@@ -30,7 +30,6 @@ describe('CartComponent', () => {
   const state_service = jasmine.createSpyObj('StateService', ['go']);
 
   beforeEach(async(() => {
-    auth_service.check_auth.and.returnValue(true);
     auth_service.get_access_token.and.returnValue('test_token');
     auth_service.auth_state.and.returnValue(of(true));
 
@@ -71,6 +70,19 @@ describe('CartComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should navigate to signin if user not auth and clicked on create order button', () => {
+    auth_service.check_auth.and.returnValue(false);
+    let create_order_button : HTMLButtonElement = fixture.nativeElement.querySelector('.create-order-button');
+    create_order_button.click();
+    fixture.detectChanges();
+
+    const spy = router.go as jasmine.Spy;
+    const navArgs = spy.calls.first().args[0];
+
+    expect(navArgs).toBe('signin', 'should nav to Signin');
+
   });
 
   it('should diplay correct products info', () => {
@@ -151,7 +163,16 @@ describe('CartComponent', () => {
     expect(cart_products.length).toBe(1, 'cart products length is correct');
   });
 
-  it('should create order when create order button clicked', fakeAsync(() => {
+  it('should set value of cart_service comment field when comment input changed', () => {
+    const comment_input: HTMLInputElement = fixture.nativeElement.querySelector('input.cart-summary__comment-input');
+    comment_input.value = 'Another comment';
+    comment_input.dispatchEvent(new Event('input'));
+    fixture.detectChanges();
+    expect(cart_service.get_comment()).toBe('Another comment');
+  });
+
+  it('should create order when clicked on the create order button', fakeAsync(() => {
+    auth_service.check_auth.and.returnValue(true);
     const cart_products = cart_service.get_products();
 
     let create_order_button : HTMLButtonElement = fixture.nativeElement.querySelector('.create-order-button');

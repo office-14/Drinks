@@ -76,4 +76,8 @@ describe('CartService', () => {
   it('#get_total_price should return correct value', () => {
     expect(service.get_total_price()).toBe(58);
   });
+
+  it('#get_comment should return correct value', () => {
+    expect(service.get_comment()).toBe('Test comment');
+  });
 });
