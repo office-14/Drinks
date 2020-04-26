@@ -20,5 +20,6 @@
     <string name="Logout">Выйти</string>
     <string name="ChangeUser">Сменить пользователя</string>
     <string name="Unauthrorized">Не авторизирован</string>
+    <string name="CommentYourOrder">Комментарий к заказу</string>
     <string name="default_notification_channel_id" translatable="false">cd_fcm_default_channel</string>
 </resources>

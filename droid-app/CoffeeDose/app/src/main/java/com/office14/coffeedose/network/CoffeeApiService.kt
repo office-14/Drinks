@@ -22,9 +22,9 @@ interface CoffeeApiService {
     @POST("/api/orders")
     fun createOrderAsync(@Body body : CreateOrderBody, @Header("Authorization") authHeader:String) :Deferred<ResponseContainer<OrderJso>>
 
-    @POST("/api/user/device-tokens")
+    @POST("/api/user/device-tokens/update")
     fun updateFcmDeviceToken(@Body body : PostFcmDeviceTokenBody, @Header("Authorization") authHeader:String) :Deferred<ResponseContainer<Any>>
 
-    @HTTP(method = "DELETE", path = "/api/user/device-tokens", hasBody = true)
+    @POST("/api/user/device-tokens/delete")
     fun deleteFcmDeviceToken(@Body body : DeleteFcmDeviceTokenBody, @Header("Authorization") authHeader:String):Deferred<ResponseContainer<Any>>
 }

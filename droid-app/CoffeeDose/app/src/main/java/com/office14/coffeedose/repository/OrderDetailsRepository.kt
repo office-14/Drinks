@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.Transformations
+import com.office14.coffeedose.database.OrderDetailAndDrinkAndSize
 import com.office14.coffeedose.database.OrderDetailDao
 import com.office14.coffeedose.database.OrderDetailDbo
 import com.office14.coffeedose.database.OrderDetailsContainer
@@ -147,6 +148,37 @@ class OrderDetailsRepository(private val orderDetailsDao : OrderDetailDao) {
             Log.d("OrderDetailsRepository.insertAll", ex.message?:"")
         }
     }
+
+    suspend fun mergeIn(orderDetail:OrderDetail){
+        try {
+            withContext(Dispatchers.IO) {
+
+                val email = PreferencesRepository.getUserEmail()
+                val existingOrderDetails : List<OrderDetail>
+                existingOrderDetails = if (email == EMPTY_STRING)
+                    orderDetailsDao.getUnAttachedDetailsWithoutUserStraight().map { it.toDomainModel().orderDetailInner }
+                else
+                    orderDetailsDao.getUnAttachedDetailsForUserStraight(email!!).map { it.toDomainModel().orderDetailInner }
+
+                val existingDetail = existingOrderDetails.firstOrNull{ it.checkEquals(orderDetail) }
+                if (existingDetail == null){
+                    val container = OrderDetailsContainer(orderDetail)
+                    if (email != EMPTY_STRING){
+                        container.orderDetails.owner = email
+                    }
+
+                    orderDetailsDao.insertOrderDetailsAndAddIns(container)
+                }
+                else
+                    orderDetailsDao.updateCountWithOrderDetailsId(existingDetail.id,existingDetail.count + orderDetail.count)
+
+            }
+        }
+        catch (ex:Exception){
+            Log.d("OrderDetailsRepository.mergeIn", ex.message?:"")
+        }
+    }
+
 
     suspend fun updateUnattachedOrderDetailsWithEmail(email:String){
         try {

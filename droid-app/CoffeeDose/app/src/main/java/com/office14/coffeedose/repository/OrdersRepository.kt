@@ -93,9 +93,9 @@ class OrdersRepository @Inject constructor(private  val ordersDao : OrderDao, pr
 
     private fun composeAuthHeader(token:String?) = "Bearer $token"
 
-    suspend fun createOrder(orders:List<OrderDetailFull>,token:String?, email: String) : Int {
+    suspend fun createOrder(orders:List<OrderDetailFull>, comment:String?, token:String?, email: String) : Int {
         var id = -1
-        val ordersBody = CreateOrderBody()
+        val ordersBody = CreateOrderBody(comment)
         ordersBody.fillWithOrders(orders)
 
         withContext(Dispatchers.IO) {

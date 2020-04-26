@@ -5,7 +5,10 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class CreateOrderBody(var drinks : List<DrinkJso> = listOf()){
+data class CreateOrderBody(
+    val comment:String?,
+    var drinks : List<DrinkJso> = listOf()
+){
 
 
     fun fillWithOrders(orderDetails:List<OrderDetailFull>){

@@ -25,7 +25,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_order_details"
                 android:layout_alignParentTop="true"
-                android:layout_above="@id/confirmButton"
+                android:layout_above="@id/tv_comment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
@@ -44,6 +44,27 @@
                 app:tint="@null"
                 app:borderWidth="0dp"
                 app:fabSize="normal" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/tv_comment"
+                android:layout_marginBottom="@dimen/spacing_normal_16"
+                android:layout_marginTop="@dimen/spacing_normal_16"
+                android:layout_alignParentBottom="true"
+                android:textColorHint="@color/color_white"
+                android:textColorHighlight="@color/color_white"
+                android:layout_toLeftOf="@id/confirmButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/ed_comment"
+                    style="@style/Base.TextView.Multiline"
+                    android:background="@drawable/bg_round_border_with_solid"
+                    android:hint="@string/CommentYourOrder"
+                    android:textColorHint="@color/color_white"
+                    android:textColorHighlight="@color/color_white"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+            </com.google.android.material.textfield.TextInputLayout>
 
         </RelativeLayout>
 

@@ -4,10 +4,12 @@ package com.office14.coffeedose.ui
 import android.content.Context
 import android.os.Bundle
 import android.view.*
+import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.activity.addCallback
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.widget.doOnTextChanged
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.HasDefaultViewModelProviderFactory
@@ -68,15 +70,16 @@ class OrderDetailsFragment : DaggerFragment(), HasDefaultViewModelProviderFactor
 
         handleForceLongPolling()
 
+        handleCommentInput(binding.edComment)
+
         return binding.root
 
     }
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        //val viewModelFactory = defaultViewModelFactory.create(this)
-        //viewModel = ViewModelProvider(this,viewModelFactory).get(OrderDetailsViewModel::class.java)
+    private fun handleCommentInput(editText: EditText){
+        editText.doOnTextChanged { text, _, _, _ -> viewModel.comment = text.toString() }
     }
+
 
     private fun initOnbackPressedCallBack(){
         val callback = requireActivity().onBackPressedDispatcher.addCallback(this) {
@@ -157,10 +160,10 @@ class OrderDetailsFragment : DaggerFragment(), HasDefaultViewModelProviderFactor
                 viewModel.clearOrderDetails()
                 true
             }
-            R.id.addMore -> {
+            /*R.id.addMore -> {
                 findNavController().navigate(OrderDetailsFragmentDirections.actionOrderFragmentToDrinksFragment())
                 true
-            }
+            }*/
             else -> false
         }
     }

@@ -146,7 +146,7 @@ class SelectDoseAndAddinsViewModel @AssistedInject constructor(application: Appl
                     owner = email
                 }
 
-                orderDetailsRepository.insertNew( OrderDetail(
+                orderDetailsRepository.mergeIn( OrderDetail(
                     id = 0,
                     drinkId = drinkId,
                     sizeId = selectedSize.value!!.id,
@@ -155,6 +155,7 @@ class SelectDoseAndAddinsViewModel @AssistedInject constructor(application: Appl
                     owner = owner,
                     orderId = null
                 ))
+
                 _navigateDrinks.value = true
             }
             catch (ex:Exception){

@@ -24,6 +24,9 @@ interface OrderDetailDao {
     @Query("select * from order_details where order_id is null and owner = :email")
     fun getUnAttachedDetailsForUser(email:String): LiveData<List<OrderDetailAndDrinkAndSize>>
 
+    @Query("update order_details set count = :count where id = :id")
+    fun updateCountWithOrderDetailsId(id:Int, count:Int)
+
     @Transaction
     @Query("select * from order_details where order_id = :orderId")
     fun getDetailsByOrderId(orderId:Int): LiveData<List<OrderDetailAndDrinkAndSize>>

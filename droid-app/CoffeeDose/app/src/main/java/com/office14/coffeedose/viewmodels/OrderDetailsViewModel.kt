@@ -32,6 +32,8 @@ class OrderDetailsViewModel @Inject constructor(application : Application, priva
 
     val unAttachedOrders = orderDetailsRepository.unAttachedOrderDetails(email)
 
+    var comment:String? = null
+
     private val _errorMessage = MutableLiveData<String>()
     val errorMessage : LiveData<String>
         get() = _errorMessage
@@ -74,29 +76,13 @@ class OrderDetailsViewModel @Inject constructor(application : Application, priva
 
                 val ordersForAdd = orderDetailsRepository.unAttachedOrderDetailsStraight(email.value!!)
 
-                val newOrderId = ordersRepository.createOrder(ordersForAdd,PreferencesRepository.getIdToken(),email.value!!)
-
-               /* val orderDetails = mutableListOf<OrderDetail>()
-                ordersForAdd.forEach {
-                    val orderDetail = OrderDetail(
-                        it.orderDetailInner.id,
-                        it.orderDetailInner.drinkId,
-                        it.orderDetailInner.sizeId,
-                        newOrderId,
-                        it.orderDetailInner.count,
-                        it.orderDetailInner.owner,
-                        listOf()
-                    )
-                    orderDetails.add(orderDetail)
-                }
-                orderDetailsRepository.insertAll(orderDetails)*/
+                val newOrderId = ordersRepository.createOrder(ordersForAdd,comment,PreferencesRepository.getIdToken(), email.value!!)
 
                 orderDetailsRepository.updateAttachedOrderDetailsWithOrderId(email.value!!,newOrderId)
 
                 _forceLongPolling.value = true
 
                 _navigateOrderAwaiting.value = true
-                //}
             }
             catch (responseEx: HttpExceptionEx) {
                 _errorMessage.value = responseEx.error.title

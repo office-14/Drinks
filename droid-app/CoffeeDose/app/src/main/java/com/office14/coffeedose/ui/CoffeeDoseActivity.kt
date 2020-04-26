@@ -1,8 +1,10 @@
 package com.office14.coffeedose.ui
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -134,7 +136,7 @@ class CoffeeDoseActivity : DaggerAppCompatActivity() {
                 account?.let { firebaseAuthWithGoogle(it) }
             } catch (e: ApiException) {
                 // Google Sign In failed, update UI appropriately
-                Log.w(TAG, "Google sign in failed", e)
+                toastAuthFailed()
                 // [START_EXCLUDE]
                 //updateUI(null)
                 // [END_EXCLUDE]
@@ -151,10 +153,18 @@ class CoffeeDoseActivity : DaggerAppCompatActivity() {
                 if (task.isSuccessful) {
                     getUserAndUpdateToken(account)
                 }
+                else
+                    toastAuthFailed()
             }
 
         return result
     }
+
+    @SuppressLint("ShowToast")
+    private fun toastAuthFailed(){
+        Toast.makeText(this,"Ошибка авторизации",Toast.LENGTH_SHORT).show()
+    }
+
 
     private fun getUserAndUpdateToken(account: GoogleSignInAccount){
         val user = auth.currentUser
@@ -172,6 +182,7 @@ class CoffeeDoseActivity : DaggerAppCompatActivity() {
                     successAuthCallback()
                 }
             }
+            else toastAuthFailed()
         }
     }
 

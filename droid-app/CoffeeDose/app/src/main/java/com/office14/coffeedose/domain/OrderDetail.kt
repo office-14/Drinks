@@ -1,5 +1,7 @@
 package com.office14.coffeedose.domain
 
+import com.office14.coffeedose.extensions.deepEqualToIgnoreOrder
+
 data class OrderDetail(
     val id : Int,
     val drinkId: Int,
@@ -8,7 +10,24 @@ data class OrderDetail(
     val count: Int,
     val owner: String?,
     val addIns : List<Addin>
-)
+){
+    fun checkEquals(other:OrderDetail): Boolean
+    {
+        if (drinkId != other.drinkId) return false
+        if (sizeId != other.sizeId) return false
+        if (!checkAddInsEquals(other.addIns)) return false
+        return true
+    }
+
+    private fun checkAddInsEquals(other:List<Addin>) : Boolean {
+
+        if (addIns.size != other.size) return false
+        addIns.forEach{ addIn ->
+            if (other.firstOrNull{ it.id == addIn.id } == null) return false
+        }
+        return true
+    }
+}
 
 
 class OrderDetailFull(
