@@ -20,7 +20,7 @@ export const environment = {
     get_sizes: 'https://drinks-api.office-14.com/api/drinks/{drink_id}/sizes',
     post_orders: 'https://drinks-api.office-14.com/api/orders',
     get_order: 'https://drinks-api.office-14.com/api/orders/{order_id}',
-    get_last_order_url: 'https://drinks-api.office-14.com/api/orders/last',
+    get_last_order_url: 'https://drinks-api.office-14.com/api/user/orders/last',
     get_last_order_status_url: 'https://drinks-api.office-14.com/api/user/orders/last/status',
   }
 };
