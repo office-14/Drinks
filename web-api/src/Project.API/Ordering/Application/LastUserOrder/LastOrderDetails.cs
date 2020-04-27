@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Project.API.Ordering.Domain.Orders;
 using Project.API.SharedKernel.Domain.Core;
@@ -9,16 +10,19 @@ namespace Project.API.Ordering.Application.LastUserOrder
     {
         private LastOrderDetails(
             OrderId id,
+            DateTime created,
             OrderNumber orderNumber,
             Roubles totalPrice,
             Status status,
             Comment comment,
             List<LastOrderDrink> drinks
         ) =>
-            (Id, OrderNumber, TotalPrice, Status, Comment, Drinks) =
-            (id, orderNumber, totalPrice, status, comment, drinks);
+            (Id, Created, OrderNumber, TotalPrice, Status, Comment, Drinks) =
+            (id, created, orderNumber, totalPrice, status, comment, drinks);
 
         public OrderId Id { get; }
+
+        public DateTime Created { get; }
 
         public OrderNumber OrderNumber { get; }
 
@@ -32,6 +36,7 @@ namespace Project.API.Ordering.Application.LastUserOrder
 
         public static LastOrderDetails Available(
             OrderId id,
+            DateTime created,
             OrderNumber orderNumber,
             Roubles totalPrice,
             Status status,
@@ -39,6 +44,7 @@ namespace Project.API.Ordering.Application.LastUserOrder
             List<LastOrderDrink> drinks
         ) => new LastOrderDetails(
             id,
+            created,
             orderNumber,
             totalPrice,
             status,

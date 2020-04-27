@@ -49,6 +49,7 @@ namespace Project.API.Infrastructure.Repositories.LastOrders
 
             return LastOrderDetails.Available(
                 order.Id,
+                order.Created,
                 order.OrderNumber,
                 order.TotalPrice,
                 order.Status,

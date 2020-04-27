@@ -12,6 +12,10 @@ namespace Project.API.WebApi.Endpoints.Ordering.LastUserOrder
         [Required]
         public int Id { get; set; }
 
+        [JsonPropertyName("created")]
+        [Required]
+        public string Created { get; set; } = default!;
+
         [JsonPropertyName("status_code")]
         [Required]
         public string StatusCode { get; set; } = default!;
@@ -40,6 +44,7 @@ namespace Project.API.WebApi.Endpoints.Ordering.LastUserOrder
             return new LastOrder
             {
                 Id = order.Id.Value,
+                Created = order.Created.ToString("o"),
                 StatusCode = order.Status.Code,
                 StatusName = order.Status.Name,
                 TotalPrice = order.TotalPrice.Amount,

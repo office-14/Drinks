@@ -11,6 +11,7 @@ namespace Project.API.Ordering.Domain.Orders
     {
         private Order(
             OrderId id,
+            DateTime created,
             OrderNumber orderNumber,
             Roubles totalPrice,
             Status status,
@@ -18,10 +19,12 @@ namespace Project.API.Ordering.Domain.Orders
             UserId clientId,
             Comment comment
         ) =>
-            (Id, OrderNumber, TotalPrice, Status, Draft, ClientId, Comment) =
-            (id, orderNumber, totalPrice, status, draft, clientId, comment);
+            (Id, Created, OrderNumber, TotalPrice, Status, Draft, ClientId, Comment) =
+            (id, created, orderNumber, totalPrice, status, draft, clientId, comment);
 
         public OrderId Id { get; private set; }
+
+        public DateTime Created { get; private set; }
 
         public OrderNumber OrderNumber { get; private set; }
 
@@ -65,6 +68,7 @@ namespace Project.API.Ordering.Domain.Orders
             Comment comment
         ) => new Order(
             default,
+            DateTime.UtcNow,
             orderNumber,
             totalPrice,
             Status.Cooking,
@@ -75,6 +79,7 @@ namespace Project.API.Ordering.Domain.Orders
 
         public static Order Existing(
             OrderId id,
+            DateTime created,
             OrderNumber orderNumber,
             Roubles totalPrice,
             Status status,
@@ -83,6 +88,7 @@ namespace Project.API.Ordering.Domain.Orders
             Comment comment
         ) => new Order(
             id,
+            created,
             orderNumber,
             totalPrice,
             status,

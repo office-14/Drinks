@@ -41,6 +41,7 @@ namespace Project.API.Infrastructure.Repositories
 
             var newOrder = Order.Existing(
                 nextId,
+                order.Created,
                 order.OrderNumber,
                 order.TotalPrice,
                 order.Status,
@@ -56,6 +57,7 @@ namespace Project.API.Infrastructure.Repositories
 
             var persistedOrder = Order.Existing(
                 nextId,
+                newOrder.Created,
                 newOrder.OrderNumber,
                 newOrder.TotalPrice,
                 newOrder.Status,
@@ -71,6 +73,7 @@ namespace Project.API.Infrastructure.Repositories
         {
             var updatedOrder = Order.Existing(
                 order.Id,
+                order.Created,
                 order.OrderNumber,
                 order.TotalPrice,
                 order.Status,
