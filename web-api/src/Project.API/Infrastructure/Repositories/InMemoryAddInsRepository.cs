@@ -15,15 +15,15 @@ namespace Project.API.Infrastructure.Repositories
         {
             AddIn.Available(
                 AddInId.From(4),
-                Name.From("Ice Cream"),
-                Description.From("An affogato is a scoop of vanilla ice cream with a shot of espresso poured over top. The standard variety takes about two minutes to prepare and even less time to guzzle down."),
+                Name.From("Мороженное"),
+                Description.From("Аффогато - это шарик ванильного мороженого политый сверху порцией эспрессо. Для приготовления аффогато требуется около двух минут и еще меньше времени, чтобы выпить его."),
                 new Uri("https://storage.googleapis.com/images.office-14.com/add-ins/ice-cream.jpg"),
                 Roubles.From(30)
             ),
             AddIn.Available(
                 AddInId.From(7),
-                Name.From("Vanilla"),
-                Description.From("Treat yourself to some rich vanilla extract now and then. Adding this to your coffee will take it to a whole new level (and you may never want to go back!)."),
+                Name.From("Ваниль"),
+                Description.From("Время от времени вы можете побаловать себя экстрактом ванили. Он выведет ваш кофе на совершенно новый уровень (и вы, возможно, никогда не захотите возвращаться!)."),
                 new Uri("https://storage.googleapis.com/images.office-14.com/add-ins/vanilla.jpg"),
                 Roubles.From(25)
             )

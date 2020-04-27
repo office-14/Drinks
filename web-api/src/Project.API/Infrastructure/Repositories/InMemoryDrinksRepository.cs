@@ -19,32 +19,32 @@ namespace Project.API.Infrastructure.Repositories
         private static readonly IEnumerable<Drink> AvailableDrinks = new List<Drink>{
             Drink.Available(
                 DrinkId.From(1),
-                Name.From("Caffè Americano"),
-                Description.From("Espresso shots topped with hot water create a light layer of crema culminating in this wonderfully rich cup with depth and nuance. Pro Tip: For an additional boost, ask your barista to try this with an extra shot."),
+                Name.From("Американо"),
+                Description.From("Порция эспрессо, залитая горячей водой, создаёт легкий слой пенки, который завершается в богатой нюансами глубине чашки этого напитка. Совет для профессионалов: чтобы добавить насыщенности вкусу, попросите своего бариста добавить в напиток ещё одну порцию эспрессо."),
                 new Uri("https://storage.googleapis.com/images.office-14.com/drinks/americano.jpg")
             ),
             Drink.Available(
                 DrinkId.From(2),
-                Name.From("Cappuccino"),
-                Description.From("Dark, rich espresso lies in wait under a smoothed and stretched layer of thick milk foam. An alchemy of barista artistry and craft."),
+                Name.From("Капучино"),
+                Description.From("Слой тёмного, насыщенного эспрессо лежит под сглаженным и растянутым слоем густой молочной пены. Алхимия баристского мастерства и ремесла."),
                 new Uri("https://storage.googleapis.com/images.office-14.com/drinks/cappuccino.jpg")
             ),
             Drink.Available(
                 DrinkId.From(107),
-                Name.From("Espresso"),
-                Description.From("Our smooth signature Espresso Roast with rich flavor and caramelly sweetness is at the very heart of everything we do."),
+                Name.From("Эспрессо"),
+                Description.From("Эспрессо с богатым насыщенным вкусом и карамельными сладкими нотками – самый яркий представитель напитков на основе эспрессо."),
                 new Uri("https://storage.googleapis.com/images.office-14.com/drinks/espresso.jpg")
             ),
             Drink.Available(
                 DrinkId.From(109),
-                Name.From("Caffè Latte"),
-                Description.From("Our dark, rich espresso balanced with steamed milk and a light layer of foam. A perfect milk-forward warm-up."),
+                Name.From("Латте"),
+                Description.From("Тёмный, насыщенный эспрессо сбалансирован пропаренным молоком и легким слоем пены. Идеальный разогрев перед молоком."),
                 new Uri("https://storage.googleapis.com/images.office-14.com/drinks/latte.jpg")
             ),
             Drink.Available(
                 DrinkId.From(15),
-                Name.From("Flat White"),
-                Description.From("Smooth ristretto shots of espresso get the perfect amount of steamed whole milk to create a not-too-strong, not-too-creamy, just-right flavor."),
+                Name.From("Флэт Уайт"),
+                Description.From("Плавные порции эспрессо из ристретто в сочетании с идеальным количеством пропаренного цельного молока создают не слишком сильный, не слишком сливочный, просто правильный вкус."),
                 new Uri("https://storage.googleapis.com/images.office-14.com/drinks/flat-white.jpg")
             ),
         };
@@ -52,14 +52,14 @@ namespace Project.API.Infrastructure.Repositories
         private static readonly IEnumerable<DrinkSize> AvailableSizes = new List<DrinkSize> {
             DrinkSize.Available(
                 DrinkSizeId.From(7),
-                Name.From("Medium"),
-                Volume.From("200 ml"),
+                Name.From("Средний"),
+                Volume.From("200 мл"),
                 Roubles.From(140)
             ),
             DrinkSize.Available(
                 DrinkSizeId.From(10),
-                Name.From("Large"),
-                Volume.From("300 ml"),
+                Name.From("Большой"),
+                Volume.From("300 мл"),
                 Roubles.From(250)
             )
         };

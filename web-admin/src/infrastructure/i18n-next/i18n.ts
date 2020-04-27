@@ -4,19 +4,19 @@ import LoadTranslationFromBackend from 'i18next-xhr-backend'
 
 const defaultOptions: InitOptions = {
   debug: process.env.NODE_ENV === 'development',
-  lng: 'en',
-  fallbackLng: 'en',
+  lng: 'ru',
+  fallbackLng: 'ru',
   ns: ['translations'],
   defaultNS: 'translations',
   interpolation: {
-    escapeValue: false // not needed for react as it escapes by default
+    escapeValue: false, // not needed for react as it escapes by default
   },
   backend: {
-    loadPath: '/i18n/{{ns}}/{{lng}}.json'
+    loadPath: '/i18n/{{ns}}/{{lng}}.json',
   },
   react: {
-    useSuspense: false
-  }
+    useSuspense: false,
+  },
 }
 
 function createI18n(options?: InitOptions) {

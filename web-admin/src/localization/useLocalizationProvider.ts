@@ -7,11 +7,11 @@ import { Localization } from './LocalizationContext'
 
 function useLocalizationProvider(): Localization {
   const [language, setLanguage] = React.useState<LanguageCode>(
-    languages[0].code
+    languages[1].code
   )
 
   const change = React.useCallback(
-    async newLang => {
+    async (newLang) => {
       // TODO: I don't know what to do when language won't be loaded.
       // Hope for the best.
       await changeLanguage(newLang)
@@ -24,7 +24,7 @@ function useLocalizationProvider(): Localization {
     current: language,
     change,
     available: languages,
-    t
+    t,
   }
 }
 
