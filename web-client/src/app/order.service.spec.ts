@@ -48,8 +48,14 @@ describe('OrderService', () => {
     expect(service).toBeTruthy();
   });
 
+  it('#load_last_order_status should return last order ', () => {
+    service.load_last_order();
+    let order = service.get_order();
+    expect(order.id).toBe(2);
+  });
+
   it('#load_last_order should return last order ', () => {
-    service.load_last_order().subscribe();
+    service.load_last_order();
     let order = service.get_order();
     expect(order.id).toBe(2);
   });

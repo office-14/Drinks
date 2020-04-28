@@ -101,8 +101,17 @@ export class OrderService {
     }
   }
 
-  load_last_order(): Observable<Order> {
-    return this.api_get_last_order()
+  load_last_order() {
+    this.api_get_last_order()
+      .subscribe(order => {
+        if (order !== null) {
+          this.set_order(order);
+        }
+      });
+  }
+
+  load_last_order_status(): Observable<Order> {
+    return this.api_get_last_order_status()
       .pipe(
         tap(order => {
           if (order !== null) {

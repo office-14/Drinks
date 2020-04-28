@@ -43,7 +43,7 @@
                 <hr class="mb-4">
               </div>
               <h5>Сумма заказа: {{get_order().total_price}} ₽</h5>
-              <p class="order__comment" *ngIf="get_order().comment.length > 0"><strong>Комментарий к заказу</strong> {{get_order().comment}}</p>
+              <p class="order__comment" *ngIf="get_order().comment && get_order().comment.length > 0"><strong>Комментарий к заказу</strong> {{get_order().comment}}</p>
               <p class="order__status"><strong>Статус </strong> <span *ngIf="is_order_status_cooking()" class="badge badge-warning order__status">Заказ готовится</span><span *ngIf="!is_order_status_cooking()" class="badge badge-success order__status">Заказ готов</span></p>
             </div>
           </div>

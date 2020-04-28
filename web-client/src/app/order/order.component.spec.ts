@@ -67,7 +67,7 @@ describe('OrderComponent', () => {
     expect(order_number.textContent).toMatch('ORD-2', 'order number displayed correctly after create');
 
     const order_status: HTMLElement = fixture.nativeElement.querySelector('.order__status');
-    expect(order_status.textContent).toMatch('готовится', 'order state displayed correctly after create');
+    expect(order_status.textContent).toMatch('Заказ готов', 'order state displayed correctly after create');
 
     const order_comment: HTMLElement = fixture.nativeElement.querySelector('.order__comment');
     expect(order_comment.textContent).toMatch('Test comment', 'order comment displayed correctly after create');

@@ -25,7 +25,7 @@ export class AppComponent implements OnInit {
     this.auth_service.auth_state().subscribe(user => {
       if (user) {
         this.user = user;
-        this.order_service.load_last_order().subscribe(
+        this.order_service.load_last_order_status().subscribe(
             last_order => {
               if (this.order_service.order_creating_started) {
                 if (this.order_service.is_allow_to_order()) {

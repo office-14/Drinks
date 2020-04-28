@@ -14,6 +14,7 @@ export class OrderComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.order_service.load_last_order();
   }
 
   is_last_order_exist() {

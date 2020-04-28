@@ -23,11 +23,12 @@ describe('CartComponent', () => {
   let component: CartComponent;
   let fixture: ComponentFixture<CartComponent>;
   let cart_service: CartService;
-  let router: StateService;
 
   const message_service = jasmine.createSpyObj('MessageService', ['show_success', 'show_error']);
   const auth_service = jasmine.createSpyObj('AuthService', ['check_auth', 'get_access_token', 'auth_state']);
   const state_service = jasmine.createSpyObj('StateService', ['go']);
+
+
 
   beforeEach(async(() => {
     auth_service.get_access_token.and.returnValue('test_token');
@@ -65,7 +66,6 @@ describe('CartComponent', () => {
     component = fixture.componentInstance;
     fixture.detectChanges();
     cart_service = TestBed.get(CartService);
-    router = TestBed.get(StateService);
   }));
 
   it('should create', () => {
@@ -73,13 +73,14 @@ describe('CartComponent', () => {
   });
 
   it('should navigate to signin if user not auth and clicked on create order button', () => {
+    const router = TestBed.get(StateService);
+    const go_to = router.go as jasmine.Spy;
     auth_service.check_auth.and.returnValue(false);
     let create_order_button : HTMLButtonElement = fixture.nativeElement.querySelector('.create-order-button');
     create_order_button.click();
     fixture.detectChanges();
 
-    const spy = router.go as jasmine.Spy;
-    const navArgs = spy.calls.first().args[0];
+    let navArgs = go_to.calls.mostRecent().args[0];
 
     expect(navArgs).toBe('signin', 'should nav to Signin');
 

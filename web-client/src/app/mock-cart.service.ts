@@ -10,7 +10,7 @@ export class MockCartService extends CartService{
       {
         "drink_id": 1,
         "drink_name": "Drink 1",
-        "drink_image": "https://globalassets.starbucks.com/assets/f12bc8af498d45ed92c5d6f1dac64062.jpg?impolicy=1by1_wide_1242",
+        "drink_image": "https://storage.googleapis.com/images.office-14.com/testing/stub_americano.jpg",
         "size_id": 11,
         "size_volume": '11',
         "addins": [
@@ -18,14 +18,14 @@ export class MockCartService extends CartService{
             "id": 1,
             "name": "Addin 1",
             "description": "About addin 1",
-            "photo_url": "https://www.tasteofhome.com/wp-content/uploads/2018/08/shutterstock_413974858.jpg",
+            "photo_url": "https://storage.googleapis.com/images.office-14.com/testing/stub_ice-cream.jpg",
             "price": 1
           },
           {
             "id": 2,
             "name": "Addin 2",
             "description": "About addin 2",
-            "photo_url": "https://www.tasteofhome.com/wp-content/uploads/2018/10/vanilla-extract.jpg",
+            "photo_url": "https://storage.googleapis.com/images.office-14.com/testing/stub_vanilla.jpg",
             "price": 2
           }
         ],
@@ -35,7 +35,7 @@ export class MockCartService extends CartService{
       {
         "drink_id": 2,
         "drink_name": "Drink 2",
-        "drink_image": "https://globalassets.starbucks.com/assets/5c515339667943ce84dc56effdf5fc1b.jpg?impolicy=1by1_wide_1242",
+        "drink_image": "https://storage.googleapis.com/images.office-14.com/testing/stub_cappuccino.jpg",
         "size_id": 22,
         "size_volume": '22',
         "addins": [],
