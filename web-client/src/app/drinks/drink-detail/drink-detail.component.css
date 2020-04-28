@@ -38,3 +38,7 @@
 .drink-detail-addin-label {
 	cursor: pointer;
 }
+
+button.plus, button.minus {
+	vertical-align: middle;
+}
