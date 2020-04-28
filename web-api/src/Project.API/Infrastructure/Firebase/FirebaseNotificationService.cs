@@ -18,7 +18,6 @@ namespace Project.API.Infrastructure.Firebase
 
         public async Task NotifyClientWhenOrderIsFinished(OrderIsFinished @event, IEnumerable<DeviceToken> tokens)
         {
-            var messaging = FirebaseMessaging.DefaultInstance;
             var tokensList = tokens.ToList();
 
             if (tokensList.Count == 0)
@@ -33,16 +32,17 @@ namespace Project.API.Infrastructure.Firebase
 
             try
             {
-                await messaging.SendAllAsync(tokensList.Select(token => new Message
-                {
-                    Token = token.Value,
-
-                    Notification = new Notification
+                await FirebaseMessaging.DefaultInstance.SendAllAsync(tokensList
+                    .Select(token => new Message
                     {
-                        Title = "Order status change",
-                        Body = "Your order is finished"
-                    }
-                }));
+                        Token = token.Value,
+
+                        Notification = new Notification
+                        {
+                            Title = "Order status change",
+                            Body = "Your order is finished"
+                        }
+                    }));
             }
             catch (Exception ex)
             {

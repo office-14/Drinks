@@ -1,8 +1,10 @@
 import React from 'react'
+import { useSnackbar } from 'notistack'
+
+import { bookedOrders, finishOrder, BookedOrder } from 'api'
+import { useTranslation } from 'localization'
 
 import OrdersTable from './OrdersTable'
-import { bookedOrders, finishOrder, BookedOrder } from 'api'
-import { useSnackbar } from 'notistack'
 
 function BookedOrders() {
   const [orders, setOrders] = React.useState<BookedOrder[]>([])
@@ -10,18 +12,24 @@ function BookedOrders() {
   const [orderFinishing, setOrderFinishing] = React.useState(false)
 
   const { enqueueSnackbar: notify } = useSnackbar()
+  const t = useTranslation()
 
   const invalidateBookedOrders = React.useCallback(async () => {
     try {
       const fetchedOrders = await bookedOrders()
       setOrders(fetchedOrders)
     } catch (error) {
-      notify(`Cannot update booked orders table. Reason: ${error.message}.`, {
-        variant: 'error',
-      })
+      notify(
+        t('bookedOrdersTable.errors.cannotUpdateTable', {
+          reason: error.message,
+        }),
+        {
+          variant: 'error',
+        }
+      )
       setOrders([])
     }
-  }, [setOrders, notify])
+  }, [setOrders, notify, t])
 
   const refreshBookedOrders = React.useCallback(async () => {
     setOrdersLoading(true)
@@ -38,19 +46,27 @@ function BookedOrders() {
         await refreshBookedOrders()
       } catch (error) {
         notify(
-          `Cannot finish order ${orderNumber}. Reason: ${error.message}.`,
+          t('bookedOrdersTable.errors.cannotFinishOrder', {
+            orderNumber,
+            reason: error.message,
+          }),
           { variant: 'error' }
         )
         setOrderFinishing(false)
         return
       }
 
-      notify(`Order ${orderNumber} was finished`, {
-        variant: 'success',
-      })
+      notify(
+        t('bookedOrdersTable.orderWasFinished', {
+          orderNumber,
+        }),
+        {
+          variant: 'success',
+        }
+      )
       setOrderFinishing(false)
     },
-    [notify, refreshBookedOrders]
+    [notify, refreshBookedOrders, t]
   )
 
   React.useEffect(() => {

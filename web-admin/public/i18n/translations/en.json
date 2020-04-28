@@ -18,7 +18,12 @@
     "noRecordsToDisplay": "No records to display",
     "refreshData": "Refresh",
     "finishOrder": "Finish order",
-    "comment": "Comment"
+    "comment": "Comment",
+    "orderWasFinished": "Order {{orderNumber}} was finished",
+    "errors": {
+      "cannotUpdateTable": "Cannot update booked orders table. Reason: {{reason}}.",
+      "cannotFinishOrder": "Cannot finish order {{orderNumber}}. Reason: {{reason}}."
+    }
   },
   "settings": {
     "localizationTitle": "Localization settings",
