@@ -31,4 +31,20 @@ export class OrderComponent implements OnInit {
     return this.order_service.is_order_status_cooking();
   }
 
+  get_formated_date() {
+    const formatter = new Intl.DateTimeFormat("ru", {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      weekday: 'long',
+      hour: 'numeric',
+      minute: 'numeric'
+    });
+    let order = this.order_service.get_order();
+    if (order.created) {
+      return formatter.format(order.created)
+    }
+    return '';
+  }
+
 }

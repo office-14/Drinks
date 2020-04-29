@@ -105,6 +105,7 @@ export class OrderService {
     this.api_get_last_order()
       .subscribe(order => {
         if (order !== null) {
+          order.created = Date.parse(order.created);
           this.set_order(order);
         }
       });
@@ -171,6 +172,7 @@ export class OrderService {
             };
           });
           order['comment'] = comment;
+          order['created'] = new Date();
           this.set_order(order);
       }),
       tap(resp => this.cart_service.clear_cart())

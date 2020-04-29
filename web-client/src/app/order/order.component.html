@@ -10,7 +10,8 @@
           <!-- Card -->
           <div class="card wish-list mb-4" *ngIf="is_last_order_exist()">
             <div class="card-body">
-              <h4 class="mb-4">Заказ {{get_order().order_number}}</h4>
+              <h4 class="mb-3">Заказ {{get_order().order_number}}</h4>
+              <p class="small text-muted text-uppercase mb-3 order__created">{{get_formated_date()}}</p>
               <div *ngFor="let product of get_order().drinks">
                 <div class="row mb-4">
                   <div class="col-md-5 col-lg-3 col-xl-3">
@@ -44,7 +45,7 @@
               </div>
               <h5>Сумма заказа: {{get_order().total_price}} ₽</h5>
               <p class="order__comment" *ngIf="get_order().comment && get_order().comment.length > 0"><strong>Комментарий к заказу</strong> {{get_order().comment}}</p>
-              <p class="order__status"><strong>Статус </strong> <span *ngIf="is_order_status_cooking()" class="badge badge-warning order__status">Заказ готовится</span><span *ngIf="!is_order_status_cooking()" class="badge badge-success order__status">Заказ готов</span></p>
+              <p><strong>Статус </strong> <span *ngIf="is_order_status_cooking()" class="badge badge-warning order__status">Заказ готовится</span><span *ngIf="!is_order_status_cooking()" class="badge badge-success order__status">Заказ готов</span></p>
             </div>
           </div>
           <!-- Card -->

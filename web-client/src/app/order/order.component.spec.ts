@@ -19,10 +19,7 @@ import { AngularFireModule } from '@angular/fire';
 import { LocalStorageService } from 'angular-2-local-storage';
 
 describe('OrderComponent', () => {
-  let component: OrderComponent;
-  let fixture: ComponentFixture<OrderComponent>;
-  let cart_service: CartService;
-  let order_service: OrderService;
+  
 
   beforeEach(async(() => {
     const auth_service = jasmine.createSpyObj('AuthService', ['get_access_token']);
@@ -48,33 +45,36 @@ describe('OrderComponent', () => {
     .compileComponents();
   }));
 
-  beforeEach(() => {
+  it('should create', () => {
+    let component: OrderComponent;
+    let fixture: ComponentFixture<OrderComponent>;
     fixture = TestBed.createComponent(OrderComponent);
     component = fixture.componentInstance;
-    cart_service = TestBed.get(CartService);
-    order_service = TestBed.get(OrderService);
-    fixture.detectChanges();
-  });
-
-  it('should create', () => {
     expect(component).toBeTruthy();
   });
 
-  it('order fields should display correctly after order created and finished', fakeAsync(() => {
-    order_service.create_order().subscribe();
-    fixture.detectChanges();
-    const order_number: HTMLElement = fixture.nativeElement.querySelector('h4');
-    expect(order_number.textContent).toMatch('ORD-2', 'order number displayed correctly after create');
-
-    const order_status: HTMLElement = fixture.nativeElement.querySelector('.order__status');
-    expect(order_status.textContent).toMatch('Заказ готов', 'order state displayed correctly after create');
-
-    const order_comment: HTMLElement = fixture.nativeElement.querySelector('.order__comment');
-    expect(order_comment.textContent).toMatch('Test comment', 'order comment displayed correctly after create');
-
+  it('order fields should display correctly after loaded last order and finished', fakeAsync(() => {
+    let component: OrderComponent;
+    let fixture: ComponentFixture<OrderComponent>;
+    fixture = TestBed.createComponent(OrderComponent);
+    component = fixture.componentInstance;
     tick(3000);
     fixture.detectChanges();
-    order_status: HTMLElement = fixture.nativeElement.querySelector('.order__status');
-    expect(order_status.textContent).toMatch('готов', 'order state displayed correctly after finish');
+    const order_number: HTMLElement = fixture.nativeElement.querySelector('h4');
+    expect(order_number.textContent).toMatch('ORD-2', 'order number displayed correctly after loaded last order');
+
+    let order_status: HTMLElement = fixture.nativeElement.querySelector('.order__status');
+    expect(order_status.textContent).toMatch('Заказ готовится', 'order state displayed correctly after loaded last order');
+
+    const order_comment: HTMLElement = fixture.nativeElement.querySelector('.order__comment');
+    expect(order_comment.textContent).toMatch('Test comment', 'order comment displayed correctly after loaded last order');
+
+    const order_created: HTMLElement = fixture.nativeElement.querySelector('.order__created');
+    expect(order_created.textContent).toMatch('среда, 29 апреля 2020 г., 11:38', 'order created displayed correctly after loaded last order');
+    
+    tick(3000);
+    fixture.detectChanges();
+    let order_status2: HTMLElement = fixture.nativeElement.querySelector('.order__status');
+    expect(order_status2.textContent).toEqual('Заказ готов', 'order state displayed correctly after finished last order');
   }));
 });

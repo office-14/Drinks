@@ -6,5 +6,6 @@ export interface Order {
     "total_price": number,
     "comment": string,
 	"drinks": Array<object>
-    "became_ready"?: boolean
+    "became_ready"?: boolean,
+    "created"?: Date
 }

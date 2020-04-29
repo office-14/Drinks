@@ -21,7 +21,8 @@ export class MockOrderService extends OrderService{
     "status_name": "COOKING",
     "order_number": "ORD-2",
     "total_price": 2345,
-    "comment": "string",
+    "comment": "Test comment",
+    "created": "2020-04-29T07:38:33.7066150Z",
     "drinks": [
       {
         "drink": {
