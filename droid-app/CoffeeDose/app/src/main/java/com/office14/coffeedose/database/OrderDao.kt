@@ -42,4 +42,7 @@ interface OrderDao{
 
     @Query("delete from orders")
     fun clear()
+
+    @Query("update orders set status_code = :statusCode, status_name = :statusName where id = :id")
+    fun updateStatusCodeAndNameById(id:Int, statusCode:String, statusName:String)
 }

@@ -39,17 +39,20 @@ class OrderDetailFull(
     val owner: String?,
     val addIns : List<Addin>,
     val drink:Coffee,
-    val size:CoffeeSize
+    val size:CoffeeSize,
+    val actualPrice:Int? = null
 
 ){
-    var price: Int
+    var price: Int = 0
+
+    val vAddIns = if (addIns.isNotEmpty()) addIns.joinToString { it.name } else "Без добавок"
 
     val orderDetailInner = OrderDetail(
         id,drinkId,sizeId,orderId,count,owner,addIns
     )
 
     init {
-        price = (size.price + addIns.sumBy { addin -> addin.price }) * count
+        price = actualPrice ?: (size.price + addIns.sumBy { addin -> addin.price }) * count
     }
 
 }

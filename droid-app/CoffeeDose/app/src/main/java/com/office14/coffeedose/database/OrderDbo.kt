@@ -26,7 +26,10 @@ data class OrderDbo (
     val owner : String?,
 
     @ColumnInfo(name = "finished")
-    var isFinished : String
+    var isFinished : String,
+
+    @ColumnInfo(name = "comment")
+    var comment : String?
 
 ){
     fun toDomainModel() = Order(

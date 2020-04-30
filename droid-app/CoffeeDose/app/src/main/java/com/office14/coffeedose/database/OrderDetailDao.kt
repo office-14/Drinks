@@ -10,6 +10,7 @@ interface OrderDetailDao {
     @Query("select * from order_details where order_id is null")
     fun getUnAttachedDetails(): LiveData<List<OrderDetailAndDrinkAndSize>>
 
+    @Transaction
     @Query("select * from order_details where order_id is null and owner = :email")
     fun getUnAttachedDetailsForUserStraight(email:String): List<OrderDetailAndDrinkAndSize>
 
@@ -17,6 +18,7 @@ interface OrderDetailDao {
     @Query("select * from order_details where order_id is null and owner is null")
     fun getUnAttachedDetailsWithoutUser(): LiveData<List<OrderDetailAndDrinkAndSize>>
 
+    @Transaction
     @Query("select * from order_details where order_id is null and owner is null")
     fun getUnAttachedDetailsWithoutUserStraight(): List<OrderDetailAndDrinkAndSize>
 

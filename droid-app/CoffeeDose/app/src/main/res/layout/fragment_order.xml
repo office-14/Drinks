@@ -50,8 +50,8 @@
                 android:layout_marginBottom="@dimen/spacing_normal_16"
                 android:layout_marginTop="@dimen/spacing_normal_16"
                 android:layout_alignParentBottom="true"
+                app:hintTextColor="@color/color_white"
                 android:textColorHint="@color/color_white"
-                android:textColorHighlight="@color/color_white"
                 android:layout_toLeftOf="@id/confirmButton"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -60,8 +60,6 @@
                     style="@style/Base.TextView.Multiline"
                     android:background="@drawable/bg_round_border_with_solid"
                     android:hint="@string/CommentYourOrder"
-                    android:textColorHint="@color/color_white"
-                    android:textColorHighlight="@color/color_white"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
             </com.google.android.material.textfield.TextInputLayout>

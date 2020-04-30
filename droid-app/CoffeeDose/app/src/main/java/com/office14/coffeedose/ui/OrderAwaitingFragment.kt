@@ -70,8 +70,15 @@ class OrderAwaitingFragment : DaggerFragment(), HasDefaultViewModelProviderFacto
             addItemDecoration(dividerDecor)
         }
 
-        viewModel.orderDetails.observe(viewLifecycleOwner, Observer {
-            it?.let { rvAdapter.setSource(it) }
+
+        viewModel.orderInfo.observe(viewLifecycleOwner, Observer {
+            if (it != null)
+                rvAdapter.addHeaderAndSubmitList(it, viewModel.queueOrderStatus.value?.toString())
+        })
+
+        viewModel.queueOrderStatus.observe(viewLifecycleOwner, Observer {
+            if (rvAdapter.itemCount != 0 && it != null)
+                rvAdapter.addHeaderAndSubmitList(viewModel.orderInfo.value!!, it.toString())
         })
     }
 
@@ -82,7 +89,7 @@ class OrderAwaitingFragment : DaggerFragment(), HasDefaultViewModelProviderFacto
             {
                 val toolbar = (activity as AppCompatActivity).supportActionBar
                 toolbar?.title = "Заказ ${it.orderNumber}"
-                tv_order_status.text = "Статус: ${it.statusName}"
+                //tv_order_status.text = "Статус: ${it.statusName}"
 
                 if (it.statusCode.toLowerCase() == "ready"){
                     bv_approve.setBooleanVisibility(true)

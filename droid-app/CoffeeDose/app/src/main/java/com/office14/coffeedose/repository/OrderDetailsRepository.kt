@@ -89,10 +89,12 @@ class OrderDetailsRepository(private val orderDetailsDao : OrderDetailDao) {
 
         val update = {
             if(email.value == EMPTY_STRING){
-                result.value = uod?.value?.count(){ it.orderDetail.owner == null} ?: 0
+                result.value = uod?.value?.filter{ it.orderDetail.owner == null}?.sumBy { it.orderDetail.count } ?: 0
+                //result.value = orderDetailsDao.getUnAttachedDetailsCountWithoutUserStraight()
             }
             else
-                result.value = uod?.value?.count(){ it.orderDetail.owner == email.value} ?: 0
+                result.value = uod?.value?.filter{ it.orderDetail.owner == email.value}?.sumBy { it.orderDetail.count } ?: 0
+                //result.value = orderDetailsDao.getUnAttachedDetailsCountForUserStraight(email.value!!)
         }
 
         result.addSource(email){ update.invoke() }

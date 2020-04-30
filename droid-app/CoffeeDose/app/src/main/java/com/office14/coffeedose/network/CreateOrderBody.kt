@@ -6,21 +6,15 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class CreateOrderBody(
+
+    @Json(name = "comment")
     val comment:String?,
+
+    @Json(name = "drinks")
     var drinks : List<DrinkJso> = listOf()
 ){
-
-
     fun fillWithOrders(orderDetails:List<OrderDetailFull>){
-        val _drinks  = mutableListOf<DrinkJso>()
-
-        for (order in orderDetails){
-            repeat(order.count) {
-                _drinks.add(DrinkJso(order.drinkId, order.sizeId, order.addIns.map { it.id }))
-            }
-        }
-
-        drinks = _drinks
+        drinks = listOf(*orderDetails.map { order ->  DrinkJso(order.drinkId, order.sizeId, order.addIns.map { it.id },order.count) }.toTypedArray())
     }
 }
 
@@ -33,5 +27,7 @@ data class DrinkJso(
     val sizeId :Int,
 
     @Json(name = "add-ins")
-    val addins: List<Int>
+    val addins: List<Int>,
+
+    val count:Int
 )

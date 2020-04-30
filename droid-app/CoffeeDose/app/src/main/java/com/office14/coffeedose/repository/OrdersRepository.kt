@@ -7,6 +7,7 @@ import androidx.lifecycle.Transformations
 import com.office14.coffeedose.database.OrderDao
 import com.office14.coffeedose.domain.Order
 import com.office14.coffeedose.domain.OrderDetailFull
+import com.office14.coffeedose.domain.OrderInfo
 import com.office14.coffeedose.domain.OrderStatus
 import com.office14.coffeedose.network.*
 import kotlinx.coroutines.Dispatchers
@@ -111,15 +112,16 @@ class OrdersRepository @Inject constructor(private  val ordersDao : OrderDao, pr
         return id
     }
 
-    suspend fun refreshOrder(token:String?, email:String) {
+    suspend fun refreshLastOrderStatus(token:String?, email:String) {
         try {
             withContext(Dispatchers.IO) {
 
-                var result = coffeeApi.getLastOrderForUserAsync(composeAuthHeader(token)).await()
+                var result = coffeeApi.getLastOrderStatusForUserAsync(composeAuthHeader(token)).await()
                 if (result.hasError())
                     throw HttpExceptionEx(result.getError())
                 else {
-                    ordersDao.insertAllOrders(result.payload!!.toDataBaseModel(email))
+                    val lastStatus = result.payload!!
+                    ordersDao.updateStatusCodeAndNameById(lastStatus.id, lastStatus.statusCode, lastStatus.statusName)
                 }
             }
             delay(5000)
@@ -144,6 +146,7 @@ class OrdersRepository @Inject constructor(private  val ordersDao : OrderDao, pr
         }
     }
 
+    // using on log in
     suspend fun getLastOrderForUserAndPutIntoDB(token:String?, email:String) {
         try {
             withContext(Dispatchers.IO) {
@@ -184,6 +187,27 @@ class OrdersRepository @Inject constructor(private  val ordersDao : OrderDao, pr
         catch (ex:Exception){
             Log.d("OrdersRepository.deleteFcmDeviceTokenOnLogOut", ex.message?:"")
         }
+    }
+
+    // using only for got data on order awaiting screen
+    suspend fun getLastOrderInfo(token:String) : OrderInfo? {
+        var orderInfo : OrderInfo? = null
+        try {
+            withContext(Dispatchers.IO){
+                val result = coffeeApi.getLastOrderForUserAsync(composeAuthHeader(token)).await()
+                if (result.hasError())
+                    throw HttpExceptionEx(result.getError())
+                else {
+                    //val existing = ordersDao.getByIdStraight(result.payload!!.id)
+                    //if (existing.isNotEmpty() && existing[0].isFinished == "false")
+                        orderInfo = result.payload!!.toOrderInfoDomainModel()
+                }
+            }
+        }
+        catch (ex:Exception){
+            Log.d("OrdersRepository.getLastOrderInfo", ex.message?:"")
+        }
+        return orderInfo
     }
 
 }

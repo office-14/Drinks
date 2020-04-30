@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
         <variable
@@ -15,32 +16,41 @@
         android:background="@color/color_primary_light"
         tools:context="com.office14.coffeedose.ui.OrderAwaitingFragment">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_order_awaiting_details"
-            android:background="@drawable/bg_round_border_with_solid"
-            android:elevation="@dimen/spacing_tiny_4"
+        <FrameLayout
+            android:id="@+id/fl_trobber"
+            app:isVisible="@{viewModel.isLoading()}"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="match_parent"/>
 
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/tv_order_status"
-            style="@style/Base.TextView"
-            android:layout_margin="@dimen/spacing_normal_16"
-            android:layout_gravity="top"
-            android:gravity="center"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="match_parent">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/bv_approve"
-            android:layout_width="200dp"
-            android:visibility="gone"
-            android:layout_gravity="bottom|center_horizontal"
-            android:onClick="@{() -> viewModel.approve()}"
-            android:text="@string/ApproveOrder"
-            android:layout_height="@dimen/default_button_height"
-            android:layout_margin="@dimen/spacing_normal_16"/>
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_order_awaiting_details"
+                android:layout_alignParentTop="true"
+                android:layout_above="@id/bv_approve"
+                app:isVisible="@{!viewModel.isLoading()}"
+                android:layout_margin="@dimen/spacing_normal_16"
+                android:background="@drawable/bg_round_border_with_solid"
+                android:elevation="@dimen/spacing_tiny_4"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/bv_approve"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_width="200dp"
+                android:visibility="gone"
+                android:layout_gravity="bottom|center_horizontal"
+                android:onClick="@{() -> viewModel.approve()}"
+                android:text="@string/ApproveOrder"
+                android:layout_height="@dimen/default_button_height"
+                android:layout_margin="@dimen/spacing_normal_16"/>
+
+        </RelativeLayout>
 
     </FrameLayout>
 </layout>

@@ -10,4 +10,10 @@ object BindingConverters {
     fun booleanToVisibility(visible: Boolean): Int {
         return if (!visible) View.GONE else View.VISIBLE
     }
+
+    @BindingConversion
+    @JvmStatic
+    fun nullToVisibility(value: String?): Int {
+        return if (value == null) View.GONE else View.VISIBLE
+    }
 }

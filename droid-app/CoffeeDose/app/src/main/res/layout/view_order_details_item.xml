@@ -1,45 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="@drawable/bg_round_border_with_solid"
-    android:id="@+id/rl_order_details_root"
-    android:elevation="@dimen/spacing_tiny_4"
-    android:layout_marginBottom="@dimen/spacing_small_8"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <LinearLayout
+    <data>
+        <variable
+            name="item"
+            type="com.office14.coffeedose.domain.OrderDetailFull" />
+
+
+    </data>
+
+    <RelativeLayout
+        android:background="@drawable/bg_round_border_with_solid"
+        android:id="@+id/rl_order_details_root"
+        android:elevation="@dimen/spacing_tiny_4"
+        android:layout_marginBottom="@dimen/spacing_small_8"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/spacing_normal_16"
-        android:layout_alignParentLeft="true"
-        android:layout_toLeftOf="@id/tv_price"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/tv_drink_title"
-            style="@style/Base.TextView.Single"
-            android:layout_marginTop="@dimen/spacing_normal_16"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/spacing_normal_16"
+            android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@id/tv_price"
+            android:orientation="vertical">
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/tv_add_ins"
-            style="@style/Base.TextView.Single"
-            android:layout_marginBottom="@dimen/spacing_normal_16"
-            android:fontFamily="sans-serif-thin"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tv_drink_title"
+                style="@style/Base.TextView.Single"
+                android:text="@{item.drink.name}"
+                android:layout_marginTop="@dimen/spacing_normal_16"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tv_drink_size_and_amount"
+                style="@style/Base.TextView.Single"
+                android:text="@{@string/DrinkSizeAndAmountFormat(item.size.name, item.size.volume, item.count)}"
+                android:layout_marginTop="@dimen/spacing_small_8"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tv_add_ins"
+                style="@style/Base.TextView.Single"
+                android:text="@{item.vAddIns}"
+                android:layout_marginTop="@dimen/spacing_small_8"
+                android:layout_marginBottom="@dimen/spacing_normal_16"
+                android:fontFamily="sans-serif-thin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
 
         </LinearLayout>
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/tv_price"
-        style="@style/Base.TextView"
-        android:layout_margin="@dimen/spacing_normal_16"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_price"
+            style="@style/Base.TextView"
+            android:text="@{@string/PriceFormat(item.price)}"
+            android:layout_margin="@dimen/spacing_normal_16"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
-</RelativeLayout>
+    </RelativeLayout>
+</layout>

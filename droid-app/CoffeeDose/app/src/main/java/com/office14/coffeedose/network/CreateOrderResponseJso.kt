@@ -5,8 +5,7 @@ import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
-data class OrderJso (
-
+data class CreateOrderResponseJso(
     val id : Int,
 
     @Json(name = "status_code")
@@ -22,6 +21,6 @@ data class OrderJso (
     val totalPrice : Int
 ){
     fun toDataBaseModel(owner:String) = OrderDbo(
-        id, statusCode,statusName,orderNumber,totalPrice,owner,"false"
+        id, statusCode,statusName,orderNumber,totalPrice,owner,"false",null
     )
 }

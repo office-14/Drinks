@@ -8,7 +8,6 @@ data class Order (
     val totalPrice : Int,
     val owner : String?,
     val isFinished : String
-
 )
 
 enum class OrderStatus {

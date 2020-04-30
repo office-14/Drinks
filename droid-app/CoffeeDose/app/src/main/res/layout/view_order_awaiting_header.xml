@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+        <variable
+            name="item"
+            type="com.office14.coffeedose.domain.OrderInfo" />
+    </data>
+
+    <LinearLayout
+
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/spacing_normal_16"
+        android:paddingRight="@dimen/spacing_normal_16"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:paddingTop="@dimen/spacing_normal_16"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tv_status_title"
+                style="@style/Base.EditText"
+                android:text="@string/OrderInfoStatusTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tv_status_value"
+                android:layout_marginLeft="4dp"
+                style="@style/Base.EditText"
+                android:text="@{item.orderStatusHumanized}"
+                app:orderStatusTextColor="@{item.orderStatus}"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_number_value"
+            style="@style/Base.EditText"
+            android:text="@{@string/OrderInfoOrderNumberFormat(item.orderNumber)}"
+            android:paddingTop="@dimen/spacing_small_8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_price_value"
+            style="@style/Base.EditText"
+            android:text="@{@string/OrderInfoPriceFormat(item.totalPrice)}"
+            android:paddingTop="@dimen/spacing_small_8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_comment_title"
+            style="@style/Base.EditText"
+            android:text="@{@string/OrderInfoCommentFormat(item.actualComment)}"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_details_header"
+            android:paddingTop="@dimen/spacing_normal_16"
+            android:paddingBottom="@dimen/spacing_small_8"
+            style="@style/Base.EditText"
+            android:text="@string/OrderInfoStatusDetailsHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+</layout>

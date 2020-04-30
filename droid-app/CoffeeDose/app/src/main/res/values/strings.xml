@@ -21,5 +21,12 @@
     <string name="ChangeUser">Сменить пользователя</string>
     <string name="Unauthrorized">Не авторизирован</string>
     <string name="CommentYourOrder">Комментарий к заказу</string>
+    <string name="OrderInfoStatusTitle">Статус:</string>
+    <string name="OrderInfoCommentFormat">Комментарий: %s</string>
+    <string name="OrderInfoStatusDetailsHeader">Детали заказа:</string>
     <string name="default_notification_channel_id" translatable="false">cd_fcm_default_channel</string>
+    <string name="OrderInfoPriceFormat">Сумма: %d ₽</string>
+    <string name="PriceFormat">%d ₽</string>
+    <string name="DrinkSizeAndAmountFormat">%s, %s, %s шт.</string>
+    <string name="OrderInfoOrderNumberFormat">Номер: %s</string>
 </resources>

@@ -9,6 +9,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.coffeedose.R
+import com.coffeedose.databinding.ViewOrderDetailsItemBinding
 import com.office14.coffeedose.domain.OrderDetailFull
 
 class OrderDetailsAdapter() : RecyclerView.Adapter<OrderDetailsAdapter.OrderDetailViewHolder>(){
@@ -32,17 +33,17 @@ class OrderDetailsAdapter() : RecyclerView.Adapter<OrderDetailsAdapter.OrderDeta
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OrderDetailViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        return OrderDetailViewHolder(inflater.inflate(R.layout.view_order_details_item,parent,false))
+        return OrderDetailViewHolder.from(parent)
     }
 
     override fun getItemCount() = items.size
 
     override fun onBindViewHolder(holder: OrderDetailViewHolder, position: Int) {
-        holder.rebindViewHolder(items[position])
+        holder.bind(items[position])
     }
 
 
-    class OrderDetailViewHolder (convertView : View) : RecyclerView.ViewHolder(convertView) ,ItemTouchViewHolder {
+    class OrderDetailViewHolder private constructor (val binding : ViewOrderDetailsItemBinding) : RecyclerView.ViewHolder(binding.root) , ItemTouchViewHolder {
         override fun onItemSelected() {
             itemView.background = ContextCompat.getDrawable(itemView.context,R.drawable.bg_swipe_to_delete_selected)
         }
@@ -51,15 +52,18 @@ class OrderDetailsAdapter() : RecyclerView.Adapter<OrderDetailsAdapter.OrderDeta
             itemView.background = ContextCompat.getDrawable(itemView.context,R.drawable.bg_round_border_with_solid)
         }
 
-        val headerTv = convertView.findViewById<TextView>(R.id.tv_drink_title)
-        val addinsTv = convertView.findViewById<TextView>(R.id.tv_add_ins)
-        val priceTv = convertView.findViewById<TextView>(R.id.tv_price)
+        fun bind(item: OrderDetailFull) {
+            binding.item = item
+            binding.executePendingBindings()
+        }
 
+        companion object {
+            fun from(parent: ViewGroup) :  OrderDetailViewHolder {
+                val inflater = LayoutInflater.from(parent.context)
+                val binding = ViewOrderDetailsItemBinding.inflate(inflater,parent,false)
+                return OrderDetailViewHolder (binding)
+            }
 
-        fun rebindViewHolder(item : OrderDetailFull){
-            headerTv.text = "${item.drink.name} (${item.size.name},${item.size.volume}) x ${item.count}"
-            addinsTv.text = if (item.addIns.size != 0) item.addIns.joinToString { it.name } else "Без добавок"
-            priceTv.text = "${item.price} Р."
         }
     }
 

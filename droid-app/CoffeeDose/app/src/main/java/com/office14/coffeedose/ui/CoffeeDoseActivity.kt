@@ -210,14 +210,16 @@ class CoffeeDoseActivity : DaggerAppCompatActivity() {
         }
 
 
+
+
         with(PreferencesRepository){
+            menuInfoViewModel.deleteFcmDeviceTokenOnLogOut(getDeviceID(), getIdToken()!!)
             saveUserEmail(EMPTY_STRING)
             saveIdToken(EMPTY_STRING)
             saveFcmRegToken(EMPTY_STRING)
         }
 
         menuInfoViewModel.refreshOrderDetailsByUser()
-        menuInfoViewModel.deleteFcmDeviceTokenOnLogOut()
         //menuInfoViewModel.refresh()
         invalidateOptionsMenu()
     }

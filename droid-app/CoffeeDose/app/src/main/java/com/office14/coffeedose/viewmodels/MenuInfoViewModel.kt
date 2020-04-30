@@ -37,7 +37,7 @@ class MenuInfoViewModel @Inject constructor(application: Application,private val
     val order : LiveData<Order> = Transformations.map(ordersRepository.getCurrentQueueOrderByUser(email)) {
         if (it != null) {
             if (!isPolling)
-                longPollingOrder()
+                longPollingOrderStatus()
             return@map it
         }
         return@map null
@@ -99,19 +99,19 @@ class MenuInfoViewModel @Inject constructor(application: Application,private val
         if (isPolling)
             _job.cancel()
 
-        longPollingOrder()
+        longPollingOrderStatus()
     }
 
     private lateinit var _job : Job
 
-    private fun longPollingOrder(){
+    private fun longPollingOrderStatus(){
 
         isPolling = true
 
         _job = pollingScope.launch {
 
             while (isActive) {
-                ordersRepository.refreshOrder(PreferencesRepository.getIdToken(),email.value!!)
+                ordersRepository.refreshLastOrderStatus(PreferencesRepository.getIdToken(),email.value!!)
             }
         }
 
@@ -150,12 +150,9 @@ class MenuInfoViewModel @Inject constructor(application: Application,private val
 
     }
 
-    fun deleteFcmDeviceTokenOnLogOut(){
+    fun deleteFcmDeviceTokenOnLogOut(deviceId: String, idToken : String){
         viewModelScope.launch {
-            ordersRepository.deleteFcmDeviceTokenOnLogOut(
-                PreferencesRepository.getDeviceID(),
-                PreferencesRepository.getIdToken()!!
-            )
+            ordersRepository.deleteFcmDeviceTokenOnLogOut( deviceId, idToken )
         }
     }
 }

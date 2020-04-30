@@ -13,14 +13,16 @@ interface CoffeeApiService {
     @GET("add-ins")
     fun getAddinsAsync():Deferred<ResponseContainer<List<AddinJso>>>
 
-    @GET("/api/orders/{orderId}")
-    fun getOrderByIdAsync(@Path(value = "orderId", encoded = true) orderId : Int, @Header("Authorization") authHeader:String):Deferred<ResponseContainer<OrderJso>>
-
     @GET("/api/user/orders/last")
-    fun getLastOrderForUserAsync(@Header("Authorization") authHeader:String):Deferred<ResponseContainer<OrderJso>>
+    @Headers("Cache-Control: no-cache")
+    fun getLastOrderForUserAsync(@Header("Authorization") authHeader:String):Deferred<ResponseContainer<LastOrderJso>>
+
+    @GET("/api/user/orders/last/status")
+    @Headers("Cache-Control: no-cache")
+    fun getLastOrderStatusForUserAsync(@Header("Authorization") authHeader:String):Deferred<ResponseContainer<LastOrderStatusJso>>
 
     @POST("/api/orders")
-    fun createOrderAsync(@Body body : CreateOrderBody, @Header("Authorization") authHeader:String) :Deferred<ResponseContainer<OrderJso>>
+    fun createOrderAsync(@Body body : CreateOrderBody, @Header("Authorization") authHeader:String) :Deferred<ResponseContainer<CreateOrderResponseJso>>
 
     @POST("/api/user/device-tokens/update")
     fun updateFcmDeviceToken(@Body body : PostFcmDeviceTokenBody, @Header("Authorization") authHeader:String) :Deferred<ResponseContainer<Any>>
