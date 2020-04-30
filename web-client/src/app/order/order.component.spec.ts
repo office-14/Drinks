@@ -70,7 +70,7 @@ describe('OrderComponent', () => {
     expect(order_comment.textContent).toMatch('Test comment', 'order comment displayed correctly after loaded last order');
 
     const order_created: HTMLElement = fixture.nativeElement.querySelector('.order__created');
-    expect(order_created.textContent).toMatch('среда, 29 апреля 2020 г., 11:38', 'order created displayed correctly after loaded last order');
+    expect(order_created.textContent).toMatch('апреля 2020 г.', 'order created displayed correctly after loaded last order');
     
     tick(3000);
     fixture.detectChanges();
