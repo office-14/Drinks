@@ -28,7 +28,9 @@ namespace Project.API.Servicing.Application.FinishOrder
             order.Finish();
             await ordersRepository.Save(order);
 
-            await mediator.Publish(new OrderIsFinished(order.Id, order.ClientId));
+            await mediator.Publish(
+                new OrderIsFinished(order.Id, order.OrderNumber, order.ClientId)
+            );
 
             return true;
         }

@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using FirebaseAdmin.Messaging;
 using Microsoft.Extensions.Logging;
 using Project.API.Infrastructure.Notifications;
+using Project.API.Ordering.Events;
 using Project.API.Servicing.Events;
 
 namespace Project.API.Infrastructure.Firebase
@@ -16,7 +17,48 @@ namespace Project.API.Infrastructure.Firebase
         public FirebaseNotificationService(ILogger<FirebaseNotificationService> logger)
             => this.logger = logger;
 
+        public async Task NotifyClientWhenOrderIsCreated(OrderIsCreated @event, IEnumerable<DeviceToken> tokens)
+        {
+            await SendNotificationsToTokens(tokens, token => new Message
+            {
+                Token = token.Value,
+
+                Notification = new Notification
+                {
+                    Title = "Изменение статуса заказа",
+                    Body = $"Ваш заказ {@event.OrderNumber.Value} принят"
+                },
+
+                Data = new Dictionary<string, string>
+                {
+                    { "event_type", "order_is_created" }
+                }
+            });
+        }
+
         public async Task NotifyClientWhenOrderIsFinished(OrderIsFinished @event, IEnumerable<DeviceToken> tokens)
+        {
+            await SendNotificationsToTokens(tokens, token => new Message
+            {
+                Token = token.Value,
+
+                Notification = new Notification
+                {
+                    Title = "Изменение статуса заказа",
+                    Body = $"Ваш заказ {@event.OrderNumber.Value} завершен"
+                },
+
+                Data = new Dictionary<string, string>
+                {
+                    { "event_type", "order_is_finished" }
+                }
+            });
+        }
+
+        private async Task SendNotificationsToTokens(
+            IEnumerable<DeviceToken> tokens,
+            Func<DeviceToken, Message> messageFactory
+        )
         {
             var tokensList = tokens.ToList();
 
@@ -33,16 +75,7 @@ namespace Project.API.Infrastructure.Firebase
             try
             {
                 await FirebaseMessaging.DefaultInstance.SendAllAsync(tokensList
-                    .Select(token => new Message
-                    {
-                        Token = token.Value,
-
-                        Notification = new Notification
-                        {
-                            Title = "Order status change",
-                            Body = "Your order is finished"
-                        }
-                    }));
+                    .Select(messageFactory));
             }
             catch (Exception ex)
             {

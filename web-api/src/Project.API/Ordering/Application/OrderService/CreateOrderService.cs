@@ -50,7 +50,9 @@ namespace Project.API.Ordering.Application.OrderService
 
             // TODO: Should we use default MediatR publish strategy here?
             // https://github.com/jbogard/MediatR/wiki#publish-strategies
-            await mediator.Publish(new OrderIsCreated(persistedOrder.Id, user.Id));
+            await mediator.Publish(
+                new OrderIsCreated(persistedOrder.Id, persistedOrder.OrderNumber, user.Id)
+            );
 
             return persistedOrder.Id;
         }

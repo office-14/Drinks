@@ -6,11 +6,13 @@ namespace Project.API.Servicing.Events
 {
     public sealed class OrderIsFinished : DomainEvent
     {
-        public OrderIsFinished(OrderId orderId, UserId clientId) =>
-            (OrderId, ClientId) = (orderId, clientId);
+        public OrderIsFinished(OrderId orderId, OrderNumber orderNumber, UserId clientId) =>
+            (OrderId, OrderNumber, UserId) = (orderId, orderNumber, clientId);
 
         public OrderId OrderId { get; }
 
-        public UserId ClientId { get; }
+        public OrderNumber OrderNumber { get; }
+
+        public UserId UserId { get; }
     }
 }

@@ -6,10 +6,12 @@ namespace Project.API.Ordering.Events
 {
     public sealed class OrderIsCreated : DomainEvent
     {
-        public OrderIsCreated(OrderId orderId, UserId userId) =>
-            (OrderId, UserId) = (orderId, userId);
+        public OrderIsCreated(OrderId orderId, OrderNumber orderNumber, UserId userId) =>
+            (OrderId, OrderNumber, UserId) = (orderId, orderNumber, userId);
 
         public OrderId OrderId { get; }
+
+        public OrderNumber OrderNumber { get; }
 
         public UserId UserId { get; }
     }
